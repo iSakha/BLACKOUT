@@ -29,7 +29,7 @@ app.get('/', function (req, res) {
 
 //  GET equipment
 // --------------------------------------------------------------------
-app.get("/eqipment", function (request, response) {
+app.get("/equipment", function (request, response) {
     getEquipment(response);
 
 });
