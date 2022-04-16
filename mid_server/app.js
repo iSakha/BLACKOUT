@@ -37,7 +37,13 @@ app.get("/equip/dep", function (request, response) {
 
 app.post("/equip/dep", function (request, response) {
     console.log('get/equip');
-    getEquipment(request.body, response);
+    getEquipmentDep(request.body, response);
+    // response.send(request.body);
+});
+
+app.post("/equip/cat", function (request, response) {
+    console.log('get/equip');
+    getEquipmentCat(request.body, response);
     // response.send(request.body);
 });
 
@@ -55,7 +61,7 @@ app.post("/equip/fxt", function (request, response) {
 
 //          F U N C T I O N S
 // --------------------------------------------------------------------
-function getEquipment(dep, response) {
+function getEquipmentDep(dep, response) {
     let data = [];
     data.push(dep.id)
     let connection = mysql.createConnection(config);
@@ -70,6 +76,24 @@ function getEquipment(dep, response) {
             response.json(results);
             // equipmentObj = results;
 
+            connection.end();
+        });
+}
+
+function getEquipmentCat(cat, response) {
+    let data = [];
+    data.push(cat.id)
+    let connection = mysql.createConnection(config);
+    connection.execute("SELECT * FROM v_cat_model_name WHERE category=?",
+        data,
+        function (err, results, fields) {
+            if (err) {
+                console.log('Check SSH tunnel!')
+                return console.log("Error: " + err.message);
+            }
+            console.log('results:', results);
+            response.json(results);
+            // equipmentObj = results;
             connection.end();
         });
 }
