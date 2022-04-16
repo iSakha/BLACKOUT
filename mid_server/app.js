@@ -35,6 +35,12 @@ app.get("/equip/dep", function (request, response) {
     getListDepartmets(response);
 });
 
+app.post("/equip/dep", function (request, response) {
+    console.log('get/equip');
+    getEquipment(request.body, response);
+    // response.send(request.body);
+});
+
 app.get("/equip/cat", function (request, response) {
     // getEquipment(response);
     console.log('get/equip');
@@ -49,10 +55,12 @@ app.post("/equip/fxt", function (request, response) {
 
 //          F U N C T I O N S
 // --------------------------------------------------------------------
-function getEquipment(response) {
-
+function getEquipment(dep, response) {
+    let data = [];
+    data.push(dep.id)
     let connection = mysql.createConnection(config);
-    connection.execute("SELECT * FROM t_equipment",
+    connection.execute("SELECT * FROM v_cat_model_name WHERE department=?",
+        data,
         function (err, results, fields) {
             if (err) {
                 console.log('Check SSH tunnel!')
@@ -60,7 +68,7 @@ function getEquipment(response) {
             }
             console.log('results:', results);
             response.json(results);
-            equipmentObj = results;
+            // equipmentObj = results;
 
             connection.end();
         });
@@ -102,8 +110,8 @@ function getListFixtures(cat, response) {
     let connection = mysql.createConnection(config);
     let data = [];
     data.push(cat.id);
-    console.log("data:",data);
-    const sql = "SELECT * FROM `t_equipment` WHERE category=?";
+    console.log("data:", data);
+    const sql = "SELECT * FROM `v_cat_model_name` WHERE category=?";
     connection.query(sql, data,
         function (err, results, fields) {
             if (err) {
