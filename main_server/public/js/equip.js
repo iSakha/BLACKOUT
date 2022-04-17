@@ -36,7 +36,7 @@ function getListCategories() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-        },
+        }
     })
         .then(res => res.json())
         .then(data => {
@@ -155,15 +155,16 @@ function fillSelectInput(obj, input, f_type) {
 
 //          FUNCTION Get Full equipment from Department
 // --------------------------------------------------------------------
+
 function getFullDepartmentEquipment(dep) {
     let data = {};
     data.id = dep;
-    fetch('http://127.0.0.1:3080/equip/dep', {
-        method: 'POST',
+    fetch('http://127.0.0.1:3080/equip/dep/' + dep, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
+        }
+        // body: JSON.stringify(data)
     })
         .then(res => res.json())
         .then(data => {
@@ -178,17 +179,14 @@ function getFullDepartmentEquipment(dep) {
         })
 }
 
-//          FUNCTION Get Full equipment from Category
-// --------------------------------------------------------------------
 function getCategoryEquipment(cat) {
     let data = {};
     data.id = cat;
-    fetch('http://127.0.0.1:3080/equip/cat', {
-        method: 'POST',
+    fetch('http://127.0.0.1:3080/equip/cat/' + cat, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
+        }
     })
         .then(res => res.json())
         .then(data => {
@@ -202,7 +200,6 @@ function getCategoryEquipment(cat) {
             console.log(error)
         })
 }
-
 //          FUNCTION Fill Equip table by department
 // --------------------------------------------------------------------
 function fillEquipTableByDep(data) {

@@ -22,38 +22,39 @@ const urlencodedParser = express.urlencoded({ extended: false });
 // ====================================================================
 //            Routing
 // ====================================================================
-
-app.get('/', function (req, res) {
+app.route('/').get( (request, response) => {
     res.send('<h2>my mid_server is running</h2>');
 });
 
 //  GET equipment
 // --------------------------------------------------------------------
-app.get("/equip/dep", function (request, response) {
+app.route('/equip/dep').get( (request, response) => {
     // getEquipment(response);
     console.log('get/equip');
     getListDepartmets(response);
 });
 
-app.post("/equip/dep", function (request, response) {
-    console.log('get/equip');
-    getEquipmentDep(request.body, response);
+app.route('/equip/dep/:id').get((request, response) => {
+    const depId = request.params['id'];
+    getEquipmentDep(depId, response);
     // response.send(request.body);
 });
 
-app.post("/equip/cat", function (request, response) {
-    console.log('get/equip');
-    getEquipmentCat(request.body, response);
+app.route('/equip/cat/:id').get((request, response) => {
+    const catId = request.params['id'];
+    // console.log('get/equip');
+    getEquipmentCat(catId, response);
     // response.send(request.body);
 });
 
-app.get("/equip/cat", function (request, response) {
+app.route('/equip/cat').get((request, response) => {
+// app.get("/equip/cat", function (request, response) {
     // getEquipment(response);
-    console.log('get/equip');
+    // console.log('get/equip');
     getListCategories(response);
 });
-
-app.post("/equip/fxt", function (request, response) {
+app.route('/equip/fxt').post((request, response) => {
+// app.post("/equip/fxt", function (request, response) {
     getListFixtures(request.body, response);
 });
 
@@ -61,9 +62,9 @@ app.post("/equip/fxt", function (request, response) {
 
 //          F U N C T I O N S
 // --------------------------------------------------------------------
-function getEquipmentDep(dep, response) {
+function getEquipmentDep(depId, response) {
     let data = [];
-    data.push(dep.id)
+    data.push(depId)
     let connection = mysql.createConnection(config);
     connection.execute("SELECT * FROM v_cat_model_name WHERE department=?",
         data,
@@ -80,9 +81,9 @@ function getEquipmentDep(dep, response) {
         });
 }
 
-function getEquipmentCat(cat, response) {
+function getEquipmentCat(catId, response) {
     let data = [];
-    data.push(cat.id)
+    data.push(catId);
     let connection = mysql.createConnection(config);
     connection.execute("SELECT * FROM v_cat_model_name WHERE category=?",
         data,
