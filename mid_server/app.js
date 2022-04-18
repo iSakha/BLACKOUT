@@ -48,27 +48,33 @@ app.route("/events").get((request, response) => {
 
 //  CREATE event
 // --------------------------------------------------------------------
-app.post("/events", urlencodedParser, function (request, response) {
+app.route("/events").post(urlencodedParser,(request, response) => {
     if (!request.body) return response.sendStatus(400);
-    console.log("post.request.body", request.body);
-    // readEvents(response);
+    // console.log("post.request.body", request.body);
     return createEvent(request.body, response)
-    // response.send(request.body);
 });
 
 //  DELETE event
 // --------------------------------------------------------------------
-app.delete("/events", urlencodedParser, function (request, response) {
+app.route("/events").delete(urlencodedParser,(request, response) => {
     if (!request.body) return response.sendStatus(400);
-    console.log("delete.request.body", request.body);
+    // console.log("delete.request.body", request.body);
     return deleteEvent(request.body, response);
+    // response.send(request.body);
+});
+
+//  UPDATE event
+// --------------------------------------------------------------------
+app.route("/events").put(urlencodedParser, (request, response) => {
+    if (!request.body) return response.sendStatus(400);
+    // console.log("update.request.body", request.body);
+    return updateEvent(request.body, response);
     // response.send(request.body);
 });
 
 //  GET equipment
 // --------------------------------------------------------------------
 app.route('/equip/dep').get( (request, response) => {
-    // getEquipment(response);
     console.log('get/equip');
     getListDepartmets(response);
 });
@@ -81,19 +87,15 @@ app.route('/equip/dep/:id').get((request, response) => {
 
 app.route('/equip/cat/:id').get((request, response) => {
     const catId = request.params['id'];
-    // console.log('get/equip');
     getEquipmentCat(catId, response);
     // response.send(request.body);
 });
 
 app.route('/equip/cat').get((request, response) => {
-// app.get("/equip/cat", function (request, response) {
-    // getEquipment(response);
-    // console.log('get/equip');
     getListCategories(response);
 });
+
 app.route('/equip/fxt').post((request, response) => {
-// app.post("/equip/fxt", function (request, response) {
     getListFixtures(request.body, response);
 });
 
@@ -171,6 +173,23 @@ function deleteEvent(data, response) {
             console.log(results); // results contains rows returned by server
         }
     )
+}
+
+function updateEvent(data, response) {
+    let connection = mysql.createConnection(config);
+    let dateStartObj = new Date(data.start);
+    let dateEndObj = new Date(data.end);
+
+    console.log("data.start:", dateStartObj);
+    
+    let dataArray = [data.calendarId, data.title, dateStartObj, dateEndObj, data.location, data.id];
+    console.log("dataArray", dataArray);
+    
+    const sql = "UPDATE t_events SET calendarId=?, title=?, start=?, end=?, location=? WHERE id=?";
+    connection.query(sql, dataArray, function (err, results) {
+        if (err) return console.log(err);
+        readEvents(response);
+    });
 }
 
 function getEquipmentDep(depId, response) {

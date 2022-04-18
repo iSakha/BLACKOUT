@@ -142,6 +142,8 @@ function createCalendar(window, Calendar) {
     });
 };
 
+
+
 function getCalendarsList() {
     fetch('http://82.209.203.205:3080/calendars')
         .then(res => res.json())
@@ -151,6 +153,7 @@ function getCalendarsList() {
             createCalendarList(data);
         })
         .then(createCalendar)
+        .then(getEventsSummary)
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
             console.log(error)
@@ -165,7 +168,9 @@ function getSchedulesList() {
         .then(res => res.json())
         .then(data => {
             // enter you logic when the fetch is successful
-            schedulesList = data;
+            // var difficult_tasks = tasks.filter((task) => task.duration >= 120 );
+            schedulesList = data.filter((e) => e.start != null );
+            // schedulesList = data;
             console.log("schedulesList:", data);
         })
         .then(getCalendarsList)
@@ -175,6 +180,8 @@ function getSchedulesList() {
         })
 
 }
+
+
 
 function saveNewSchedule(e) {
     // console.log(e);
@@ -197,6 +204,7 @@ function saveNewSchedule(e) {
             getSchedulesList();
             console.log("data:", data);
         })
+        .then(getEventsSummary)
         .then(refresh)
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
@@ -220,6 +228,7 @@ function deleteSchedule(e) {
             getSchedulesList();
             console.log("data:", data);
         })
+        .then(getEventsSummary)
         .then(refresh)
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
@@ -292,14 +301,38 @@ function updateSchedule(e) {
         })
 }
 
+function getEventsSummary() {
+    fetch('http://82.209.203.205:3080/events/summary')
+        .then(res => res.json())
+        .then(data => {
+            // enter you logic when the fetch is successful
+            console.log("summary:", data);
+            displaySummary(data);
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+function displaySummary(data) {
+    console.log("displaySummary:", data);
+
+    document.getElementById('sum-minsk').innerHTML = '<h3>Минск:' + data[0].qty + '</h3>';
+    document.getElementById('sum-msk').innerHTML = '<h3>Москва:' + data[1].qty + '</h3>';
+    document.getElementById('sum-kzn').innerHTML = '<h3>Казань:' + data[2].qty + '</h3>';
+    document.getElementById('sum-ptr').innerHTML = '<h3>Питер:' + data[3].qty + '</h3>';
+
+}
+
 function refresh() {
     location.reload();
 }
 
 //  Equipment reservation
 // ====================================================================
-document.getElementById('equip-reserv').addEventListener('click', equipReservation);
+// document.getElementById('equip-reserv').addEventListener('click', equipReservation);
 
-function equipReservation() {
-    // window.open('http://82.209.203.205:3060','_blank');
-}
+// function equipReservation() {
+//     // window.open('http://82.209.203.205:3060','_blank');
+// }
