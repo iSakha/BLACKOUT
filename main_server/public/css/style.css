@@ -1,3 +1,31 @@
 h2 {
     margin-left: 20px;
 }
+
+.space{
+    width: 120px;
+}
+.summary{
+    margin-left: 40px;
+
+}
+#sum-minsk{
+    background-color: #d1b5fa;
+    padding: 10px;
+}
+
+#sum-msk{
+    background-color: #77d0fd;
+    padding: 10px;
+}
+
+#sum-kzn{
+    background-color: #fa9cb5;
+    padding: 10px;
+}
+
+#sum-ptr{
+    background-color: #ffe492;
+    padding: 10px;
+}
+
