@@ -10,7 +10,8 @@ let categoryListObj = {};
 function getListDepartments() {
 
     let input = document.getElementById('dep');
-    fetch('http://127.0.0.1:3080/equip/dep', {
+    // fetch('http://127.0.0.1:3080/equip/dep', {
+        fetch('http://82.209.203.205:3080/equip/dep', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -32,7 +33,8 @@ function getListDepartments() {
 function getListCategories() {
 
     let input = document.getElementById('cat');
-    fetch('http://127.0.0.1:3080/equip/cat', {
+    // fetch('http://127.0.0.1:3080/equip/cat', {
+        fetch('http://82.209.203.205:3080/equip/cat', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -159,7 +161,8 @@ function fillSelectInput(obj, input, f_type) {
 function getFullDepartmentEquipment(dep) {
     let data = {};
     data.id = dep;
-    fetch('http://127.0.0.1:3080/equip/dep/' + dep, {
+    // fetch('http://127.0.0.1:3080/equip/dep/' + dep, {
+        fetch('http://82.209.203.205:3080/equip/dep/' + dep, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -182,7 +185,8 @@ function getFullDepartmentEquipment(dep) {
 function getCategoryEquipment(cat) {
     let data = {};
     data.id = cat;
-    fetch('http://127.0.0.1:3080/equip/cat/' + cat, {
+    // fetch('http://127.0.0.1:3080/equip/cat/' + cat, {
+    fetch('http://82.209.203.205:3080/equip/cat/' + cat, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -312,7 +316,8 @@ function getListFixtureTypes(cat) {
     let input = document.getElementById('fxt-type');
     let data = {};
     data.id = cat;
-    fetch('http://127.0.0.1:3080/equip/fxt', {
+    fetch('http://82.209.203.205:3080/equip/fxt', {
+    // fetch('http://127.0.0.1:3080/equip/fxt', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
