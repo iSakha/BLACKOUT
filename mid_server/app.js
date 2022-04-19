@@ -56,10 +56,18 @@ app.route("/events").post(urlencodedParser,(request, response) => {
 
 //  DELETE event
 // --------------------------------------------------------------------
-app.route("/events").delete(urlencodedParser,(request, response) => {
+// app.route("/events").delete(urlencodedParser,(request, response) => {
+//     if (!request.body) return response.sendStatus(400);
+//     // console.log("delete.request.body", request.body);
+//     return deleteEvent(request.body, response);
+//     // response.send(request.body);
+// });
+
+app.route("/events/:id").delete(urlencodedParser,(request, response) => {
     if (!request.body) return response.sendStatus(400);
+    const eventId = request.params['id'];
     // console.log("delete.request.body", request.body);
-    return deleteEvent(request.body, response);
+    return deleteEvent(eventId, response);
     // response.send(request.body);
 });
 
@@ -160,13 +168,13 @@ function createEvent(data, response) {
     });
 }
 
-function deleteEvent(data, response) {
+function deleteEvent(eventId, response) {
     let connection = mysql.createConnection(config);
-    console.log("data.id", data.id);
+    console.log("eventId", eventId);
     // execute will internally call prepare and query
     connection.execute(
         "DELETE FROM `t_events` WHERE `id` = ?",
-        [data.id],
+        [eventId],
         function (err, results, fields) {
             if (err) return console.log(err);
             readEvents(response);
