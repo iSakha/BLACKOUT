@@ -31,7 +31,7 @@ readCalendars();
 //            Routing
 // ====================================================================
 app.route('/').get( (request, response) => {
-    res.send('<h2>my mid_server is running</h2>');
+    response.send('<h2>my mid_server is running</h2>');
 });
 
 //  READ calendars
@@ -78,6 +78,12 @@ app.route("/events").put(urlencodedParser, (request, response) => {
     // console.log("update.request.body", request.body);
     return updateEvent(request.body, response);
     // response.send(request.body);
+});
+
+//  READ events SUMMARY
+// --------------------------------------------------------------------
+app.route("/events/summary").get((request, response) => {
+    readEventsSummary(response);
 });
 
 //  GET equipment
@@ -198,6 +204,19 @@ function updateEvent(data, response) {
         if (err) return console.log(err);
         readEvents(response);
     });
+}
+
+function readEventsSummary(response) {
+    let connection = mysql.createConnection(config);
+    connection.execute("SELECT * FROM v_events_summary",
+        function (err, results, fields) {
+            if (err) {
+                console.log('Check SSH tunnel!')
+                return console.log("Error: " + err.message);
+            }
+            response.send(results);
+            connection.end();
+        });
 }
 
 function getEquipmentDep(depId, response) {
