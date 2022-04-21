@@ -2,6 +2,10 @@ var CalendarList = [];
 var schedulesList = [];
 var selectedEvent = {};
 
+document.addEventListener("DOMContentLoaded", getListDepartments);
+let departmentListObj = {};
+let categoryListObj = {};
+
 getSchedulesList();
 
 
@@ -51,7 +55,7 @@ tbl.addEventListener('click', (e) => {
         row.className = "yellow";
 
         // loadEventEquip(selectedEventId);
-        // setDate(start, end);
+        setDate(start, end);
 
     } else {
         // document.getElementById('div-booking-equip').classList.add("d-none");
@@ -114,4 +118,158 @@ function clearBackgroundColor(tbl) {
     for (let i = 0; i < rows.length; i++) {
         rows[i].classList.remove("yellow");
     }
+}
+
+function getListDepartments() {
+
+    let input = document.getElementById('dep');
+    // fetch('http://127.0.0.1:3080/equip/dep', {
+        fetch('http://82.209.203.205:3080/equip/dep', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(res => res.json())
+        .then(data => {
+            departmentListObj = data;
+            // console.log("departmentListObj:", departmentListObj);
+            fillSelectInput(departmentListObj, input);
+        })
+        .then(getListCategories)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+function getListCategories() {
+
+    let input = document.getElementById('cat');
+    // fetch('http://127.0.0.1:3080/equip/cat', {
+        fetch('http://82.209.203.205:3080/equip/cat', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            categoryListObj = data;
+            console.log("data:", data);
+            fillSelectInput(categoryListObj, input);
+        })
+        // .then(getListCategories)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+//          Dependent Drop down lists
+// ====================================================================
+
+//      Select Department
+// --------------------------------------------------------------------
+document.getElementById('dep').addEventListener('change', changeCategorySelectSource);
+
+function changeCategorySelectSource() {
+    let dep = document.getElementById('dep').value;
+    let opt = document.createElement('option');
+    console.log("dep: ", dep)
+    let input = document.getElementById('cat');
+    switch (dep) {
+        case '000':
+            fillSelectInput(categoryListObj, input);
+            break;
+        default:
+            input.innerHTML = "";
+            let opt = document.createElement('option');
+            input.innerHTML = "";
+            opt.innerHTML = "Все";
+            opt.value = "000";
+            input.appendChild(opt);
+            for (let i = 0; i < categoryListObj.length; i++) {
+                opt = document.createElement('option');
+                let str = categoryListObj[i].id;
+                if (str.substring(0, 3) === dep) {
+                    opt.innerHTML = categoryListObj[i].name;
+                    opt.value = categoryListObj[i].id;
+                    input.appendChild(opt);
+                }
+            }
+            break;
+    }
+}
+
+//      Select Category
+// --------------------------------------------------------------------
+document.getElementById('cat').addEventListener('change', setDepartmentSelectValue);
+
+function setDepartmentSelectValue() {
+    let cat = document.getElementById('cat').value;
+    let dep = cat.substring(0, 3);
+    console.log("cat:", cat);
+    document.getElementById('dep').value = dep;
+    getListFixtureTypes(cat);
+
+}
+
+//          FUNCTION Fill select input
+// --------------------------------------------------------------------
+function fillSelectInput(obj, input, f_type) {
+
+    console.log("obj :", obj);
+
+    let opt = document.createElement('option');
+    input.innerHTML = "";
+    opt.innerHTML = "Все";
+    opt.value = "000";
+    input.appendChild(opt);
+    for (let i = 0; i < obj.length; i++) {
+        opt = document.createElement('option');
+        if (f_type) {
+            opt.innerHTML = obj[i].model_name;
+            opt.value = obj[i].fixture_type;
+            input.appendChild(opt);
+        } else {
+
+            opt.innerHTML = obj[i].name;
+            opt.value = obj[i].id;
+            input.appendChild(opt);
+        }
+
+    }
+}
+
+//      FUNCTION get list of fixture_types
+// --------------------------------------------------------------------
+function getListFixtureTypes(cat) {
+    let input = document.getElementById('fxt-type');
+    let data = {};
+    data.id = cat;
+    fetch('http://82.209.203.205:3080/equip/fxt', {
+    // fetch('http://127.0.0.1:3080/equip/fxt', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+        .then(data => {
+            // categoryListObj = data;
+            // console.log("data:", data);
+            fillSelectInput(data, input, true);
+        })
+        // .then(getListCategories)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+function setDate(start, end) {
+    document.getElementById('start').value = start;
+    document.getElementById('end').value = end;
 }

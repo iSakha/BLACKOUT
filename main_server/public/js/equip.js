@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", getListDepartments);
 let departmentListObj = {};
 let categoryListObj = {};
 
-
 //          Get List of Departments and Categories
 // --------------------------------------------------------------------
 function getListDepartments() {
