@@ -24,3 +24,9 @@ h2 {
     background-color:rgb(248, 245, 241);
     font-weight: bold ;
 }
+
+.font-bold{
+    font-weight: bold ;
+    font-size: 13pt;
+    font-style: italic;
+}

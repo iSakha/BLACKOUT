@@ -567,58 +567,42 @@ function fillEquipTable(equip, tbl, tblBody) {
 
         let row = document.createElement('tr');
         let cell = document.createElement("td");
-        cell.innerHTML = i + 1;
+
+        if (equip[i].fixture_type_id.slice(8, 11) === '000') {
+            cell.innerHTML = "";
+        } else cell.innerHTML = equip[i].fixture_type_id;
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        if (equip[i].fixture_type_id.slice(8, 11) === '000') {
+            cell.classList.add('font-bold');
+        }
         cell.innerHTML = equip[i].fixture;
         row.appendChild(cell);
 
         cell = document.createElement("td");
-        cell.innerHTML = equip[i].storage_qty;
+        if (equip[i].fixture_type_id.slice(8, 11) === '000') {
+            cell.innerHTML = "";
+        } else cell.innerHTML = equip[i].storage_qty;
         row.appendChild(cell);
 
         cell = document.createElement("td");
-        cell.innerHTML = equip[i].result_qty;
+        if (equip[i].fixture_type_id.slice(8, 11) === '000') {
+            cell.innerHTML = "";
+        } else cell.innerHTML = equip[i].result_qty;
+        row.appendChild(cell);
+
+
+        cell = document.createElement("td");
+        if (equip[i].fixture_type_id.slice(8, 11) === '000') {
+            cell.innerHTML = "";
+        } else cell.innerHTML = equip[i].selected_qty;
         row.appendChild(cell);
 
         cell = document.createElement("td");
-        cell.innerHTML = equip[i].selected_qty;
-        row.appendChild(cell);
-
-        //     cell = document.createElement("td");
-        //     cell.classList.add('equip-tbl-cell');
-        //     cell.innerHTML = equip[i].fixture_name;
-        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
-        //         cell.classList.add('font-bold');
-        //     }
-        //     row.appendChild(cell);
-
-        //     cell = document.createElement("td");
-        //     cell.classList.add('equip-tbl-cell');
-        //     cell.innerHTML = equip[i].storage_qty;
-        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
-        //         cell.classList.add('d-none');
-        //     }
-        //     row.appendChild(cell);
-
-        //     cell = document.createElement("td");
-        //     cell.classList.add('equip-tbl-cell');
-        //     cell.innerHTML = equip[i].result_qty;
-        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
-        //         cell.classList.add('d-none');
-        //     }
-        //     row.appendChild(cell);
-
-        //     cell = document.createElement("td");
-        //     cell.classList.add('equip-tbl-cell');
-        //     cell.innerHTML = equip[i].selected_qty;
-        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
-        //         cell.classList.add('d-none');
-        //     }
-        //     row.appendChild(cell);
-
-            cell = document.createElement("td");
+        if (equip[i].fixture_type_id.slice(8, 11) === '000') {
+            cell.innerHTML = "";
+        } else {
             cell.classList.add('equip-tbl-cell');
             let newinputbox = document.createElement("input");
             newinputbox.classList.add('txt-to-take')
@@ -629,18 +613,11 @@ function fillEquipTable(equip, tbl, tblBody) {
             }
 
             cell.appendChild(newinputbox);
+        }
 
-        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
-        //         cell.classList.add('d-none');
-        //     }
-
-            row.appendChild(cell);
-
-
+        row.appendChild(cell);
 
         tblBody.appendChild(row);
-
-
     }
     tbl.append(tblBody);
 
