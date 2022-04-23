@@ -9,18 +9,21 @@ let categoryListObj = {};
 getSchedulesList();
 
 
+
+
+//          Q U E R I E S       to mid_server
+// ====================================================================
+
+
+//  Get List of events
+// ------------------------------------------------------------------------
 function getSchedulesList() {
-
-    // using fetch
-
     fetch('http://82.209.203.205:3080/events')
         .then(res => res.json())
         .then(data => {
-            // enter you logic when the fetch is successful
-            // var difficult_tasks = tasks.filter((task) => task.duration >= 120 );
-            schedulesList = data.filter((e) => e.start != null );
-            // schedulesList = data;
-            console.log("schedulesList:", schedulesList);
+            // filter out 'fake' events
+            schedulesList = data.filter((e) => e.start != null);
+            // console.log("schedulesList:", schedulesList);
             fillEventTable(schedulesList);
         })
         .catch(error => {
@@ -29,6 +32,36 @@ function getSchedulesList() {
         })
 
 }
+
+//  Get List Selected equipment for event
+// ------------------------------------------------------------------------
+function loadEventEquip(id) {
+    let tbl = document.getElementById('equip-table');
+    let tblBody = document.getElementById('equip-table-body');
+    // console.log(id);
+    // let data = {};
+    // data.id = id;
+    fetch('http://82.209.203.205:3080/equip/selected/' + id, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(res => res.json())
+        .then(data => {
+            // fillEquipEventTable(data, tbl, tblBody);
+            eventEquipObj = data;
+            console.log("Selected equipment:", data);
+        })
+        // .then(getSelectedEventEquip)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+
+}
+
+
 
 let tbl = document.getElementById('events-table');
 
@@ -54,7 +87,7 @@ tbl.addEventListener('click', (e) => {
     if (row.rowIndex > 0) {
         row.className = "yellow";
 
-        // loadEventEquip(selectedEventId);
+        loadEventEquip(selectedEventId);
         setDate(start, end);
 
     } else {
@@ -66,6 +99,28 @@ tbl.addEventListener('click', (e) => {
 
     }
 
+});
+
+//      Click button SUBMIT
+// --------------------------------------------------------------------
+document.getElementById('btn-submit').addEventListener('click', function (e) {
+    e.preventDefault();
+    let div = document.getElementById('div-dep-equip');
+    div.classList.add('d-none');
+    div = document.getElementById('div-cat-equip');
+    div.classList.add('d-none');
+    let select_cat = document.getElementById('cat');
+    let cat = select_cat.options[select_cat.selectedIndex].value
+    switch (cat) {
+        case '000':
+            let select_dep = document.getElementById('dep');
+            let dep = select_dep.options[select_dep.selectedIndex].value
+            getFullDepartmentEquipment(dep);
+            break;
+        default:
+            getCategoryEquipment(cat);
+            break;
+    }
 });
 
 
@@ -124,7 +179,7 @@ function getListDepartments() {
 
     let input = document.getElementById('dep');
     // fetch('http://127.0.0.1:3080/equip/dep', {
-        fetch('http://82.209.203.205:3080/equip/dep', {
+    fetch('http://82.209.203.205:3080/equip/dep', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -147,7 +202,7 @@ function getListCategories() {
 
     let input = document.getElementById('cat');
     // fetch('http://127.0.0.1:3080/equip/cat', {
-        fetch('http://82.209.203.205:3080/equip/cat', {
+    fetch('http://82.209.203.205:3080/equip/cat', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -249,7 +304,7 @@ function getListFixtureTypes(cat) {
     let data = {};
     data.id = cat;
     fetch('http://82.209.203.205:3080/equip/fxt', {
-    // fetch('http://127.0.0.1:3080/equip/fxt', {
+        // fetch('http://127.0.0.1:3080/equip/fxt', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -272,4 +327,160 @@ function getListFixtureTypes(cat) {
 function setDate(start, end) {
     document.getElementById('start').value = start;
     document.getElementById('end').value = end;
+}
+
+//          FUNCTION Get Full equipment from Department
+// --------------------------------------------------------------------
+
+function getFullDepartmentEquipment(dep) {
+    let data = {};
+    data.id = dep;
+    // fetch('http://127.0.0.1:3080/equip/dep/' + dep, {
+    fetch('http://82.209.203.205:3080/equip/dep/' + dep, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+        // body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+        .then(data => {
+            // categoryListObj = data;
+            console.log("dep:", data);
+            fillEquipTableByDep(data);
+        })
+        // .then(getListCategories)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+//          FUNCTION Fill Equip table by department
+// --------------------------------------------------------------------
+function fillEquipTableByDep(data) {
+
+    if (data.length > 0) {
+        let div = document.getElementById('div-dep-equip');
+        let tbl_head = document.getElementById('dep-equip');
+        let tbl = document.getElementById('tbl-equip-dep');
+        div.classList.remove('d-none');
+        let select_dep = document.getElementById('dep');
+        let dep_val = select_dep.options[select_dep.selectedIndex].text;
+        tbl_head.innerHTML = dep_val;
+        let tblBody = document.getElementById('tbody-equip-dep');
+        tblBody.innerHTML = "";
+
+        for (let i = 0; i < data.length; i++) {
+
+            let row = document.createElement('tr');
+
+            let cell = document.createElement("td");
+            cell.innerHTML = i;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].model_name;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty_minsk;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty_kazan;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty_msc;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty_piter;
+            row.appendChild(cell);
+
+            tblBody.appendChild(row)
+        }
+        tbl.append(tblBody)
+    }
+
+}
+
+function getCategoryEquipment(cat) {
+    let data = {};
+    data.id = cat;
+    // fetch('http://127.0.0.1:3080/equip/cat/' + cat, {
+    fetch('http://82.209.203.205:3080/equip/cat/' + cat, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            // categoryListObj = data;
+            console.log("cat:", data);
+            fillEquipTableByCat(data);
+        })
+        // .then(getListCategories)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+//          FUNCTION Fill Equip table by category
+// --------------------------------------------------------------------
+function fillEquipTableByCat(data) {
+    if (data.length > 0) {
+        let div = document.getElementById('div-cat-equip');
+        let tbl_head = document.getElementById('cat-equip');
+        let tbl = document.getElementById('tbl-equip-cat');
+        div.classList.remove('d-none');
+        let select_dep = document.getElementById('cat');
+        let dep_val = select_dep.options[select_dep.selectedIndex].text;
+        tbl_head.innerHTML = dep_val;
+        let tblBody = document.getElementById('tbody-equip-cat');
+        tblBody.innerHTML = "";
+
+        for (let i = 0; i < data.length; i++) {
+
+            let row = document.createElement('tr');
+
+            let cell = document.createElement("td");
+            cell.innerHTML = i;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].model_name;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty_minsk;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty_kazan;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty_msc;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].qty_piter;
+            row.appendChild(cell);
+
+            tblBody.appendChild(row)
+        }
+        tbl.append(tblBody)
+    }
 }

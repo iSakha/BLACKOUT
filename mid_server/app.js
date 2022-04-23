@@ -113,7 +113,13 @@ app.route('/equip/fxt').post((request, response) => {
     getListFixtures(request.body, response);
 });
 
-
+//  GET selected equipment for the event
+// --------------------------------------------------------------------
+app.route('/equip/selected/:id').get((request, response) => {
+    const eventId = request.params['id'];
+    getEquipmentEvent(eventId, response);
+    // response.send(request.body);
+});
 
 //          F U N C T I O N S
 // --------------------------------------------------------------------
@@ -303,6 +309,25 @@ function getListFixtures(cat, response) {
             console.log('fxt:', results);
             response.json(results);
             console.log("cat", cat);
+            connection.end();
+        });
+}
+
+function getEquipmentEvent(eventId, response) {
+    let data = [];
+    data.push(eventId)
+    let connection = mysql.createConnection(config);
+    connection.execute("SELECT * FROM v_event_fixtures WHERE event_id=?",
+        data,
+        function (err, results, fields) {
+            if (err) {
+                console.log('Check SSH tunnel!')
+                return console.log("Error: " + err.message);
+            }
+            console.log('results:', results);
+            response.json(results);
+            // equipmentObj = results;
+
             connection.end();
         });
 }
