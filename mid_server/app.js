@@ -121,6 +121,15 @@ app.route('/equip/selected/:id').get((request, response) => {
     // response.send(request.body);
 });
 
+//  READ Equipment using time interval
+// --------------------------------------------------------------------
+app.post("/equipment", urlencodedParser, function (request, response) {
+    if (!request.body) return response.sendStatus(400);
+    console.log("request.body", request.body);
+    return readEquipment(request.body, response);
+    // response.send(request.body);
+  });
+
 //          F U N C T I O N S
 // --------------------------------------------------------------------
 
@@ -331,6 +340,26 @@ function getEquipmentEvent(eventId, response) {
             connection.end();
         });
 }
+
+//  READ Equipment using time interval function
+// --------------------------------------------------------------------
+function readEquipment(interval, response) {
+    let connection = mysql.createConnection(config);
+    // connection.execute("SELECT * FROM v_event_fixtures",
+    connection.execute("CALL equip_calculation(?,?)",
+      [interval.start, interval.end],
+      function (err, results, fields) {
+        if (err) {
+          console.log('Check SSH tunnel!')
+          return console.log("Error: " + err.message);
+        }
+        equipmentObj = results[0];
+        // console.log(fullEquipObj); // results contains rows returned by server
+        response.send(equipmentObj);
+        connection.end();
+      }
+    )
+  }
 
 //          S E R V E R
 // --------------------------------------------------------------------

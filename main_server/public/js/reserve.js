@@ -1,6 +1,7 @@
-var CalendarList = [];
-var schedulesList = [];
-var selectedEvent = {};
+let CalendarList = [];
+let schedulesList = [];
+let selectedEvent = {};
+let eventEquipArr = [];
 
 document.addEventListener("DOMContentLoaded", getListDepartments);
 let departmentListObj = {};
@@ -53,7 +54,7 @@ function loadEventEquip(id) {
             eventEquipObj = data;
             console.log("Selected equipment:", data);
         })
-        // .then(getSelectedEventEquip)
+        .then(getSelectedEventEquip)
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
             console.log(error)
@@ -487,6 +488,7 @@ function fillEquipTableByCat(data) {
 
 function fillEquipEventTable(equip, tbl, tblBody) {
     console.log("fillEquipEventTable", equip);
+    eventEquipArr = equip;
     tblBody.innerHTML = "";
     for (let i = 0; i < equip.length; i++) {
 
@@ -507,7 +509,7 @@ function fillEquipEventTable(equip, tbl, tblBody) {
         row.appendChild(cell);
 
         cell = document.createElement("td");
-        cell.innerHTML = equip[i].qty;
+        cell.innerHTML = equip[i].selected_qty;
         row.appendChild(cell);
 
         tblBody.appendChild(row);
@@ -517,4 +519,142 @@ function fillEquipEventTable(equip, tbl, tblBody) {
     document.getElementById('div-equip-table').classList.remove("d-none");
 
     // console.log('eventEquipArr :', eventEquipArr);
+}
+
+function getSelectedEventEquip() {
+
+    document.getElementById('div-booking-equip').classList.remove("d-none");
+    let start = document.getElementById('start').value;
+    let end = document.getElementById('end').value;
+    loadEquipment(start, end);
+
+}
+
+function loadEquipment(start, end) {
+    let tbl = document.getElementById('booking-equip-table');
+    let tblBody = document.getElementById('booking-equip-table-body');
+    interval = {};
+    interval.start = start;
+    interval.end = end;
+
+    // console.log("interval:", interval);
+
+    let data = JSON.stringify(interval);
+    fetch('http://82.209.203.205:3080/equipment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: data
+    })
+        .then(res => res.json())
+        .then(data => {
+            // console.log("equipment using date:", data);
+            fillEquipTable(data, tbl, tblBody)
+        })
+        // .then(refresh)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+function fillEquipTable(equip, tbl, tblBody) {
+    console.log("fillEquipTable", equip);
+
+    tblBody.innerHTML = "";
+    for (let i = 0; i < equip.length; i++) {
+
+        let row = document.createElement('tr');
+        let cell = document.createElement("td");
+        cell.innerHTML = i + 1;
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cell.innerHTML = equip[i].fixture;
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cell.innerHTML = equip[i].storage_qty;
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cell.innerHTML = equip[i].result_qty;
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cell.innerHTML = equip[i].selected_qty;
+        row.appendChild(cell);
+
+        //     cell = document.createElement("td");
+        //     cell.classList.add('equip-tbl-cell');
+        //     cell.innerHTML = equip[i].fixture_name;
+        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
+        //         cell.classList.add('font-bold');
+        //     }
+        //     row.appendChild(cell);
+
+        //     cell = document.createElement("td");
+        //     cell.classList.add('equip-tbl-cell');
+        //     cell.innerHTML = equip[i].storage_qty;
+        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
+        //         cell.classList.add('d-none');
+        //     }
+        //     row.appendChild(cell);
+
+        //     cell = document.createElement("td");
+        //     cell.classList.add('equip-tbl-cell');
+        //     cell.innerHTML = equip[i].result_qty;
+        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
+        //         cell.classList.add('d-none');
+        //     }
+        //     row.appendChild(cell);
+
+        //     cell = document.createElement("td");
+        //     cell.classList.add('equip-tbl-cell');
+        //     cell.innerHTML = equip[i].selected_qty;
+        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
+        //         cell.classList.add('d-none');
+        //     }
+        //     row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.classList.add('equip-tbl-cell');
+            let newinputbox = document.createElement("input");
+            newinputbox.classList.add('txt-to-take')
+            newinputbox.value = getEventEquip(equip[i].fixture_type_id);
+            newinputbox.setAttribute("type", "text");
+            if (newinputbox.value > 0) {
+                row.classList.add("yellow");
+            }
+
+            cell.appendChild(newinputbox);
+
+        //     if (equip[i].fixture_id.slice(4, 7) === '000') {
+        //         cell.classList.add('d-none');
+        //     }
+
+            row.appendChild(cell);
+
+
+
+        tblBody.appendChild(row);
+
+
+    }
+    tbl.append(tblBody);
+
+    document.getElementById('div-equip-table').classList.remove("d-none");
+}
+
+function getEventEquip(id) {
+    // console.log(id);
+    let qty = 0;
+    for (let i = 0; i < eventEquipArr.length; i++) {
+        if (eventEquipArr[i].fixture_type_id === id) {
+            // console.log(eventEquipArr[i].selected_qty);
+            qty = eventEquipArr[i].selected_qty;
+        }
+    }
+    return qty;
 }
