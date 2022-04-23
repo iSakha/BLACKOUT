@@ -49,7 +49,7 @@ function loadEventEquip(id) {
     })
         .then(res => res.json())
         .then(data => {
-            // fillEquipEventTable(data, tbl, tblBody);
+            fillEquipEventTable(data, tbl, tblBody);
             eventEquipObj = data;
             console.log("Selected equipment:", data);
         })
@@ -483,4 +483,38 @@ function fillEquipTableByCat(data) {
         }
         tbl.append(tblBody)
     }
+}
+
+function fillEquipEventTable(equip, tbl, tblBody) {
+    console.log("fillEquipEventTable", equip);
+    tblBody.innerHTML = "";
+    for (let i = 0; i < equip.length; i++) {
+
+        // eventEquipArr.push(equip[i]);
+
+        let row = document.createElement('tr');
+
+        let cell = document.createElement("td");
+        cell.innerHTML = i + 1;
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cell.innerHTML = equip[i].fixture;
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cell.innerHTML = equip[i].event_name;
+        row.appendChild(cell);
+
+        cell = document.createElement("td");
+        cell.innerHTML = equip[i].qty;
+        row.appendChild(cell);
+
+        tblBody.appendChild(row);
+    }
+    tbl.append(tblBody);
+
+    document.getElementById('div-equip-table').classList.remove("d-none");
+
+    // console.log('eventEquipArr :', eventEquipArr);
 }
