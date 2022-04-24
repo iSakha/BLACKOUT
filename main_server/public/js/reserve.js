@@ -749,7 +749,7 @@ function getEventEquip(id) {
 function addSelectedEquipToDB() {
     console.log("addSelectedEquipToDB");
 
-    fetch('http://82.209.203.205:3080/eq/event', {
+    fetch('http://82.209.203.205:3080/equipment/event', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -770,7 +770,7 @@ function addSelectedEquipToDB() {
 }
 
 function updateSelectedEquipToDB() {
-    fetch('/events', {
+    fetch('http://82.209.203.205:3080/equipment/event', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -791,8 +791,8 @@ function updateSelectedEquipToDB() {
 }
 
 function addThenUpdateSelectedEquipToDB() {
-    fetch('/events', {
-        method: 'PUT',
+    fetch('http://82.209.203.205:3080/equipment/event', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
