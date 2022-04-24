@@ -118,20 +118,26 @@ tblEquip.addEventListener('click', (e) => {
         let old_value = txt.value;
         let new_value;
         let fxt_id = tr.children[0].innerHTML;
+        let maxQty = parseInt(tr.children[3].innerHTML);
         console.log(fxt_id);
         console.log('old_value', old_value);
-        if(!txt.disabled) {
-           txt.value = ""; 
+        if (!txt.disabled) {
+            txt.value = "";
         }
-        
+
         e.target.addEventListener('keydown', (e) => {
             if (e.keyCode == 13) {
-                    txt.blur();
-                }
+                txt.blur();
+            }
         })
 
         e.target.addEventListener('focusout', () => {
             new_value = txt.value;
+            if (new_value > maxQty) {
+                alert("Сколько-сколько?");
+                txt.value = old_value;
+                return;
+            }
             if (new_value == "") {
                 txt.value = old_value;
                 new_value = txt.value;
