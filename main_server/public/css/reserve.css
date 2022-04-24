@@ -7,6 +7,10 @@ h2 {
     background-color: yellow;
 }
 
+.pink {
+    background-color: rgb(250, 189, 83);
+}
+
 .my-custom-scrollbar {
     position: relative;
     height: 600px;

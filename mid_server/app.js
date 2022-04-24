@@ -130,6 +130,15 @@ app.post("/equipment", urlencodedParser, function (request, response) {
     // response.send(request.body);
   });
 
+  //  ADD Equipment to the Event
+// --------------------------------------------------------------------
+app.post("/eq/event", urlencodedParser, function (request, response) {
+    if (!request.body) return response.sendStatus(400);
+    // console.log("request.body", request.body);
+    return addEquipmentToEvent(request.body, response);
+    response.send(request.body);
+  });
+
 //          F U N C T I O N S
 // --------------------------------------------------------------------
 
@@ -359,6 +368,25 @@ function readEquipment(interval, response) {
         connection.end();
       }
     )
+  }
+
+  //  ADD Equipment to the Event function
+// --------------------------------------------------------------------
+function addEquipmentToEvent(data, response) {
+    console.log("data to add: ", data);
+    let dataArray = [];
+    let connection = mysql.createConnection(config);
+    for (let i = 0; i < data.length; i++) {    
+      dataArray.push([data[i].id_fxt, data[i].id_event, data[i].qty]);
+    }
+  
+    console.log("dataArray to add: ", dataArray);
+    const sql = "INSERT INTO t_selected_fixtures(id_fxt, id_event, qty) VALUES ?";
+    connection.query(sql, [dataArray], function (err, results) {
+      if (err) return console.log(err);
+    });
+    response.send(data);
+    connection.end();
   }
 
 //          S E R V E R
