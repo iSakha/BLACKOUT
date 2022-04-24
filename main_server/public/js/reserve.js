@@ -92,9 +92,9 @@ tbl.addEventListener('click', (e) => {
 
         loadEventEquip(selectedEventId);
         setDate(start, end);
-
+        document.getElementById('div-booking-equip').classList.remove("d-none");
     } else {
-        // document.getElementById('div-booking-equip').classList.add("d-none");
+
         // document.getElementById('btn-add-equip').classList.add("d-none");
         // document.querySelectorAll('.row')[0].classList.add("d-none");
         // document.querySelectorAll('.row')[1].classList.add("d-none");
