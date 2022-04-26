@@ -33,7 +33,7 @@ const urlencodedParser = express.urlencoded({ extended: false });
 //            Routing
 // ====================================================================
 app.route('/').get( (request, response) => {
-    response.send('<h2>my mid_server is running</h2>');
+    response.send('<h2>my mid_server_MVC is running</h2>');
 });
 
 //  READ calendars
@@ -42,11 +42,6 @@ app.route('/').get( (request, response) => {
     response.json(calendarsObj)
 });
 
-//  READ events
-// --------------------------------------------------------------------
-// app.route("/events").get((request, response) => {
-//     readEvents(response);
-// });
 app.use("/events", eventRouter);
 
 //  CREATE event
@@ -66,22 +61,22 @@ app.use("/events", eventRouter);
 //     // response.send(request.body);
 // });
 
-app.route("/events/:id").delete(urlencodedParser,(request, response) => {
-    if (!request.body) return response.sendStatus(400);
-    const eventId = request.params['id'];
-    // console.log("delete.request.body", request.body);
-    return deleteEvent(eventId, response);
-    // response.send(request.body);
-});
+// app.route("/events/:id").delete(urlencodedParser,(request, response) => {
+//     if (!request.body) return response.sendStatus(400);
+//     const eventId = request.params['id'];
+//     // console.log("delete.request.body", request.body);
+//     return deleteEvent(eventId, response);
+//     // response.send(request.body);
+// });
 
 //  UPDATE event
 // --------------------------------------------------------------------
-app.route("/events").put(urlencodedParser, (request, response) => {
-    if (!request.body) return response.sendStatus(400);
-    // console.log("update.request.body", request.body);
-    return updateEvent(request.body, response);
-    // response.send(request.body);
-});
+// app.route("/events").put(urlencodedParser, (request, response) => {
+//     if (!request.body) return response.sendStatus(400);
+//     // console.log("update.request.body", request.body);
+//     return updateEvent(request.body, response);
+//     // response.send(request.body);
+// });
 
 //  READ events SUMMARY
 // --------------------------------------------------------------------
