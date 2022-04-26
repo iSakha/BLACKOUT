@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", getListDepartments);
 let departmentListObj = {};
 let categoryListObj = {};
 
-
 //          Get List of Departments and Categories
 // --------------------------------------------------------------------
 function getListDepartments() {
@@ -183,8 +182,8 @@ function getFullDepartmentEquipment(dep) {
 }
 
 function getCategoryEquipment(cat) {
-    let data = {};
-    data.id = cat;
+    // let data = {};
+    // data.id = cat;
     // fetch('http://127.0.0.1:3080/equip/cat/' + cat, {
     fetch('http://82.209.203.205:3080/equip/cat/' + cat, {
         method: 'GET',

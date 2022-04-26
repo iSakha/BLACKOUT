@@ -213,9 +213,9 @@ function saveNewSchedule(e) {
 }
 
 function deleteSchedule(e) {
-    // console.log(e);
+    console.log("eventId:",e);
     eventId = e;
-    fetch('http://82.209.203.205:3080/events', {
+    fetch('http://82.209.203.205:3080/events/' + eventId, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
