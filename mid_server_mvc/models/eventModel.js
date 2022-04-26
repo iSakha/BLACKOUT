@@ -2,7 +2,6 @@ let dbConn = require('../config/config.js');
 
 let Event = function (event) {
 
-    this.id = event.id;
     this.title = event.title;
     this.calendarId = event.calendarId;
     this.start = event.start;
@@ -27,9 +26,12 @@ Event.getAllEvents = (result) =>{
 
 // create new event
 Event.createEvent = (eventReqData, result) =>{
-    // let dataArray = [data.calendarId, data.title, dateStartObj, dateEndObj, data.location];
-    // console.log("dataArray", dataArray);
-    dbConn.query('INSERT INTO t_events SET ? ', eventReqData, (err, res)=>{
+    // console.log("eventReqData:", eventReqData);
+    let dateStartObj = new Date(eventReqData.start);
+    let dateEndObj = new Date(eventReqData.end);
+    let dataArray = [eventReqData.calendarId, eventReqData.title, dateStartObj, dateEndObj, eventReqData.location, eventReqData.notes];
+    const sql = "INSERT INTO t_events(calendarId, title, start, end, location) VALUES(?, ?, ?, ?, ?)";
+    dbConn.query(sql, dataArray, (err, res)=>{
         if(err){
             console.log('Error while inserting data');
             result(null, err);
