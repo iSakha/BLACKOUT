@@ -9,6 +9,18 @@ app.use(express.urlencoded({ extended: false }));
 // --------------------------------------------------------------------
 equipRouter.get('/', equipController.getEquipment);
 
+//  READ ALL Departments
+// --------------------------------------------------------------------
+equipRouter.get('/dep', equipController.getDepartment);
+
+//  READ ALL Categories
+// --------------------------------------------------------------------
+equipRouter.get('/cat', equipController.getCategories);
+
+//  READ Categories by Department
+// --------------------------------------------------------------------
+// equipRouter.get('/cat/:dep_id', equipController.getCategoriesByDep);
+
 //  READ Equipment by Department
 // --------------------------------------------------------------------
 equipRouter.get('/:dep_id', equipController.getEquipmentByDep);

@@ -31,6 +31,32 @@ Equip.getEquipment = (result) =>{
     })
 }
 
+// get all departments
+Equip.getDepartment = (result) =>{
+    dbConn.query('SELECT * FROM t_department', (err, res)=>{
+        if(err){
+            console.log('Error while fetching department', err);
+            result(null,err);
+        }else{
+            console.log('Department fetched successfully');
+            result(null,res);
+        }
+    })
+}
+
+// get all categories
+Equip.getCategories = (result) =>{
+    dbConn.query('SELECT * FROM t_category', (err, res)=>{
+        if(err){
+            console.log('Error while fetching categories', err);
+            result(null,err);
+        }else{
+            console.log('Categories fetched successfully');
+            result(null,res);
+        }
+    })
+}
+
 // get equipment by dep
 Equip.getEquipmentByDep = (id, result)=>{
     dbConn.query('SELECT * FROM t_equipment WHERE department=?', id, (err, res)=>{
@@ -55,5 +81,10 @@ Equip.getEquipmentByDepAndCat = (result) =>{
         }
     })
 }
+
+
+
+
+
 
 module.exports = Equip;

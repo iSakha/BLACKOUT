@@ -12,6 +12,26 @@ exports.getEquipment = (req, res)=> {
     })
 }
 
+// get all departments
+exports.getDepartment = (req, res)=> {
+    equipModel.getDepartment((err, equip) =>{
+        if(err)
+        res.send(err);
+        console.log('Department', equip);
+        res.send(equip)
+    })
+}
+
+// get all categories
+exports.getCategories = (req, res)=> {
+    equipModel.getCategories((err, equip) =>{
+        if(err)
+        res.send(err);
+        console.log('Categories', equip);
+        res.send(equip)
+    })
+}
+
 // get equipment by dep
 exports.getEquipmentByDep = (req, res)=> {
     equipModel.getEquipmentByDep(req.params.dep_id, (err, equip)=>{
