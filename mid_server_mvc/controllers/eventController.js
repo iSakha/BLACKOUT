@@ -5,11 +5,11 @@ const eventModel = require('../models/eventModel.js');
 // get all events list
 exports.getEvents = (req, res)=> {
     //console.log('here all employees list');
-    eventModel.getAllEvents((err, events) =>{
+    eventModel.getEvents((err, events) =>{
         console.log('We are here');
         if(err)
         res.send(err);
-        console.log('Employees', events);
+        console.log('Events', events);
         res.send(events)
     })
 }

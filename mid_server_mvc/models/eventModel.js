@@ -12,7 +12,7 @@ let Event = function (event) {
 }
 
 // get all events
-Event.getAllEvents = (result) =>{
+Event.getEvents = (result) =>{
     dbConn.query('SELECT * FROM v_events', (err, res)=>{
         if(err){
             console.log('Error while fetching events', err);
