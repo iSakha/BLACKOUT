@@ -57,6 +57,18 @@ Equip.getCategories = (result) =>{
     })
 }
 
+// get categories by dep
+Equip.getCategoriesByDep = (id, result)=>{
+    dbConn.query('SELECT * FROM t_category WHERE dep_id=?', id, (err, res)=>{
+        if(err){
+            console.log('Error while fetching categories by dep', err);
+            result(null, err);
+        }else{
+            result(null, res);
+        }
+    })
+}
+
 // get equipment by dep
 Equip.getEquipmentByDep = (id, result)=>{
     dbConn.query('SELECT * FROM t_equipment WHERE department=?', id, (err, res)=>{

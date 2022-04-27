@@ -19,7 +19,7 @@ equipRouter.get('/cat', equipController.getCategories);
 
 //  READ Categories by Department
 // --------------------------------------------------------------------
-// equipRouter.get('/cat/:dep_id', equipController.getCategoriesByDep);
+equipRouter.get('/cat/:dep_id', equipController.getCategoriesByDep);
 
 //  READ Equipment by Department
 // --------------------------------------------------------------------
