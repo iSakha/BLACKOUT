@@ -31,4 +31,29 @@ Equip.getEquipment = (result) =>{
     })
 }
 
+// get equipment by dep
+Equip.getEquipmentByDep = (id, result)=>{
+    dbConn.query('SELECT * FROM t_equipment WHERE department=?', id, (err, res)=>{
+        if(err){
+            console.log('Error while fetching equipment by dep', err);
+            result(null, err);
+        }else{
+            result(null, res);
+        }
+    })
+}
+
+// get equipment by dep and cat
+Equip.getEquipmentByDepAndCat = (result) =>{
+    dbConn.query('SELECT * FROM t_equipment', (err, res)=>{
+        if(err){
+            console.log('Error while fetching equipment', err);
+            result(null,err);
+        }else{
+            console.log('Equipment fetched successfully');
+            result(null,res);
+        }
+    })
+}
+
 module.exports = Equip;
