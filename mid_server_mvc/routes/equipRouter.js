@@ -27,7 +27,12 @@ equipRouter.get('/:dep_id', equipController.getEquipmentByDep);
 
 //  READ Equipment by Department and Category
 // --------------------------------------------------------------------
-equipRouter.get('/', equipController.getEquipmentByDepAndCat);
+equipRouter.get('/:dep_id/:cat_id', equipController.getEquipmentByDepAndCat);
+
+//  READ Equipment by Department, Category and Fixture type
+// --------------------------------------------------------------------
+equipRouter.get('/:dep_id/:cat_id/:ftype_id', equipController.getEquipmentByDepCatFType);
+
 
 
 module.exports = equipRouter;

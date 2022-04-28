@@ -5,6 +5,7 @@ let Equip = function (equip) {
     this.department = equip.department;
     this.category = equip.category;
     this.fixture_type = equip.fixture_type;
+    this.fixture_id = equip.fixture_id;
     this.equip_id = equip.equip_id;
     this.uid_cloudio = equip.uid_cloudio;
     this.manufactor = equip.manufactor;
@@ -20,7 +21,7 @@ let Equip = function (equip) {
 
 // get all equipment
 Equip.getEquipment = (result) =>{
-    dbConn.query('SELECT * FROM t_equipment', (err, res)=>{
+    dbConn.query('SELECT * FROM t_equipment_c', (err, res)=>{
         if(err){
             console.log('Error while fetching equipment', err);
             result(null,err);
@@ -46,7 +47,7 @@ Equip.getDepartment = (result) =>{
 
 // get all categories
 Equip.getCategories = (result) =>{
-    dbConn.query('SELECT * FROM t_category', (err, res)=>{
+    dbConn.query('SELECT * FROM t_category_c', (err, res)=>{
         if(err){
             console.log('Error while fetching categories', err);
             result(null,err);
@@ -59,7 +60,7 @@ Equip.getCategories = (result) =>{
 
 // get categories by dep
 Equip.getCategoriesByDep = (id, result)=>{
-    dbConn.query('SELECT * FROM t_category WHERE dep_id=?', id, (err, res)=>{
+    dbConn.query('SELECT * FROM t_category_c WHERE dep_id=?', id, (err, res)=>{
         if(err){
             console.log('Error while fetching categories by dep', err);
             result(null, err);
@@ -71,7 +72,7 @@ Equip.getCategoriesByDep = (id, result)=>{
 
 // get equipment by dep
 Equip.getEquipmentByDep = (id, result)=>{
-    dbConn.query('SELECT * FROM t_equipment WHERE department=?', id, (err, res)=>{
+    dbConn.query('SELECT * FROM t_equipment_c WHERE department=?', id, (err, res)=>{
         if(err){
             console.log('Error while fetching equipment by dep', err);
             result(null, err);
@@ -82,20 +83,34 @@ Equip.getEquipmentByDep = (id, result)=>{
 }
 
 // get equipment by dep and cat
-Equip.getEquipmentByDepAndCat = (result) =>{
-    dbConn.query('SELECT * FROM t_equipment', (err, res)=>{
+Equip.getEquipmentByDepAndCat = (id_dep, id_cat, result) =>{
+    let dataArray = [id_dep, id_cat];
+    const sql = "SELECT * FROM t_equipment_c WHERE department=? AND category=?";
+    dbConn.query(sql, dataArray, (err, res)=>{
         if(err){
-            console.log('Error while fetching equipment', err);
-            result(null,err);
+            console.log('Error while updating the event');
+            result(null, err);
         }else{
-            console.log('Equipment fetched successfully');
-            result(null,res);
+            console.log("Event updated successfully");
+            result(null, res);
         }
-    })
+    });
 }
 
-
-
+// get equipment by dep, cat and fixture type
+Equip.getEquipmentByDepCatFType = (id_dep, id_cat, id_ftype, result) =>{
+    let dataArray = [id_dep, id_cat, id_ftype];
+    const sql = "SELECT * FROM t_equipment_c WHERE department=? AND category=? AND fixture_type=?";
+    dbConn.query(sql, dataArray, (err, res)=>{
+        if(err){
+            console.log('Error while getting equipment');
+            result(null, err);
+        }else{
+            console.log("Equipment got successfully");
+            result(null, res);
+        }
+    });
+}
 
 
 

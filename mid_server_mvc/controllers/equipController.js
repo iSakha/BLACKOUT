@@ -54,10 +54,20 @@ exports.getEquipmentByDep = (req, res)=> {
 
 // get equipment by dep and cat
 exports.getEquipmentByDepAndCat = (req, res)=> {
-    equipModel.getEquipmentByDepAndCat((err, equip) =>{
+    equipModel.getEquipmentByDepAndCat(req.params.dep_id, req.params.cat_id, (err, equip)=>{
         if(err)
         res.send(err);
-        console.log('Equipment', equip);
+        console.log('Equipment by department and category',equip);
+        res.send(equip)
+    })
+}
+
+// get equipment by dep cat and fixture type
+exports.getEquipmentByDepCatFType = (req, res)=> {
+    equipModel.getEquipmentByDepCatFType(req.params.dep_id, req.params.cat_id, req.params.ftype_id, (err, equip)=>{
+        if(err)
+        res.send(err);
+        console.log('Equipment by department,category and fixture type',equip);
         res.send(equip)
     })
 }
