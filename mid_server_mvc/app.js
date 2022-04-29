@@ -45,33 +45,6 @@ app.use("/events", eventRouter);
 app.use("/equip", equipRouter);
 
 
-//  GET equipment
-// --------------------------------------------------------------------
-app.route('/equip/dep').get( (request, response) => {
-    console.log('get/equip');
-    getListDepartmets(response);
-});
-
-app.route('/equip/dep/:id').get((request, response) => {
-    const depId = request.params['id'];
-    getEquipmentDep(depId, response);
-    // response.send(request.body);
-});
-
-app.route('/equip/cat/:id').get((request, response) => {
-    const catId = request.params['id'];
-    getEquipmentCat(catId, response);
-    // response.send(request.body);
-});
-
-app.route('/equip/cat').get((request, response) => {
-    getListCategories(response);
-});
-
-app.route('/equip/fxt').post((request, response) => {
-    getListFixtures(request.body, response);
-});
-
 //  GET selected equipment for the event
 // --------------------------------------------------------------------
 app.route('/equip/selected/:id').get((request, response) => {

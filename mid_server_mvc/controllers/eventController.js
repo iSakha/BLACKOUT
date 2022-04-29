@@ -62,18 +62,40 @@ exports.getEventsSummary = (req, res)=> {
         // console.log('We are here');
         if(err)
         res.send(err);
-        console.log('Employees', events);
-        res.send(events)
+        console.log('Events', events);
+        res.send(events);
     })
 }
 
-// get employee by ID
+// get event by ID
 exports.getEventByID = (req, res)=>{
-    //console.log('get emp by id');
+    //console.log('get event by id');
     eventModel.getEventByID(req.params.id, (err, event)=>{
         if(err)
         res.send(err);
-        console.log('single employee data',event);
+        console.log('single event data',event);
         res.send(event);
+    })
+}
+
+// get events status for drop down
+exports.getEventsStatus = (req, res)=> {
+    eventModel.getEventsStatus((err, events) =>{
+        // console.log('We are here');
+        if(err)
+        res.send(err);
+        console.log('Status', events);
+        res.send(events);
+    })
+}
+
+// get events phase for drop down
+exports.getEventsPhase = (req, res)=> {
+    eventModel.getEventsPhase((err, events) =>{
+        // console.log('We are here');
+        if(err)
+        res.send(err);
+        console.log('Phase', events);
+        res.send(events);
     })
 }

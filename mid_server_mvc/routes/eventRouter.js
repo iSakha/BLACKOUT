@@ -27,7 +27,17 @@ eventRouter.put('/:id', eventController.updateEvent);
 eventRouter.get('/summary', eventController.getEventsSummary);
 
 // GET event by ID
-eventRouter.get('/:id',eventController.getEventByID);
+eventRouter.get('/id/:id',eventController.getEventByID);
+
+//  Get event status for drop down menu
+// --------------------------------------------------------------------
+eventRouter.get('/status/getstatus', eventController.getEventsStatus);
+
+//  Get event phase for drop down menu
+// --------------------------------------------------------------------
+eventRouter.get('/phase/getphase', eventController.getEventsPhase);
+
+
 
 
 module.exports = eventRouter;

@@ -1,0 +1,19 @@
+CREATE VIEW `v_events_c` AS
+
+SELECT 
+`t_events_c`.`id` AS `id`,
+`t_events_c`.`calendarId` AS `calendarId`,
+`t_events_c`.`title` AS `title`,
+`t_events_c`.`start` AS `start`,
+`t_events_c`.`end` AS `end`,
+`t_events_c`.`notes` AS `notes`,
+`t_events_c`.`location` AS `location`,
+`t_calendars`.`cal_name` AS `cal_name`,
+`t_event_status`.`status` AS `status`,
+`t_events_c`.`phase` AS `phase`
+ 
+FROM `t_events_c` 
+JOIN `t_calendars` 
+ON `t_events_c`.`calendarId` = `t_calendars`.`id`
+JOIN `t_event_status`
+ON `t_events_c`.`status` = `t_event_status`.`id`
