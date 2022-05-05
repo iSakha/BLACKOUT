@@ -6,7 +6,7 @@ const dbConn = mysql.createConnection({
   port: 23308,
   user: "black_user",
   password: "test_black",
-  database: "blackout"
+  database: "b_out"
 });
 
 dbConn.connect(function (error) {

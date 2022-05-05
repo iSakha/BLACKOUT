@@ -5,8 +5,11 @@ const mysql = require("mysql2");
 const app = express();
 const cors = require("cors");
 
+const dbConn = require('./config/config.js');
+
 const eventRouter = require("./routes/eventRouter.js");
 const equipRouter = require("./routes/equipRouter.js");
+const userRouter = require("./routes/userRouter.js");
 
 
 const PORT = 3070;
@@ -15,8 +18,10 @@ let equipmentObj = {};
 let eventsObj = {};
 
 let calendarsObj;
-let calendarsArray;
-let calendarsArrId;
+let eventStatusObj;
+let managersObj;
+let locationsObj;
+let phaseObj;
 
 app.use(cors());
 app.use(express.json());
@@ -26,23 +31,54 @@ app.use(express.urlencoded({ extended: false }));
 const urlencodedParser = express.urlencoded({ extended: false });
 
 
-// readCalendars();
+readCalendars();
+readEventStatus();
+readManagers();
+readLocations();
+readPhases();
 
-// ====================================================================
-//            Routing
-// ====================================================================
+
 app.route('/').get( (request, response) => {
     response.send('<h2>my mid_server_MVC is running</h2>');
 });
 
-//  READ calendars
+//  READ calendars (cities)
 // --------------------------------------------------------------------
-    app.route('/calendars').get((request, response) => {
-    response.json(calendarsObj)
+    app.route('/cities').get((request, response) => {
+    response.json(calendarsObj);
 });
+
+//  READ Event status
+// --------------------------------------------------------------------
+app.route('/status').get((request, response) => {
+    response.json(eventStatusObj);
+});
+
+//  READ Managers
+// --------------------------------------------------------------------
+app.route('/managers').get((request, response) => {
+    response.json(managersObj);
+});
+
+//  READ Locations
+// --------------------------------------------------------------------
+app.route('/locations').get((request, response) => {
+    response.json(locationsObj);
+});
+
+//  READ event phases
+// --------------------------------------------------------------------
+app.route('/phases').get((request, response) => {
+    response.json(phaseObj);
+});
+
+// ====================================================================
+//            Routing
+// ====================================================================
 
 app.use("/events", eventRouter);
 app.use("/equip", equipRouter);
+app.use("/login", userRouter);
 
 
 //  GET selected equipment for the event
@@ -83,31 +119,67 @@ app.patch("/equipment/event", urlencodedParser, function (request, response) {
 //          F U N C T I O N S
 // --------------------------------------------------------------------
 
-// function readCalendars() {
-//     let connection = mysql.createConnection(config);
-//     connection.execute("SELECT * FROM `t_calendars`",
-//         function (err, results, fields) {
-//             if (err) {
-//                 console.log('Check SSH tunnel!')
-//                 return console.log("Error: " + err.message);
-//             }
+function readCalendars() {
 
-//             calendarsObj = results;
-//             calendarsArray = [];
-//             calendarsArrId = [];
-//             for (let i = 0; i < calendarsObj.length; i++) {
-//                 calendarsArray.push(calendarsObj[i].cal_name);
-//                 calendarsArrId.push(calendarsObj[i].id);
-//             }
+    dbConn.query('SELECT * FROM t_calendars', (err, result)=>{
+        if(err){
+            console.log('Error while fetching events', err);
+        }else{
+            console.log('Calendars fetched successfully');
+            calendarsObj = result;
+            console.log(calendarsObj);
+        }
+    })
+}
 
-//             console.log('calendars array:', calendarsArray);
-//             console.log('calendarsID array:', calendarsArrId);
+function readEventStatus() {
 
-//             connection.end();
-//         });
-// }
+    dbConn.query('SELECT * FROM t_event_status', (err, result)=>{
+        if(err){
+            console.log('Error while fetching events', err);
+        }else{
+            console.log('Event status fetched successfully');
+            eventStatusObj = result;
+            console.log(eventStatusObj);
+        }
+    })
+}
 
+function readManagers() {
+    dbConn.query('SELECT * FROM v_managers', (err, result)=>{
+        if(err){
+            console.log('Error while fetching managers', err);
+        }else{
+            console.log('Managers fetched successfully');
+            managersObj = result;
+            console.log(managersObj);
+        }
+    })
+}
 
+function readLocations() {
+    dbConn.query('SELECT * FROM v_event_location', (err, result)=>{
+        if(err){
+            console.log('Error while fetching locations', err);
+        }else{
+            console.log('Locations fetched successfully');
+            locationsObj = result;
+            console.log(locationsObj);
+        }
+    })
+}
+
+function readPhases() {
+    dbConn.query('SELECT * FROM t_event_phase', (err, result)=>{
+        if(err){
+            console.log('Error while fetching phases', err);
+        }else{
+            console.log('Phasess fetched successfully');
+            phaseObj = result;
+            console.log(phaseObj);
+        }
+    })
+}
 // function getEquipmentDep(depId, response) {
 //     let data = [];
 //     data.push(depId)
