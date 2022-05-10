@@ -71,3 +71,13 @@ exports.getEquipmentByDepCatFType = (req, res)=> {
         res.send(equip)
     })
 }
+
+// write transferring equipment to DB
+// exports.writeTransEquipment = (req, res)=> {
+//     equipModel.getEquipmentByDepCatFType(req.body, (err, equip)=>{
+//         if(err)
+//         res.send(err);
+//         console.log('Transferring equipment');
+//         res.send({"message": "success"});
+//     })
+// }
