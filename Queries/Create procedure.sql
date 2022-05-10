@@ -1,0 +1,8 @@
+DELIMITER $$
+
+CREATE PROCEDURE GetAllValues()
+BEGIN
+	SELECT *  FROM t_equip_name_qty;
+END $$
+
+DELIMITER ;
