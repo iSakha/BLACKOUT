@@ -37,6 +37,10 @@ eventRouter.get('/status/getstatus', eventController.getEventsStatus);
 // --------------------------------------------------------------------
 eventRouter.get('/phase/getphase', eventController.getEventsPhase);
 
+//  Get event locations
+// --------------------------------------------------------------------
+eventRouter.get('/locations', eventController.getEventLocations);
+
 
 
 
