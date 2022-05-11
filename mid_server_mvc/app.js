@@ -121,7 +121,7 @@ app.patch("/equip/transfer", urlencodedParser, function (request, response) {
 
 function readCalendars() {
 
-    dbConn.query('SELECT * FROM t_calendars', (err, result) => {
+    dbConn.query('SELECT * FROM t_warehouses', (err, result) => {
         if (err) {
             console.log('Error while fetching events', err);
         } else {
