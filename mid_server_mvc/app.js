@@ -21,7 +21,7 @@ let calendarsObj;
 let eventStatusObj;
 let managersObj;
 let locationsObj;
-let phaseObj;
+let clientObj;
 
 app.use(cors());
 app.use(express.json());
@@ -35,7 +35,7 @@ readCalendars();
 readEventStatus();
 readManagers();
 readLocations();
-readPhases();
+readClients();
 
 
 app.route('/').get((request, response) => {
@@ -66,10 +66,10 @@ app.route('/locations').get((request, response) => {
     response.json(locationsObj);
 });
 
-//  READ event phases
+//  READ clients
 // --------------------------------------------------------------------
-app.route('/phases').get((request, response) => {
-    response.json(phaseObj);
+app.route('/clients').get((request, response) => {
+    response.json(clientObj);
 });
 
 // ====================================================================
@@ -121,7 +121,7 @@ app.patch("/equip/transfer", urlencodedParser, function (request, response) {
 
 function readCalendars() {
 
-    dbConn.query('SELECT * FROM t_calendars', (err, result) => {
+    dbConn.query('SELECT * FROM t_warehouses', (err, result) => {
         if (err) {
             console.log('Error while fetching events', err);
         } else {
@@ -169,14 +169,14 @@ function readLocations() {
     })
 }
 
-function readPhases() {
-    dbConn.query('SELECT * FROM t_event_phase', (err, result) => {
+function readClients() {
+    dbConn.query('SELECT * FROM t_clients', (err, result) => {
         if (err) {
-            console.log('Error while fetching phases', err);
+            console.log('Error while fetching clients', err);
         } else {
-            console.log('Phasess fetched successfully');
-            phaseObj = result;
-            console.log(phaseObj);
+            console.log('Clients fetched successfully');
+            clientObj = result;
+            console.log(clientObj);
         }
     })
 }
