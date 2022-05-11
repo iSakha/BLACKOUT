@@ -33,6 +33,17 @@ equipRouter.get('/:dep_id/:cat_id', equipController.getEquipmentByDepAndCat);
 // --------------------------------------------------------------------
 equipRouter.get('/:dep_id/:cat_id/:ftype_id', equipController.getEquipmentByDepCatFType);
 
+//  WRITE transferring equipment to DB
+// --------------------------------------------------------------------
+// equipRouter.patch('/transfer', equipController.writeTransEquipment);
 
+    //  UPDATE Equipment to the Event
+// --------------------------------------------------------------------
+// app.patch("/equip/transfer", urlencodedParser, function (request, response) {
+//     if (!request.body) return response.sendStatus(400);
+//     console.log("request.body", request.body);
+//     // return updateEquipmentToEvent(request.body, response);
+//     response.send(request.body);
+//   });
 
 module.exports = equipRouter;
