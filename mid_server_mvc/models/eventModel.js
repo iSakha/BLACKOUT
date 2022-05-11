@@ -133,5 +133,18 @@ Event.getEventsPhase = (result) =>{
 }
 
 
+// get events locations
+Event.getEventLocations = (result) =>{
+    dbConn.query('SELECT * FROM v_event_location', (err, res)=>{
+        if(err){
+            console.log('Error while fetching events locations', err);
+            result(null,err);
+        }else{
+            console.log('Events locations fetched successfully');
+            result(null,res);
+        }
+    })
+}
+
 
 module.exports = Event;

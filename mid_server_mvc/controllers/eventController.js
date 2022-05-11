@@ -112,3 +112,14 @@ exports.getEventsPhase = (req, res) => {
         res.send(events);
     })
 }
+
+// get events locations
+exports.getEventLocations = (req, res) => {
+    eventModel.getEventLocations((err, locations) => {
+        // console.log('We are here');
+        if (err)
+            res.send(err);
+        console.log('Locations', locations);
+        res.send(locations);
+    })
+}
