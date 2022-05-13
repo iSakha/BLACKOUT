@@ -104,7 +104,7 @@ app.post("/equipment/event", urlencodedParser, function (request, response) {
     if (!request.body) return response.sendStatus(400);
     // console.log("request.body", request.body);
     return addEquipmentToEvent(request.body, response);
-    response.send(request.body);
+    // response.send(request.body);
 });
 
 //  UPDATE Equipment (transfer between warehouses)
