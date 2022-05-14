@@ -3,7 +3,7 @@ let dbConn = require('../config/config.js');
 let Event = function (event) {
 
     this.title = event.title;
-    this.calendarId = event.warehouseId;
+    this.warehouseId = event.warehouseId;
     this.start = event.start;
     this.end = event.end;
     this.notes = event.notes;
@@ -37,10 +37,10 @@ Event.createEvent = (eventReqData, result) =>{
     console.log("dateStartObj", dateStartObj)
     let dateEndObj = new Date(eventReqData.end);
     console.log("dateEndObj", dateEndObj)
-    let dataArray = [eventReqData.calendarId, eventReqData.title, dateStartObj, dateEndObj, eventReqData.location_city, eventReqData.location_place, eventReqData.notes, eventReqData.status, eventReqData.client, eventReqData.manager_1, eventReqData.manager_2, eventReqData.current_user];
+    let dataArray = [eventReqData.warehouseId, eventReqData.title, dateStartObj, dateEndObj, eventReqData.location_city, eventReqData.location_place, eventReqData.notes, eventReqData.status, eventReqData.client, eventReqData.manager_1, eventReqData.manager_2, eventReqData.current_user];
 
     // console.log("dataArray:", dataArray)
-    const sql = "INSERT INTO t_events(`calendarId`, `title`, `start`, `end`, `location_city`, `location_place`, `notes`, `status`, `client`, `manager_1`, `manager_2`, `current_user`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const sql = "INSERT INTO t_events(`warehouseId`, `title`, `start`, `end`, `location_city`, `location_place`, `notes`, `status`, `client`, `manager_1`, `manager_2`, `current_user`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     dbConn.query(sql, dataArray, (err, res)=>{
         if(err){
             console.log('Error while inserting data', err);
@@ -70,8 +70,8 @@ Event.deleteEvent = (id, result)=>{
 Event.updateEvent = (id, eventReqData, result)=>{
     let dateStartObj = new Date(eventReqData.start);
     let dateEndObj = new Date(eventReqData.end);
-    let dataArray = [eventReqData.calendarId, eventReqData.title, dateStartObj, dateEndObj, eventReqData.location_city, eventReqData.location_place, eventReqData.notes, eventReqData.status, eventReqData.client, eventReqData.manager_1, eventReqData.manager_2, eventReqData.current_user,id];
-    const sql = "UPDATE `t_events` SET `calendarId`=?, `title`=?, `start`=?, `end`=?, `location_city`=?, `location_place`=?, `notes`=?, `status`=?, `client`=?, `manager_1`=?, `manager_2`=?, `current_user`=? WHERE id=?";
+    let dataArray = [eventReqData.warehouseId, eventReqData.title, dateStartObj, dateEndObj, eventReqData.location_city, eventReqData.location_place, eventReqData.notes, eventReqData.status, eventReqData.client, eventReqData.manager_1, eventReqData.manager_2, eventReqData.current_user,id];
+    const sql = "UPDATE `t_events` SET `warehouseId`=?, `title`=?, `start`=?, `end`=?, `location_city`=?, `location_place`=?, `notes`=?, `status`=?, `client`=?, `manager_1`=?, `manager_2`=?, `current_user`=? WHERE id=?";
     dbConn.query(sql, dataArray, (err, res)=>{
         if(err){
             console.log('Error while updating the event', err);

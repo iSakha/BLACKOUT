@@ -69,6 +69,13 @@ app.route('/locations').get((request, response) => {
 //  READ clients
 // --------------------------------------------------------------------
 app.route('/clients').get((request, response) => {
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH");
+    response.setHeader("Access-Control-Allow-Credentials", true);
+    response.setHeader(
+        "Access-Control-Allow-Headers",
+        "X-Requested-With,content-type,Origin,Accept,Authorization"
+    );
     response.json(clientObj);
 });
 
