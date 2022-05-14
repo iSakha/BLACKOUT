@@ -26,8 +26,9 @@ exports.createNewEvent = (req, res) => {
         eventModel.createEvent(eventReqData, (err, event) => {
             if (err)
                 res.send(err);
-            res.json({ status: true, message: 'Event Created Successfully' })
-            // res.json({status: true, message: 'Event Created Successfully',data: event.insertId})
+                console.log("event:", event)
+            // res.json({ status: true, message: 'Event Created Successfully' })
+            res.json(eventReqData);
         })
         // res.json({status: true, message: 'Event Created Successfully'})
     }

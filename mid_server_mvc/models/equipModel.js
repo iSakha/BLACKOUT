@@ -47,7 +47,7 @@ Equip.getDepartment = (result) => {
 
 // get all categories
 Equip.getCategories = (result) => {
-    dbConn.query('SELECT * FROM t_category_c', (err, res) => {
+    dbConn.query('SELECT * FROM t_category', (err, res) => {
         if (err) {
             console.log('Error while fetching categories', err);
             result(null, err);
@@ -100,7 +100,7 @@ Equip.getEquipmentByDepAndCat = (id_dep, id_cat, result) => {
 // get equipment by dep, cat and fixture type
 Equip.getEquipmentByDepCatFType = (id_dep, id_cat, id_ftype, result) => {
     let dataArray = [id_dep, id_cat, id_ftype];
-    const sql = "SELECT * FROM t_equipment_c WHERE department=? AND category=? AND fixture_type=?";
+    const sql = "SELECT * FROM t_equipment WHERE department=? AND category=? AND fixture_type=?";
     dbConn.query(sql, dataArray, (err, res) => {
         if (err) {
             console.log('Error while getting equipment');
