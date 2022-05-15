@@ -54,6 +54,12 @@ app.route('/status').get((request, response) => {
     response.json(eventStatusObj);
 });
 
+//  GET event phases
+// --------------------------------------------------------------------
+app.route('/phases').get((request, response) => {
+    getPhases(response);
+});
+
 //  READ Managers
 // --------------------------------------------------------------------
 app.route('/managers').get((request, response) => {
@@ -69,6 +75,13 @@ app.route('/locations').get((request, response) => {
 //  READ clients
 // --------------------------------------------------------------------
 app.route('/clients').get((request, response) => {
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH");
+    response.setHeader("Access-Control-Allow-Credentials", true);
+    response.setHeader(
+        "Access-Control-Allow-Headers",
+        "X-Requested-With,content-type,Origin,Accept,Authorization"
+    );
     response.json(clientObj);
 });
 
@@ -115,6 +128,10 @@ app.patch("/equip/transfer", urlencodedParser, function (request, response) {
     return transferEquipment(request.body, response);
     // response.send(request.body);
 });
+
+//  GET event phases
+// --------------------------------------------------------------------
+
 
 //          F U N C T I O N S
 // --------------------------------------------------------------------
@@ -338,20 +355,52 @@ function transferEquipment(data, response) {
         const sql = "UPDATE t_equip_name_qty SET qty_minsk=?, qty_msc=?, qty_kazan=?, qty_piter=? WHERE fixture_type=?";
         dbConn.query(sql, dataArray, (err, result) => {
             if (err) {
-                console.log('Error while fetching locations', err);               
-                response.send({"result" : "error"});
+                console.log('Error while fetching locations', err);
+                response.send({ "result": "error" });
             } else {
-                console.log('Locations fetched successfully');               
-                
+                console.log('Locations fetched successfully');
+
             }
-            
+
         })
-    };   
-    response.send({"result" : "success"}); 
+    };
+    response.send({ "result": "success" });
 }
 
 
+// function getAllEvents(response) {
 
+//     let eventObj = [];
+//     dbConn.query('SELECT * FROM v_events', (err, res) => {
+//         if (err) {
+//             console.log('Error while fetching events', err);
+//         } else {
+//             eventObj = res;
+//             for (let i = 0; i < eventObj.length; i++) {
+//                 getPhases(eventObj[i]);
+//             }
+//         }
+//         // response.json(eventObj);
+//     })
+// }
+
+
+// function getPhases(eventObj) {
+//     let myEvent = [];
+//     let phaseObj = [];
+//     let id = eventObj.id;
+//     dbConn.query('SELECT * FROM v_event_details WHERE id_event=' + id, (err, res) => {
+//         if (err) {
+//             console.log('Error while fetching events phases', err);
+//         } else {
+//             console.log('Events phasesfetched successfully');
+//             console.log("phases: ", res);
+//             phaseObj = res;
+//         }
+//         console.log("phaseObj: ", phaseObj);
+//     })
+//     response.json(eventObj);
+// }
 
 //          S E R V E R
 // --------------------------------------------------------------------
