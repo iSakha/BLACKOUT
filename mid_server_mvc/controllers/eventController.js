@@ -6,9 +6,8 @@ const eventModel = require('../models/eventModel.js');
 exports.getEvents = (req, res) => {
     //console.log('here all employees list');
     eventModel.getEvents((err, events) => {
-        console.log('We are here');
         if (err)
-            res.send(err);
+            res.send("getEvents error:" ,err);
         console.log('Events', events);
         res.send(events)
     })
@@ -25,7 +24,7 @@ exports.createNewEvent = (req, res) => {
     } else {
         eventModel.createEvent(eventReqData, (err, event) => {
             if (err)
-                res.send(err);
+                res.send("createEvent error:" ,err);
             res.json({ status: true, message: 'Event Created Successfully' })
             // res.json({status: true, message: 'Event Created Successfully',data: event.insertId})
         })
@@ -45,7 +44,7 @@ exports.deleteEvent = (req, res) => {
     let id = parseInt(req.params.id);
     eventModel.deleteEvent(id, (err, event) => {
         if (err)
-            res.send(err);
+            res.send("deleteEvent error:" ,err);
         res.json({ success: true, message: 'Event deleted successully!' });
     })
 }
@@ -63,7 +62,7 @@ exports.updateEvent = (req, res) => {
     } else {
         eventModel.updateEvent(id, eventReqData, (err, event) => {
             if (err)
-                res.send(err);
+            res.send("updateEvent error:" ,err);
             res.json({ status: true, message: 'Event updated Successfully' })
         })
     }
@@ -74,7 +73,7 @@ exports.getEventsSummary = (req, res) => {
     eventModel.getEventsSummary((err, events) => {
         // console.log('We are here');
         if (err)
-            res.send(err);
+            res.send("getEventsSummary error:" ,err);
         console.log('Events', events);
         res.send(events);
     })
@@ -85,7 +84,7 @@ exports.getEventByID = (req, res) => {
     //console.log('get event by id');
     eventModel.getEventByID(req.params.id, (err, event) => {
         if (err)
-            res.send(err);
+            res.send("getEventByID error:" ,err);
         console.log('single event data', event);
         res.send(event);
     })
@@ -96,7 +95,7 @@ exports.getEventsStatus = (req, res) => {
     eventModel.getEventsStatus((err, events) => {
         // console.log('We are here');
         if (err)
-            res.send(err);
+            res.send("getEventsStatus error:" ,err);
         console.log('Status', events);
         res.send(events);
     })
@@ -107,7 +106,7 @@ exports.getEventsPhase = (req, res) => {
     eventModel.getEventsPhase((err, events) => {
         // console.log('We are here');
         if (err)
-            res.send(err);
+            res.send("getEventsPhase error:" ,err);
         console.log('Phase', events);
         res.send(events);
     })
@@ -118,7 +117,7 @@ exports.getEventLocations = (req, res) => {
     eventModel.getEventLocations((err, locations) => {
         // console.log('We are here');
         if (err)
-            res.send(err);
+            res.send("getEventLocations error:" ,err);
         console.log('Locations', locations);
         res.send(locations);
     })
