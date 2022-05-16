@@ -31,11 +31,11 @@ app.use(express.urlencoded({ extended: false }));
 const urlencodedParser = express.urlencoded({ extended: false });
 
 
-readCalendars();
-readEventStatus();
-readManagers();
-readLocations();
-readClients();
+// readCalendars();
+// readEventStatus();
+// readManagers();
+// readLocations();
+// readClients();
 
 
 app.route('/').get((request, response) => {
@@ -46,6 +46,12 @@ app.route('/').get((request, response) => {
 // --------------------------------------------------------------------
 app.route('/cities').get((request, response) => {
     response.json(calendarsObj);
+});
+
+//  GET all events
+// --------------------------------------------------------------------
+app.route('/events').get((request, response) => {
+    getAllEvents(response);
 });
 
 //  READ Event status
@@ -368,23 +374,72 @@ function transferEquipment(data, response) {
 }
 
 
-// function getAllEvents(response) {
+function getAllEvents(response) {
+    let phase = [];
+    let eventObj = [];
+    dbConn.query('SELECT * FROM v_events', (err, res) => {
+        if (err) {
+            console.log('Error while fetching events', err);
+        } else {
+            eventObj = res;
+            // console.log(eventObj);
 
-//     let eventObj = [];
-//     dbConn.query('SELECT * FROM v_events', (err, res) => {
-//         if (err) {
-//             console.log('Error while fetching events', err);
-//         } else {
-//             eventObj = res;
-//             for (let i = 0; i < eventObj.length; i++) {
-//                 getPhases(eventObj[i]);
-//             }
-//         }
-//         // response.json(eventObj);
-//     })
-// }
+            // const uniques = eventObj.map(
+            //     (obj) => {
+            //         return obj.id
+            //     }
+            // ).filter(
+            //     (item, index, arr) => {
+            //         return arr.indexOf(item) == index
+            //     }
+            // );
 
 
+
+            // console.log("uniques:", uniques);
+
+            // for (let i = 0; i < uniques.length; i++) {
+
+            //     let eventObjId = eventObj.filter((p) => {
+            //         return p.id == uniques[i];
+            //     })
+
+            //     console.log("eventObjId", eventObjId, "i=", i);
+
+
+            //     for (let j = 0; j < eventObjId.length; j++) {
+            //         let ph = {};
+            //         ph.id = j + 1;
+            //         ph.id_phase = eventObj[j].id_phase;
+            //         ph.id_event = uniques[i]
+            //         ph.phase_title = eventObj[j].phase_title;
+            //         ph.phase_start = eventObj[j].phase_start;
+            //         ph.phase_end = eventObj[j].phase_end;
+
+            //         phase.push(ph);
+            //         // console.log("ph:", ph.phase_title, "uniques" + i, uniques[i]);
+            //         // console.log("ph:", ph);
+
+            //         // console.log("i=", i, " ", "j=", j);
+            //         // console.log("ph", ph);
+            //     }
+
+            //     eventObj[i].event_phase = phase;
+            // }
+
+        }
+
+        // const arr1 = getUniqueListBy(eventObj, 'id')
+        // console.log("eventObj:", eventObj);
+        response.json(eventObj);
+
+
+    })
+}
+
+function getUniqueListBy(arr, key) {
+    return [...new Map(arr.map(item => [item[key], item])).values()]
+}
 // function getPhases(eventObj) {
 //     let myEvent = [];
 //     let phaseObj = [];
@@ -401,6 +456,53 @@ function transferEquipment(data, response) {
 //     })
 //     response.json(eventObj);
 // }
+
+// const data = [{
+//     "Name": "Adobe Systems Incorporated",
+//     "Sector": "Technology",
+//     "Market": "NASDAQ"
+//   }, {
+//     "Name": "American River Bankshares",
+//     "Sector": "Finance",
+//     "Market": "NASDAQ"
+//   }, {
+//     "Name": "iStar Financial Inc.",
+//     "Sector": "n/a",
+//     "Market": "NYSE"
+//   }, {
+//     "Name": "Prothena Corporation plc",
+//     "Sector": "Health Care",
+//     "Market": "NASDAQ"
+//   }, {
+//     "Name": "Matrix Service Company",
+//     "Sector": "Basic Industries",
+//     "Market": "NASDAQ"
+//   }];
+
+//   console.log("data:",data);
+
+//   const uniques = data.map(
+//     (obj) => {
+//       return obj.Market
+//     }
+//   ).filter(
+//     (item, index, arr) => {
+//       return arr.indexOf(item) == index
+//     }
+//   );
+
+//   console.log("uniques:",uniques);
+
+const userScores = {
+    chemistry: 60,
+    mathematics: 70,
+    physics: 80,
+    english: 98
+};
+
+const names = Object.keys(userScores);
+console.log(names);
+
 
 //          S E R V E R
 // --------------------------------------------------------------------

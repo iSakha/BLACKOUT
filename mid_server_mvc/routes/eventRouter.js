@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //  READ events
 // --------------------------------------------------------------------
-eventRouter.get('/', eventController.getEvents);
+// eventRouter.get('/', eventController.getEvents);
 
 //  CREATE event
 // --------------------------------------------------------------------
