@@ -52,6 +52,9 @@ app.route('/cities').get((request, response) => {
 // --------------------------------------------------------------------
 app.route('/events').get((request, response) => {
     getAllEvents(response);
+    // response.json({
+    //     "result": "OK"
+    //     });
 });
 
 //  READ Event status
@@ -375,7 +378,7 @@ function transferEquipment(data, response) {
 
 
 function getAllEvents(response) {
-    let phase = [];
+    let sendingObject = [];
     let eventObj = [];
     dbConn.query('SELECT * FROM v_events', (err, res) => {
         if (err) {
@@ -384,54 +387,68 @@ function getAllEvents(response) {
             eventObj = res;
             // console.log(eventObj);
 
-            // const uniques = eventObj.map(
-            //     (obj) => {
-            //         return obj.id
-            //     }
-            // ).filter(
-            //     (item, index, arr) => {
-            //         return arr.indexOf(item) == index
-            //     }
-            // );
+            const uniques = eventObj.map(
+                (obj) => {
+                    return obj.id
+                }
+            ).filter(
+                (item, index, arr) => {
+                    return arr.indexOf(item) == index
+                }
+            );
+
+            console.log("uniques:", uniques);
+
+            
+
+            for (let i = 0; i < uniques.length; i++) {
+                let phase = [];
+                // filter by id
+                // =======================================
+                let eventObjId = eventObj.filter((p) => {
+                    return p.id == uniques[i];
+                })
+
+                let distinctEventObj = getUniqueListBy(eventObjId, 'id');
+
+                console.log("distinctEventObj-" + i, distinctEventObj);
+
+                console.log("eventObjId-" + i, eventObjId);
+
+                console.log("length-" + i, eventObjId.length);
+
+                for (let j = 0; j < eventObjId.length; j++) {
+
+                    let ph = {};
+                    ph.id = j + 1;
+                    ph.id_phase = eventObjId[j].id_phase;
+                    ph.id_event = uniques[i]
+                    ph.phase_title = eventObjId[j].phase_title;
+                    ph.phase_start = eventObjId[j].phase_start;
+                    ph.phase_end = eventObjId[j].phase_end;
+
+                    phase.push(ph);
+
+                }
+                let so = {};
+                so = distinctEventObj[0];
+                so.phase = phase;
 
 
-
-            // console.log("uniques:", uniques);
-
-            // for (let i = 0; i < uniques.length; i++) {
-
-            //     let eventObjId = eventObj.filter((p) => {
-            //         return p.id == uniques[i];
-            //     })
-
-            //     console.log("eventObjId", eventObjId, "i=", i);
+                sendingObject.push(so);
 
 
-            //     for (let j = 0; j < eventObjId.length; j++) {
-            //         let ph = {};
-            //         ph.id = j + 1;
-            //         ph.id_phase = eventObj[j].id_phase;
-            //         ph.id_event = uniques[i]
-            //         ph.phase_title = eventObj[j].phase_title;
-            //         ph.phase_start = eventObj[j].phase_start;
-            //         ph.phase_end = eventObj[j].phase_end;
+                console.log("phase-" + i, phase)
 
-            //         phase.push(ph);
-            //         // console.log("ph:", ph.phase_title, "uniques" + i, uniques[i]);
-            //         // console.log("ph:", ph);
+            }
 
-            //         // console.log("i=", i, " ", "j=", j);
-            //         // console.log("ph", ph);
-            //     }
-
-            //     eventObj[i].event_phase = phase;
-            // }
+            console.log("sendingObject", sendingObject)
 
         }
 
         // const arr1 = getUniqueListBy(eventObj, 'id')
         // console.log("eventObj:", eventObj);
-        response.json(eventObj);
+        response.json(sendingObject);
 
 
     })
@@ -440,6 +457,7 @@ function getAllEvents(response) {
 function getUniqueListBy(arr, key) {
     return [...new Map(arr.map(item => [item[key], item])).values()]
 }
+
 // function getPhases(eventObj) {
 //     let myEvent = [];
 //     let phaseObj = [];
