@@ -1,0 +1,14 @@
+CREATE TABLE `t_users` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`login` VARCHAR(70) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`pass` VARCHAR(70) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`firstName` VARCHAR(70) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`lastName` VARCHAR(70) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	`role` INT(5) NULL DEFAULT NULL,
+	`avatar` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+	PRIMARY KEY (`id`) USING BTREE
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=7
+;
