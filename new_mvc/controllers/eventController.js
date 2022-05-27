@@ -13,10 +13,8 @@ exports.getAllEvents = async (req, res) => {
 
 exports.createNewEvent = async (req, res) => {
 
-    
-
     try {
-        console.log("req.body:",req.body);
+        console.log("req.body:", req.body);
         // res.setHeader("Access-Control-Allow-Origin", "*");
         // res.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH, POST");
         // res.setHeader("Access-Control-Allow-Credentials", true);
@@ -24,8 +22,13 @@ exports.createNewEvent = async (req, res) => {
         //     "Access-Control-Allow-Headers",
         //     "X-Requested-With,content-type,Origin,Accept,Authorization"
         // );
-        
-        // let itemObj = { id: 4, item: "cheese" };
+
+        Object.keys(req.body).forEach((key) => {
+            if((req.body[key] == 'null') || (req.body[key] == '')) {
+                req.body[key] = null;
+            }            
+        });
+
         const [newEvent] = await Event.createEvent(req.body);
         // res.status(200).json({ "message": "created" });
         res.status(200).json(newEvent);
@@ -33,8 +36,9 @@ exports.createNewEvent = async (req, res) => {
 
     } catch (error) {
         if (!error.statusCode) {
-            console.log("error:",error);
+            console.log("error:", error);
             error.statusCode = 500;
+            res.status(500).json(error);
         }
     }
 }

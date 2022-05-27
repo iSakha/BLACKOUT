@@ -12,8 +12,13 @@ module.exports = class Event {
     }
 
     static createEvent(eventObj) {
-        console.log("eventObj:",eventObj);
-        return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, start) VALUES(?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.start]);
+        console.log("eventObj:", eventObj);
+        try {
+            return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, start, end, idManager_1) VALUES(?, ?, ?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.start, eventObj.end, eventObj.idManager_1]);
+        } catch (error) {
+            return error;
+        }
+
     }
 
 }
