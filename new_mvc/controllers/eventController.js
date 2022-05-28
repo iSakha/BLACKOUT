@@ -1,4 +1,5 @@
 const Event = require('../models/eventModel');
+const utils = require('../utils/utils')
 
 exports.getAllEvents = async (req, res) => {
     try {
@@ -23,13 +24,19 @@ exports.createNewEvent = async (req, res) => {
         //     "X-Requested-With,content-type,Origin,Accept,Authorization"
         // );
 
-        Object.keys(req.body).forEach((key) => {
-            if((req.body[key] == 'null') || (req.body[key] == '')) {
-                req.body[key] = null;
-            }            
-        });
+        let myEvent = new Event(req.body);
+        console.log("myEvent:", myEvent);
 
-        const [newEvent] = await Event.createEvent(req.body);
+        Object.keys(req.body).forEach((key) => {
+
+            myEvent[key] = req.body[key];
+
+        });
+        let now = utils.currentDateTime();
+        myEvent.createdAt = now.toString();
+
+
+        const [newEvent] = await Event.createEvent(myEvent);
         // res.status(200).json({ "message": "created" });
         res.status(200).json(newEvent);
 
