@@ -39,7 +39,14 @@ function currentDateTime() {
 
 }
 
+function createEventId() {
+    let d = new Date();
+    let utc = d.getTime().toString();
+    let id = utc.slice(0,11);
+    return id;
+}
 
 module.exports = {
-    currentDateTime: currentDateTime
+    currentDateTime: currentDateTime,
+    createEventId: createEventId
 };

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>CRUD events</h1>
+
+  <div class="container d-flex align-items-left flex-column">
+    <div class="row g-3 align-items-center">
+      <div class="col-4">
+        <label for="txt-event-id" class="form-label">ID проекта</label>
+        <input type="text" class="form-control" id="txt-event-id" disabled>
+      </div>
+      <div class="col-4">
+        <label for="txt-event-title" class="form-label">Название проекта</label>
+        <input type="text" class="form-control" id="txt-event-title">
+      </div>
+      <div class="col-4">
+        <label for="txt-event-user" class="form-label">Кто создал</label>
+        <input type="text" class="form-control" id="txt-event-user" disabled>
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center">
+      <div class="col-4">
+        <label for="date-event-start" class="form-label">Дата начала</label>
+        <input type="date" class="form-control" id="date-event-start">
+      </div>
+      <div class="col-4">
+        <label for="date-event-end" class="form-label">Дата окончания</label>
+        <input type="date" class="form-control" id="date-event-end">
+      </div>
+      <div class="col-4">
+        <label for="select-city" class="form-label" required>Склад отгрузки</label>
+        <select class="form-select" id="select-city">
+        </select>
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center">
+      <div class="col-2">
+        <label for="select-event-city" class="form-label">Время начала (часы)</label>
+        <select class="form-select" id="select-event-city">
+            <option selected></option>
+        </select>
+      </div>
+      <div class="col-2">
+        <label for="select-event-city" class="form-label">Время начала (минуты)</label>
+        <select class="form-select" id="select-event-city">
+            <option selected></option>
+        </select>
+      </div>
+      <div class="col-2">
+        <label for="select-event-city" class="form-label">Время окончания (часы)</label>
+        <select class="form-select" id="select-event-city">
+            <option selected></option>
+        </select>
+      </div>
+      <div class="col-2">
+        <label for="select-event-place" class="form-label">Время окончания (минуты)</label>
+        <select class="form-select" id="select-event-place">
+            <option selected></option>
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="select-event-client" class="form-label">Примечания</label>
+        <input type="text" class="form-control" id="txt-event-title">
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center">
+      <div class="col-4">
+        <label for="select-event-city" class="form-label">Город проведения</label>
+        <select class="form-select" id="select-event-city">
+            <option selected></option>
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="select-event-place" class="form-label">Площадка</label>
+        <select class="form-select" id="select-event-place">
+            <option selected></option>
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="select-event-client" class="form-label">Заказчик</label>
+        <select class="form-select" id="select-event-client">
+        </select>
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center">
+      <div class="col-4">
+        <label for="select-manager-1" class="form-label">Руководитель проекта</label>
+        <select class="form-select" id="select-manager-1">
+            <option selected></option>
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="select-manager-2" class="form-label">Менеджер проекта</label>
+        <select class="form-select" id="select-manager-2">
+            <option selected></option>
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="select-status" class="form-label">Выбрать статус</label>
+        <select class="form-select" id="select-status">
+        </select>
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center">
+
+  </div>
+  <script src="script.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

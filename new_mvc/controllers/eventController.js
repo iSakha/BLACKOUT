@@ -32,9 +32,9 @@ exports.createNewEvent = async (req, res) => {
             myEvent[key] = req.body[key];
 
         });
-        let now = utils.currentDateTime();
-        myEvent.createdAt = now.toString();
 
+        myEvent.createdAt = utils.currentDateTime();
+        myEvent.idEvent = utils.createEventId();
 
         const [newEvent] = await Event.createEvent(myEvent);
         // res.status(200).json({ "message": "created" });
