@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bootstrap demo</title>
+  <title>CRUD events</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
@@ -39,40 +39,96 @@
         <input type="date" class="form-control" id="date-event-end">
       </div>
       <div class="col-4">
-        <label for="select-city" class="form-label" required>Склад отгрузки</label>
-        <select class="form-select" id="select-city">
+        <label for="select-whouse" class="form-label" required>Склад отгрузки</label>
+        <select class="form-select" id="select-whouse">
         </select>
       </div>
     </div>
     <br>
     <div class="row g-3 align-items-center">
       <div class="col-2">
-        <label for="select-event-city" class="form-label">Время начала (часы)</label>
-        <select class="form-select" id="select-event-city">
-            <option selected></option>
+        <label for="select-time-start-h" class="form-label">Время начала (часы)</label>
+        <select class="form-select" id="select-time-start-h">
+          <option selected></option>
+          <option>00</option>
+          <option>01</option>
+          <option>02</option>
+          <option>03</option>
+          <option>04</option>
+          <option>05</option>
+          <option>06</option>
+          <option>07</option>
+          <option>08</option>
+          <option>09</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+          <option>13</option>
+          <option>14</option>
+          <option>15</option>
+          <option>16</option>
+          <option>17</option>
+          <option>18</option>
+          <option>19</option>
+          <option>20</option>
+          <option>21</option>
+          <option>22</option>
+          <option>23</option>
         </select>
       </div>
       <div class="col-2">
-        <label for="select-event-city" class="form-label">Время начала (минуты)</label>
-        <select class="form-select" id="select-event-city">
-            <option selected></option>
+        <label for="select-time-start-m" class="form-label">Время начала (минуты)</label>
+        <select class="form-select" id="select-time-start-m">
+          <option selected></option>
+          <option>00</option>
+          <option>15</option>
+          <option>30</option>
+          <option>45</option>
         </select>
       </div>
       <div class="col-2">
-        <label for="select-event-city" class="form-label">Время окончания (часы)</label>
-        <select class="form-select" id="select-event-city">
-            <option selected></option>
+        <label for="select-time-end-h" class="form-label">Время окончания (часы)</label>
+        <select class="form-select" id="select-time-end-h">
+          <option selected></option>
+          <option>00</option>
+          <option>01</option>
+          <option>02</option>
+          <option>03</option>
+          <option>04</option>
+          <option>05</option>
+          <option>06</option>
+          <option>07</option>
+          <option>08</option>
+          <option>09</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+          <option>13</option>
+          <option>14</option>
+          <option>15</option>
+          <option>16</option>
+          <option>17</option>
+          <option>18</option>
+          <option>19</option>
+          <option>20</option>
+          <option>21</option>
+          <option>22</option>
+          <option>23</option>
         </select>
       </div>
       <div class="col-2">
-        <label for="select-event-place" class="form-label">Время окончания (минуты)</label>
-        <select class="form-select" id="select-event-place">
-            <option selected></option>
+        <label for="select-time-end-m" class="form-label">Время окончания (минуты)</label>
+        <select class="form-select" id="select-time-end-m">
+          <option selected></option>
+          <option>00</option>
+          <option>15</option>
+          <option>30</option>
+          <option>45</option>
         </select>
       </div>
       <div class="col-4">
-        <label for="select-event-client" class="form-label">Примечания</label>
-        <input type="text" class="form-control" id="txt-event-title">
+        <label for="txt-notes" class="form-label">Примечания</label>
+        <input type="text" class="form-control" id="txt-notes">
       </div>
     </div>
     <br>
@@ -80,13 +136,13 @@
       <div class="col-4">
         <label for="select-event-city" class="form-label">Город проведения</label>
         <select class="form-select" id="select-event-city">
-            <option selected></option>
+          <option selected></option>
         </select>
       </div>
       <div class="col-4">
         <label for="select-event-place" class="form-label">Площадка</label>
         <select class="form-select" id="select-event-place">
-            <option selected></option>
+          <option selected></option>
         </select>
       </div>
       <div class="col-4">
@@ -100,13 +156,13 @@
       <div class="col-4">
         <label for="select-manager-1" class="form-label">Руководитель проекта</label>
         <select class="form-select" id="select-manager-1">
-            <option selected></option>
+          <option selected></option>
         </select>
       </div>
       <div class="col-4">
         <label for="select-manager-2" class="form-label">Менеджер проекта</label>
         <select class="form-select" id="select-manager-2">
-            <option selected></option>
+          <option selected></option>
         </select>
       </div>
       <div class="col-4">
@@ -117,13 +173,24 @@
     </div>
     <br>
     <div class="row g-3 align-items-center">
-
-  </div>
-  <script src="script.js">
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-    crossorigin="anonymous"></script>
+      <div class="col-3">
+        <button id="btn-event-create" type="button" class="btn btn-success">Create event</button>
+      </div>
+      <div class="col-3">
+        <button id="btn-event-read" type="button" class="btn btn-primary">Get all events</button>
+      </div>
+      <div class="col-3">
+        <button id="btn-trans-move" type="button" class="btn btn-warning">Update event</button>
+      </div>
+      <div class="col-3">
+        <button id="btn-trans-move" type="button" class="btn btn-danger">Delete event</button>
+      </div>
+    </div>
+    <script src="script.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+      crossorigin="anonymous"></script>
 </body>
 
 </html>

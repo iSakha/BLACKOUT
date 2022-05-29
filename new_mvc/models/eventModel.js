@@ -38,7 +38,22 @@ module.exports = class Event {
         } catch (error) {
             return error;
         }
+    }
 
+    static getLocations(){
+        return db.execute('SELECT * FROM `v_location`');
+    }
+
+    static getClients(){
+        return db.execute('SELECT * FROM `t_clients`');
+    }
+
+    static getUsers(){
+        return db.execute('SELECT * FROM `t_users`');
+    }
+
+    static getStatus(){
+        return db.execute('SELECT * FROM `t_status`');
     }
 
 }

@@ -49,3 +49,55 @@ exports.createNewEvent = async (req, res) => {
         }
     }
 }
+
+exports.getLocations = async (req, res) => {
+    try {
+        const [locations] = await Event.getLocations();
+        console.log(locations);
+        res.status(200).json(locations);
+    } catch (error) {
+        if (!error.statusCode) {
+            // error.statusCode = 500;
+            res.status(500).json(error);
+        }
+    }
+}
+
+exports.getClients = async (req, res) => {
+    try {
+        const [clients] = await Event.getClients();
+        console.log(clients);
+        res.status(200).json(clients);
+    } catch (error) {
+        if (!error.statusCode) {
+            // error.statusCode = 500;
+            res.status(500).json(error);
+        }
+    }
+}
+
+exports.getManagers = async (req, res) => {
+    try {
+        const [users] = await Event.getUsers();
+        console.log(users);
+        res.status(200).json(users);
+    } catch (error) {
+        if (!error.statusCode) {
+            // error.statusCode = 500;
+            res.status(500).json(error);
+        }
+    }
+}
+
+exports.getStatus = async (req, res) => {
+    try {
+        const [status] = await Event.getStatus();
+        console.log(status);
+        res.status(200).json(status);
+    } catch (error) {
+        if (!error.statusCode) {
+            // error.statusCode = 500;
+            res.status(500).json(error);
+        }
+    }
+}
