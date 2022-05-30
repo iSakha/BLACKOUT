@@ -4,8 +4,9 @@ const PORT = 3070;
 const URL = HOST + ':' + PORT;
 
 let eventLocations = {};
-let events = {};
+let eventObj = {};
 let selectedEventId;
+
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -32,8 +33,104 @@ document.getElementById('date-event-start').addEventListener('change', () => {
     document.getElementById('date-event-end').value = document.getElementById('date-event-start').value;
 });
 
+// Event object  
+//====================================================================
+
+document.getElementById('txt-event-title').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.title = e.target.value;
+    }else {
+        delete eventObj.title;
+    };
+});
+
+document.getElementById('date-event-start').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.start = e.target.value;
+    }else {
+        delete eventObj.start;
+    };
+});
+
+document.getElementById('date-event-end').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.end = e.target.value;
+    }else {
+        delete eventObj.end;
+    };
+});
+
+document.getElementById('select-whouse').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.idWarehouse = e.target.value;
+    }else {
+        delete eventObj.idWarehouse;
+    };
+});
+
+document.getElementById('txt-notes').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.notes = e.target.value;
+    }else {
+        delete eventObj.notes;
+    };
+});
+
+document.getElementById('select-event-city').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.idEventCity = e.target.value;
+    }else {
+        delete eventObj.idEventCity;
+    };
+});
+
+document.getElementById('select-event-place').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.idEventPlace = e.target.value;
+    }else {
+        delete eventObj.idEventPlace;
+    };
+});
+
+document.getElementById('select-event-client').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.idClient = e.target.value;
+    }else {
+        delete eventObj.idClient;
+    };
+});
+
+document.getElementById('select-manager-1').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.idManager_1 = e.target.value;
+    }else {
+        delete eventObj.idManager_1;
+    };
+});
+
+document.getElementById('select-manager-2').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.idManager_2 = e.target.value;
+    }else {
+        delete eventObj.idManager_2;
+    };
+});
+
+document.getElementById('select-status').addEventListener('change', (e) => {
+    if(e.target.value) {
+        eventObj.idStatus = e.target.value;
+    }else {
+        delete eventObj.idStatus;
+    };
+});
 
 
+//          C R U D
+//=====================================================================
+
+//  CREATE Event 
+//=====================================================================
+document.getElementById('btn-event-create').addEventListener('click', createEvent);
 
 
 
@@ -261,4 +358,45 @@ function loadSelectSource(data, select) {
         select.appendChild(opt);
 
     }
+}
+
+//  CREATE Event function
+//=====================================================================
+
+function createEvent() {
+
+    let start = document.getElementById('date-event-start').value;
+    let end = document.getElementById('date-event-end').value;
+
+    let startH = document.getElementById('select-time-start-h');
+    let startM = document.getElementById('select-time-start-m');
+    let endH = document.getElementById('select-time-end-h');
+    let endM = document.getElementById('select-time-end-m');
+
+    let hourStart = startH.options[startH.selectedIndex].value;
+    let hourEnd = startM.options[startM.selectedIndex].value;
+    let minStart = endH.options[endH.selectedIndex].value;
+    let minEnd = endM.options[endM.selectedIndex].value;
+
+    eventObj.start = start + "T" + hourStart + ":" + minStart + ":00";
+    eventObj.end = end + "T" + hourEnd + ":" + minEnd + ":00";
+
+    
+    console.log("eventObj:",eventObj);
+
+    fetch(URL + '/events', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',              
+        },
+        body: JSON.stringify(eventObj)
+    })
+        .then(res => res.json())
+        .then(data => {
+            console.log("data:", data);
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
 }

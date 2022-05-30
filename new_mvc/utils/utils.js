@@ -42,11 +42,18 @@ function currentDateTime() {
 function createEventId() {
     let d = new Date();
     let utc = d.getTime().toString();
-    let id = utc.slice(0,11);
+    let id = utc.slice(0, 11);
     return id;
+}
+
+function validateInputData(data) {
+    if((data.title !=null) && (data.idWarehouse !=null)) {
+        return true;
+    }else return false;
 }
 
 module.exports = {
     currentDateTime: currentDateTime,
-    createEventId: createEventId
+    createEventId: createEventId,
+    validateInputData: validateInputData
 };
