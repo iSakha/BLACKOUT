@@ -14,40 +14,47 @@ exports.getAllEvents = async (req, res) => {
 
 exports.createNewEvent = async (req, res) => {
 
-    try {
-        console.log("req.body:", req.body);
-        // res.setHeader("Access-Control-Allow-Origin", "*");
-        // res.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH, POST");
-        // res.setHeader("Access-Control-Allow-Credentials", true);
-        // res.setHeader(
-        //     "Access-Control-Allow-Headers",
-        //     "X-Requested-With,content-type,Origin,Accept,Authorization"
-        // );
+    if (utils.validateInputData(req.body)) {
 
-        let myEvent = new Event(req.body);
-        console.log("myEvent:", myEvent);
-
-        Object.keys(req.body).forEach((key) => {
-
-            myEvent[key] = req.body[key];
-
-        });
-
-        myEvent.createdAt = utils.currentDateTime();
-        myEvent.idEvent = utils.createEventId();
-
-        const [newEvent] = await Event.createEvent(myEvent);
-        // res.status(200).json({ "message": "created" });
-        res.status(200).json(newEvent);
+        try {
+            console.log("req.body:", req.body);
 
 
-    } catch (error) {
-        if (!error.statusCode) {
-            console.log("error:", error);
-            error.statusCode = 500;
-            res.status(500).json(error);
+            // res.setHeader("Access-Control-Allow-Origin", "*");
+            // res.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH, POST");
+            // res.setHeader("Access-Control-Allow-Credentials", true);
+            // res.setHeader(
+            //     "Access-Control-Allow-Headers",
+            //     "X-Requested-With,content-type,Origin,Accept,Authorization"
+            // );
+
+            let myEvent = new Event(req.body);
+            console.log("myEvent:", myEvent);
+
+            Object.keys(req.body).forEach((key) => {
+
+                myEvent[key] = req.body[key];
+
+            });
+
+            myEvent.createdAt = utils.currentDateTime();
+            myEvent.idEvent = utils.createEventId();
+
+            const [newEvent] = await Event.createEvent(myEvent);
+            // res.status(200).json({ "message": "created" });
+            res.status(200).json(newEvent);
+
+
+        } catch (error) {
+            if (!error.statusCode) {
+                console.log("error:", error);
+                error.statusCode = 500;
+                res.status(500).json(error);
+            }
         }
-    }
+    }else res.status(400).json("Не указаны обязательные поля");
+
+
 }
 
 exports.getLocations = async (req, res) => {
