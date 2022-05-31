@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 const urlencodedParser = express.urlencoded({ extended: false });
 
 
-// readCalendars();
+readCalendars();
 // readEventStatus();
 // readManagers();
 // readLocations();
