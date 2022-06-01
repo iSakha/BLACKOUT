@@ -1,8 +1,45 @@
 const Event = require('../models/eventModel');
-const utils = require('../utils/utils')
+const utils = require('../utils/utils');
+const jwt = require('jsonwebtoken');
 
+const accessTokenSecret = 'greatSecretForTokenAccessWith#-~';
+const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
+
+async function authenticateJWT(req, res, next) {
+    const authHeader = req.headers.authorization;
+    console.log("authHeader:",authHeader);
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+
+        jwt.verify(token, accessTokenSecret, (err, user) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+
+            req.user = user;
+            console.log("user:",user);
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
+
+
+
+// exports.getAllEvents = async (req, res) => {
+//     try {
+//         const [allEvents] = await Event.getAll();
+//         res.status(200).json(allEvents);
+//     } catch (error) {
+//         if (!error.statusCode) {
+//             error.statusCode = 500;
+//         }
+//     }
+// }
 exports.getAllEvents = async (req, res) => {
     try {
+        await authenticateJWT(req, res);
         const [allEvents] = await Event.getAll();
         res.status(200).json(allEvents);
     } catch (error) {
