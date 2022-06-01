@@ -43,13 +43,6 @@ exports.validateUser = async (req, res) => {
             }
         } else res.status(200).json({ "result": "Wrong password or login" });
 
-
-
-
-        // res.status(200).json(newEvent);
-
-
-
     } catch (error) {
         if (!error.statusCode) {
             console.log("error:", error);
@@ -57,7 +50,4 @@ exports.validateUser = async (req, res) => {
             res.status(500).json(error);
         }
     }
-
-
-
 }

@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const accessTokenSecret = 'greatSecretForTokenAccessWith#-~';
 const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
+
+
 async function authenticateJWT(req, res, next) {
     const authHeader = req.headers.authorization;
     console.log("authHeader:",authHeader);
@@ -13,15 +15,21 @@ async function authenticateJWT(req, res, next) {
 
         jwt.verify(token, accessTokenSecret, (err, user) => {
             if (err) {
-                return res.sendStatus(403);
+                // return res.sendStatus(403);
+                console.log(403);
+                return 403;
             }
 
             req.user = user;
             console.log("user:",user);
-            next();
+            // next();
+            console.log(200);
+            return 200;
         });
     } else {
-        res.sendStatus(401);
+        // res.sendStatus(401);
+        console.log(401);
+        return 401;
     }
 };
 
@@ -55,7 +63,7 @@ exports.createNewEvent = async (req, res) => {
 
         try {
             console.log("req.body:", req.body);
-
+            await authenticateJWT(req, res);
 
             // res.setHeader("Access-Control-Allow-Origin", "*");
             // res.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH, POST");
