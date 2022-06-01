@@ -7,6 +7,9 @@ let eventLocations = {};
 let eventObj = {};
 let selectedEventId;
 
+let accessToken;
+let refreshToken;
+
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -39,89 +42,89 @@ document.getElementById('date-event-start').addEventListener('change', () => {
 //====================================================================
 
 document.getElementById('txt-event-title').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.title = e.target.value;
-    }else {
+    } else {
         delete eventObj.title;
     };
 });
 
 document.getElementById('date-event-start').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.start = e.target.value;
-    }else {
+    } else {
         delete eventObj.start;
     };
 });
 
 document.getElementById('date-event-end').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.end = e.target.value;
-    }else {
+    } else {
         delete eventObj.end;
     };
 });
 
 document.getElementById('select-whouse').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.idWarehouse = e.target.value;
-    }else {
+    } else {
         delete eventObj.idWarehouse;
     };
 });
 
 document.getElementById('txt-notes').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.notes = e.target.value;
-    }else {
+    } else {
         delete eventObj.notes;
     };
 });
 
 document.getElementById('select-event-city').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.idEventCity = e.target.value;
-    }else {
+    } else {
         delete eventObj.idEventCity;
     };
 });
 
 document.getElementById('select-event-place').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.idEventPlace = e.target.value;
-    }else {
+    } else {
         delete eventObj.idEventPlace;
     };
 });
 
 document.getElementById('select-event-client').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.idClient = e.target.value;
-    }else {
+    } else {
         delete eventObj.idClient;
     };
 });
 
 document.getElementById('select-manager-1').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.idManager_1 = e.target.value;
-    }else {
+    } else {
         delete eventObj.idManager_1;
     };
 });
 
 document.getElementById('select-manager-2').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.idManager_2 = e.target.value;
-    }else {
+    } else {
         delete eventObj.idManager_2;
     };
 });
 
 document.getElementById('select-status').addEventListener('change', (e) => {
-    if(e.target.value) {
+    if (e.target.value) {
         eventObj.idStatus = e.target.value;
-    }else {
+    } else {
         delete eventObj.idStatus;
     };
 });
@@ -165,7 +168,7 @@ function loginUser() {
     fetch(URL + '/login', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',              
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(userObj)
     })
@@ -173,14 +176,16 @@ function loginUser() {
         .then(res => res.json())
         .then(data => {
             console.log(data);
-            if(data.result === "User validated") {
-               document.getElementById('lbl-user').innerHTML = "<h3>USER: " + userObj.login + "</h3>"; 
-            }else {
+            if ((data.accessToken != null) && (data.refreshToken != null)) {
+                document.getElementById('lbl-user').innerHTML = "<h3>USER: " + userObj.login + "</h3>";
+                accessToken = data.accessToken;
+                refreshToken = data.refreshToken;
+            } else {
                 alert('Wrong password or login!');
                 document.getElementById('txt-login').value = "";
                 document.getElementById('txt-pass').value = "";
             }
-            
+
         })
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
@@ -417,13 +422,15 @@ function createEvent() {
     eventObj.start = start + "T" + hourStart + ":" + minStart + ":00";
     eventObj.end = end + "T" + hourEnd + ":" + minEnd + ":00";
 
-    
-    console.log("eventObj:",eventObj);
+
+    console.log("eventObj:", eventObj);
 
     fetch(URL + '/events', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',              
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
+
         },
         body: JSON.stringify(eventObj)
     })
