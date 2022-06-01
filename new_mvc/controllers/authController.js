@@ -21,11 +21,11 @@ exports.validateUser = async (req, res) => {
             if (bcrypt.hashSync(passwordEnteredByUser, salt) === row[0].crypto) {
 
                 console.log("success!");
-                res.status(200).json({ "message": "User validated" });
+                res.status(200).json({ "result": "User validated" });
             } else {
-                res.status(200).json({ "message": "Failure" });
+                res.status(200).json({ "result": "Failure" });
             }
-        }else res.status(200).json({ "message": "Wrong password or login" });
+        }else res.status(200).json({ "result": "Wrong password or login" });
 
 
 

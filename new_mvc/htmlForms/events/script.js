@@ -10,6 +10,8 @@ let selectedEventId;
 
 document.addEventListener('DOMContentLoaded', init);
 
+document.getElementById('btn-login').addEventListener('click', loginUser);
+
 // dependent dropdown lists (event city => event place)
 //============================================================
 document.getElementById('select-event-city').addEventListener('change', (e) => {
@@ -150,6 +152,40 @@ function init() {
 
     document.getElementById('txt-event-user').value = "testUser";
 
+}
+
+function loginUser() {
+    let login = document.getElementById('txt-login').value;
+    let pass = document.getElementById('txt-pass').value;
+
+    let userObj = {};
+    userObj.login = login;
+    userObj.pass = pass;
+
+    fetch(URL + '/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',              
+        },
+        body: JSON.stringify(userObj)
+    })
+        .then(console.log(userObj))
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if(data.result === "User validated") {
+               document.getElementById('lbl-user').innerHTML = "<h3>USER: " + userObj.login + "</h3>"; 
+            }else {
+                alert('Wrong password or login!');
+                document.getElementById('txt-login').value = "";
+                document.getElementById('txt-pass').value = "";
+            }
+            
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
 
 
 }
