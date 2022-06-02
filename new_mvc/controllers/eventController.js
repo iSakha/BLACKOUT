@@ -9,45 +9,44 @@ const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
 async function authenticateJWT(req, res) {
     const authHeader = req.headers.authorization;
+
     if (authHeader) {
         const token = authHeader.split(' ')[1];
-        console.log("token:", token);
 
         jwt.verify(token, accessTokenSecret, (err, user) => {
             if (err) {
-                const payloadBase64 = token.split('.')[1];
-                const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
-                console.log("decodedJson:", decodedJson);
-                const decoded = JSON.parse(decodedJson)
-                const exp = decoded.exp;
-                console.log("exp:", decoded.exp);
-
-                if (Date.now() >= exp * 1000) {
-                    console.log("Expired!");
-                    // res.json("Token expired!");
-                    let ex = "Expired!"
-                    return ex;
-                }
-                return;
+                return res.sendStatus(403);
             }
+
             req.user = user;
-            console.log("user:", user);
-            console.log("message: OK");
-            console.log("Date.now():", Date.now());
-            return;
+            // next();
         });
     } else {
-        console.log("Unauthorized");
         res.sendStatus(401);
     }
-
-    return "Expired!";
 };
 
 
 
+exports.getAllEvents = async (req, res) => {
+    try {
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        const [allEvents] = await Event.getAll();
+        res.json(allEvents);
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+}
 // exports.getAllEvents = async (req, res) => {
 //     try {
+//         let result = await authenticateJWT(req, res);
+//         console.log("result:", result);
+//         if (result == "Expired!") {
+//             res.status(200).json({ "message": "Token expired!" });
+//         }
 //         const [allEvents] = await Event.getAll();
 //         res.status(200).json(allEvents);
 //     } catch (error) {
@@ -56,21 +55,6 @@ async function authenticateJWT(req, res) {
 //         }
 //     }
 // }
-exports.getAllEvents = async (req, res) => {
-    try {
-        let result = await authenticateJWT(req, res);
-        console.log("result:", result);
-        if (result == "Expired!") {
-            res.status(200).json({ "message": "Token expired!" });
-        }
-        const [allEvents] = await Event.getAll();
-        res.status(200).json(allEvents);
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-}
 
 exports.createNewEvent = async (req, res) => {
 

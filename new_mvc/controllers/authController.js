@@ -31,7 +31,7 @@ exports.validateUser = async (req, res) => {
                 user.password = row[0].crypto,
                 user.role = row[0].role
                 console.log(user);
-                const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '20m' });
+                const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '5m' });
                 const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
 
                 res.status(200).json({
@@ -50,4 +50,26 @@ exports.validateUser = async (req, res) => {
             res.status(500).json(error);
         }
     }
+}
+
+exports.updateToken = async (req, res) => {
+    const { token } = req.body;
+    // console.log(token );
+    if (!token) {
+        console.log("token 401:", token);
+        return res.sendStatus(401);
+    }
+    jwt.verify(token, refreshTokenSecret, (err, user) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+
+        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '5m' });
+        const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
+
+        res.json({
+            accessToken,
+            refreshToken
+        });
+    });
 }

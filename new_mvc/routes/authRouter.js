@@ -3,5 +3,6 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 
 router.post('/', authController.validateUser);
+router.post('/updatejwt', authController.updateToken);
 
 module.exports = router;

@@ -136,6 +136,7 @@ document.getElementById('select-status').addEventListener('change', (e) => {
 //  CREATE Event 
 //=====================================================================
 document.getElementById('btn-event-create').addEventListener('click', createEvent);
+document.getElementById('btn-event-read').addEventListener('click', getAllEvents);
 
 
 
@@ -158,6 +159,9 @@ function init() {
 }
 
 function loginUser() {
+    console.log('==========================================');
+    console.log('Login user');
+    console.log('GET http://127.0.0.1:3070/login');
     let login = document.getElementById('txt-login').value;
     let pass = document.getElementById('txt-pass').value;
 
@@ -197,8 +201,8 @@ function loginUser() {
 
 function checkConnectionToMySQL() {
 
-    console.log('Check connection to MySQL database');
     console.log('==========================================');
+    console.log('Check connection to MySQL database');
     console.log('GET http://127.0.0.1:3070/checkDBconn');
 
     fetch(URL + '/checkDBconn', {
@@ -221,9 +225,9 @@ function checkConnectionToMySQL() {
 
 function getListWarehouses() {
 
-    console.log("");
-    console.log('Get list of warehouses');
+    console.log(" ");
     console.log('==========================================');
+    console.log('Get list of warehouses');
     console.log('GET http://127.0.0.1:3070/warehouses');
 
     let selectWhouse = document.getElementById('select-whouse');
@@ -247,9 +251,9 @@ function getListWarehouses() {
 
 
 function getListLocations() {
-    console.log("");
-    console.log('Get list of locations');
+    console.log(" ");
     console.log('==========================================');
+    console.log('Get list of locations');
     console.log('GET http://127.0.0.1:3070/events/locations');
 
 
@@ -278,9 +282,9 @@ function getListLocations() {
 }
 
 function getListClients() {
-    console.log("");
-    console.log('Get list of clients');
+    console.log(" ");
     console.log('==========================================');
+    console.log('Get list of clients');
     console.log('GET http://127.0.0.1:3070/events/clients');
 
 
@@ -304,9 +308,9 @@ function getListClients() {
 }
 
 function getListManagers() {
-    console.log("");
-    console.log('Get list of users');
+    console.log(" ");
     console.log('==========================================');
+    console.log('Get list of users');
     console.log('GET http://127.0.0.1:3070/events/users');
 
 
@@ -331,9 +335,9 @@ function getListManagers() {
 }
 
 function getListStatus() {
-    console.log("");
-    console.log('Get list of status');
+    console.log(" ");
     console.log('==========================================');
+    console.log('Get list of status');
     console.log('GET http://127.0.0.1:3070/events/status');
 
 
@@ -405,14 +409,50 @@ function checkExpirationToken() {
     if (accessToken) {
         const jwtPayload = JSON.parse(window.atob(accessToken.split('.')[1]));
 
+        if (Date.now() > jwtPayload.exp) {
+            updateToken();
+        }
+
         console.log(jwtPayload.exp);
         console.log(jwtPayload);
-        // const payloadBase64 = accessToken.split('.')[1];
-        // const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
-        // const decoded = JSON.parse(decodedJson);
-        // const exp = decoded.exp;
-        // console.log("decoded:", decoded);
+
     }
+}
+
+function updateToken() {
+    console.log(" ");
+    console.log('==========================================');
+    console.log('Update token');
+    console.log('POST http://127.0.0.1:3070/login/updatejwt');
+    let tokenObj = {};
+    tokenObj.token = refreshToken;
+        fetch(URL + '/login/updatejwt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: tokenObj
+        })
+            .then(console.log(tokenObj))
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if ((data.accessToken != null) && (data.refreshToken != null)) {
+                    document.getElementById('lbl-user').innerHTML = "<h3>USER: " + userObj.login + "</h3>";
+                    accessToken = data.accessToken;
+                    refreshToken = data.refreshToken;
+                } else {
+                    alert('Something goes wrong!');
+                }
+    
+            })
+            .catch(error => {
+                // enter your logic for when there is an error (ex. error toast)
+                console.log(error)
+            })
+    
+    
+
 }
 
 //  CREATE Event function
@@ -440,6 +480,11 @@ function createEvent() {
     console.log("eventObj:", eventObj);
     checkExpirationToken();
 
+    console.log(" ");
+    console.log('==========================================');
+    console.log('Create event');
+    console.log('POST http://127.0.0.1:3070/events');
+
     fetch(URL + '/events', {
         method: 'POST',
         headers: {
@@ -456,5 +501,33 @@ function createEvent() {
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
             console.log(error)
+        })
+}
+
+//  GET All Events function
+//=====================================================================
+function getAllEvents() {
+
+    console.log(" ");
+    console.log('==========================================');
+    console.log('GET All Events');
+    console.log('GET http://127.0.0.1:3070/events');
+
+    fetch(URL + '/events', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            events = data
+            console.log("events:",data)
+            // loadEventsTable(events);
+        })
+        // .then(getSummary)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error);
         })
 }
