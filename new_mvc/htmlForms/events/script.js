@@ -401,6 +401,20 @@ function loadSelectSource(data, select) {
     }
 }
 
+function checkExpirationToken() {
+    if (accessToken) {
+        const jwtPayload = JSON.parse(window.atob(accessToken.split('.')[1]));
+
+        console.log(jwtPayload.exp);
+        console.log(jwtPayload);
+        // const payloadBase64 = accessToken.split('.')[1];
+        // const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
+        // const decoded = JSON.parse(decodedJson);
+        // const exp = decoded.exp;
+        // console.log("decoded:", decoded);
+    }
+}
+
 //  CREATE Event function
 //=====================================================================
 
@@ -424,6 +438,7 @@ function createEvent() {
 
 
     console.log("eventObj:", eventObj);
+    checkExpirationToken();
 
     fetch(URL + '/events', {
         method: 'POST',

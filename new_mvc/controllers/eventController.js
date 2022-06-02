@@ -7,30 +7,41 @@ const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
 
 
-async function authenticateJWT(req, res, next) {
+async function authenticateJWT(req, res) {
     const authHeader = req.headers.authorization;
-    console.log("authHeader:",authHeader);
     if (authHeader) {
         const token = authHeader.split(' ')[1];
+        console.log("token:", token);
 
         jwt.verify(token, accessTokenSecret, (err, user) => {
             if (err) {
-                // return res.sendStatus(403);
-                console.log(403);
-                return 403;
-            }
+                const payloadBase64 = token.split('.')[1];
+                const decodedJson = Buffer.from(payloadBase64, 'base64').toString();
+                console.log("decodedJson:", decodedJson);
+                const decoded = JSON.parse(decodedJson)
+                const exp = decoded.exp;
+                console.log("exp:", decoded.exp);
 
+                if (Date.now() >= exp * 1000) {
+                    console.log("Expired!");
+                    // res.json("Token expired!");
+                    let ex = "Expired!"
+                    return ex;
+                }
+                return;
+            }
             req.user = user;
-            console.log("user:",user);
-            // next();
-            console.log(200);
-            return 200;
+            console.log("user:", user);
+            console.log("message: OK");
+            console.log("Date.now():", Date.now());
+            return;
         });
     } else {
-        // res.sendStatus(401);
-        console.log(401);
-        return 401;
+        console.log("Unauthorized");
+        res.sendStatus(401);
     }
+
+    return "Expired!";
 };
 
 
@@ -47,7 +58,11 @@ async function authenticateJWT(req, res, next) {
 // }
 exports.getAllEvents = async (req, res) => {
     try {
-        await authenticateJWT(req, res);
+        let result = await authenticateJWT(req, res);
+        console.log("result:", result);
+        if (result == "Expired!") {
+            res.status(200).json({ "message": "Token expired!" });
+        }
         const [allEvents] = await Event.getAll();
         res.status(200).json(allEvents);
     } catch (error) {
@@ -97,7 +112,7 @@ exports.createNewEvent = async (req, res) => {
                 res.status(500).json(error);
             }
         }
-    }else res.status(400).json("Не указаны обязательные поля");
+    } else res.status(400).json("Не указаны обязательные поля");
 
 
 }
