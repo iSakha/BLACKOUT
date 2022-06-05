@@ -430,6 +430,8 @@ async function checkExpirationToken() {
 
 function updateToken() {
 
+    let p = new Promise((resolve, reject) => {
+
         console.log(" ");
         console.log('==========================================');
         console.log('Update token');
@@ -452,13 +454,15 @@ function updateToken() {
             .then(console.log("tokenObj:", tokenObj))
             .then(res => res.json())
             .then(data => {
-                console.log("updated tokens:", data);
+
                 if ((data.accessToken != null) && (data.refreshToken != null)) {
-                    console.log("We've got new tokens")
+                    console.log("We've got new tokens");
+                    console.log("updated tokens:", data);
                     accessToken = data.accessToken;
                     refreshToken = data.refreshToken;
 
-                    fetchAllEvents(accessToken);
+                    // fetchAllEvents(accessToken);
+                    resolve(accessToken);
 
                 } else {
                     alert('Something goes wrong!');
@@ -469,6 +473,11 @@ function updateToken() {
                 // enter your logic for when there is an error (ex. error toast)
                 console.log(error)
             })
+    })
+
+    return p;
+
+       
 
 }
 
@@ -567,7 +576,9 @@ async function getAllEvents() {
 
             console.log("before update accessToken:", accessToken);
 
-            updateToken();
+            updateToken()
+            .then(()=> fetchAllEvents(accessToken))
+
             break;
     }
 
