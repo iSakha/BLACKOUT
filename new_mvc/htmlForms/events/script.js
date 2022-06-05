@@ -158,6 +158,8 @@ function init() {
 
 }
 
+//  Login function 
+//=====================================================================
 function loginUser() {
     console.log('==========================================');
     console.log('Login user');
@@ -182,6 +184,7 @@ function loginUser() {
             console.log(data);
             if ((data.accessToken != null) && (data.refreshToken != null)) {
                 document.getElementById('lbl-user').innerHTML = "<h3>USER: " + userObj.login + "</h3>";
+
                 accessToken = data.accessToken;
                 refreshToken = data.refreshToken;
             } else {
@@ -199,6 +202,8 @@ function loginUser() {
 
 }
 
+//  CheckConnectionToMySQL function 
+//=====================================================================
 function checkConnectionToMySQL() {
 
     console.log('==========================================');
@@ -223,6 +228,8 @@ function checkConnectionToMySQL() {
         })
 }
 
+//  GetListWarehouses function 
+//=====================================================================
 function getListWarehouses() {
 
     console.log(" ");
@@ -249,7 +256,8 @@ function getListWarehouses() {
         })
 }
 
-
+//  GetListLocations function 
+//=====================================================================
 function getListLocations() {
     console.log(" ");
     console.log('==========================================');
@@ -281,6 +289,8 @@ function getListLocations() {
         })
 }
 
+//  GetListClients function 
+//=====================================================================
 function getListClients() {
     console.log(" ");
     console.log('==========================================');
@@ -307,6 +317,8 @@ function getListClients() {
         })
 }
 
+//  GetListManagers function 
+//=====================================================================
 function getListManagers() {
     console.log(" ");
     console.log('==========================================');
@@ -334,6 +346,8 @@ function getListManagers() {
         })
 }
 
+//  GetListStatus function 
+//=====================================================================
 function getListStatus() {
     console.log(" ");
     console.log('==========================================');
@@ -405,6 +419,8 @@ function loadSelectSource(data, select) {
     }
 }
 
+//  Create data source input function 
+//=====================================================================
 async function checkExpirationToken() {
 
     console.log(" ");
@@ -428,6 +444,19 @@ async function checkExpirationToken() {
     }
 }
 
+//  Create event table function 
+//=====================================================================
+function createEventTable(data) {
+    console.log(" ");
+    console.log('==========================================');
+    console.log('createEventTable');
+    console.log("data for table: ", data);
+
+    
+}
+
+//  updateToken function 
+//=====================================================================
 function updateToken() {
 
     let p = new Promise((resolve, reject) => {
@@ -477,10 +506,13 @@ function updateToken() {
 
     return p;
 
-       
+
 
 }
 
+//  FETCH functions 
+//=====================================================================
+//=====================================================================
 function fetchAllEvents(token) {
     fetch(URL + '/events', {
         method: 'GET',
@@ -493,14 +525,39 @@ function fetchAllEvents(token) {
         .then(data => {
             events = data
             console.log("events:", data)
-            // loadEventsTable(events);
+            createEventTable(events);
         })
         // .then(getSummary)
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
             console.log("error:", error);
         })
+        return events;
 }
+
+function fetchNewEvent(token) {
+    fetch(URL + '/events', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
+
+        },
+        body: JSON.stringify(eventObj)
+    })
+        .then(res => res.json())
+        .then(data => {
+            console.log("data:", data);
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+//  CRUD functions 
+//=====================================================================
+//=====================================================================
 
 //  CREATE Event function
 //=====================================================================
@@ -525,30 +582,30 @@ async function createEvent() {
 
 
     console.log("eventObj:", eventObj);
-    await checkExpirationToken(accessToken);
+    let valid = await checkExpirationToken();
+    switch (valid) {
+        case true:
+            console.log(" ");
+            console.log('==========================================');
+            console.log('Create event');
+            console.log('POST http://127.0.0.1:3070/events');
 
-    console.log(" ");
-    console.log('==========================================');
-    console.log('Create event');
-    console.log('POST http://127.0.0.1:3070/events');
+            console.log("accessToken:", accessToken);
 
-    fetch(URL + '/events', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + accessToken
+            fetchNewEvent(accessToken);
 
-        },
-        body: JSON.stringify(eventObj)
-    })
-        .then(res => res.json())
-        .then(data => {
-            console.log("data:", data);
-        })
-        .catch(error => {
-            // enter your logic for when there is an error (ex. error toast)
-            console.log(error)
-        })
+            break;
+
+        case false:
+
+            console.log("before update accessToken:", accessToken);
+
+            updateToken()
+                .then(() => fetchNewEvent(accessToken))
+
+            break;
+    }
+
 }
 
 //  GET All Events function
@@ -557,7 +614,6 @@ async function getAllEvents() {
 
     let valid = await checkExpirationToken();
 
-    console.log("valid:", valid);
     switch (valid) {
         case true:
             console.log(" ");
@@ -577,81 +633,8 @@ async function getAllEvents() {
             console.log("before update accessToken:", accessToken);
 
             updateToken()
-            .then(()=> fetchAllEvents(accessToken))
-
+                .then(() => fetchAllEvents(accessToken))
             break;
     }
 
 }
-
-// async function af1() {
-//     let tokenObj = {};
-
-//     console.log("refreshToken:", refreshToken);
-
-//     tokenObj.token = refreshToken;
-
-//     console.log("refreshTokenObj:", tokenObj);
-
-//     fetch(URL + '/login/updatejwt', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(tokenObj)
-//     })
-//         .then(console.log("tokenObj:", tokenObj))
-//         .then(res => res.json())
-//         .then(data => {
-//             console.log("updated tokens:", data);
-//             if ((data.accessToken != null) && (data.refreshToken != null)) {
-//                 accessToken = data.accessToken;
-//                 refreshToken = data.refreshToken;
-//             } else {
-//                 alert('Something goes wrong!');
-//             }
-
-//         })
-//         .catch(error => {
-//             // enter your logic for when there is an error (ex. error toast)
-//             console.log(error)
-//         })
-
-
-//     return accessToken;
-// }
-
-// async function af2() {
-//     let events = {};
-//     fetch(URL + '/events', {
-//         method: 'GET',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': "Bearer " + accessToken
-//         }
-//     })
-
-//         .then(res => res.json())
-//         .then(data => {
-//             events = data
-//             console.log("events:", data)
-//             // loadEventsTable(events);
-//         })
-//         // .then(getSummary)
-//         .catch(error => {
-//             // enter your logic for when there is an error (ex. error toast)
-//             console.log("error:", error);
-//         })
-//     return events;
-// }
-
-// async function go() {
-//     try {
-//         let a = await af1();
-//         console.log("a:", a);
-//         let b = await af2();
-//         console.log("b:", b);
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
