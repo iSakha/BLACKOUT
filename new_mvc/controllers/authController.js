@@ -9,6 +9,7 @@ const accessTokenSecret = 'greatSecretForTokenAccessWith#-~';
 const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
 exports.validateUser = async (req, res) => {
+    console.log("validateUser");
 
     try {
         console.log("login:", req.body.login);
@@ -28,10 +29,10 @@ exports.validateUser = async (req, res) => {
             if (bcrypt.hashSync(passwordEnteredByUser, salt) === row[0].crypto) {
                 let user = {};
                 user.username = row[0].login,
-                user.password = row[0].crypto,
-                user.role = row[0].role
-                console.log(user);
-                const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '5m' });
+                    user.password = row[0].crypto,
+                    user.role = row[0].role
+                console.log("user:", user);
+                const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '2m' });
                 const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
 
                 res.status(200).json({
@@ -53,21 +54,30 @@ exports.validateUser = async (req, res) => {
 }
 
 exports.updateToken = async (req, res) => {
+    console.log("updateToken");
+    console.log("req.body:", req.body);
     const { token } = req.body;
-    // console.log(token );
+
     if (!token) {
         console.log("token 401:", token);
         return res.sendStatus(401);
     }
     jwt.verify(token, refreshTokenSecret, (err, user) => {
         if (err) {
+            console.log("token 403:", token);
             return res.sendStatus(403);
         }
 
-        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '5m' });
+        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '2m' });
         const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
 
-        res.json({
+        console.log("updated accessToken:", accessToken);
+        console.log("updated refreshToken:", refreshToken);
+
+        // res.status(200).json({
+        //     "message": "test"
+        // });
+        res.status(200).json({
             accessToken,
             refreshToken
         });

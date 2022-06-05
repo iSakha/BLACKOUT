@@ -405,60 +405,75 @@ function loadSelectSource(data, select) {
     }
 }
 
-function checkExpirationToken() {
+async function checkExpirationToken() {
+
+    console.log(" ");
+    console.log('==========================================');
+    console.log('checkExpirationToken');
+    let valid;
+
     if (accessToken) {
+
         const jwtPayload = JSON.parse(window.atob(accessToken.split('.')[1]));
 
-        if (Date.now() > jwtPayload.exp) {
-            updateToken();
-        }
+        console.log("jwtPayload.exp:", jwtPayload.exp * 1000);
+        console.log("Date.now():", Date.now());
 
-        console.log(jwtPayload.exp);
-        console.log(jwtPayload);
+        if (Date.now() > jwtPayload.exp * 1000) {
+            valid = false;
+        } else valid = true;
+
+        return valid;
 
     }
 }
 
-function updateToken() {
+ function updateToken() {
+
     console.log(" ");
     console.log('==========================================');
     console.log('Update token');
     console.log('POST http://127.0.0.1:3070/login/updatejwt');
     let tokenObj = {};
-    tokenObj.token = refreshToken;
-        fetch(URL + '/login/updatejwt', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: tokenObj
-        })
-            .then(console.log(tokenObj))
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                if ((data.accessToken != null) && (data.refreshToken != null)) {
-                    document.getElementById('lbl-user').innerHTML = "<h3>USER: " + userObj.login + "</h3>";
-                    accessToken = data.accessToken;
-                    refreshToken = data.refreshToken;
-                } else {
-                    alert('Something goes wrong!');
-                }
-    
-            })
-            .catch(error => {
-                // enter your logic for when there is an error (ex. error toast)
-                console.log(error)
-            })
-    
-    
 
+    console.log("refreshToken:", refreshToken);
+
+    tokenObj.token = refreshToken;
+
+    console.log("refreshTokenObj:", tokenObj);
+
+    fetch(URL + '/login/updatejwt', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tokenObj)
+    })
+        .then(console.log("tokenObj:", tokenObj))
+        .then(res => res.json())
+        .then(data => {
+            console.log("updated tokens:", data);
+            if ((data.accessToken != null) && (data.refreshToken != null)) {
+                accessToken = data.accessToken;
+                refreshToken = data.refreshToken;
+            } else {
+                alert('Something goes wrong!');
+            }
+
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+
+
+    return accessToken;
 }
 
 //  CREATE Event function
 //=====================================================================
 
-function createEvent() {
+async function createEvent() {
 
     let start = document.getElementById('date-event-start').value;
     let end = document.getElementById('date-event-end').value;
@@ -478,7 +493,7 @@ function createEvent() {
 
 
     console.log("eventObj:", eventObj);
-    checkExpirationToken();
+    await checkExpirationToken(accessToken);
 
     console.log(" ");
     console.log('==========================================');
@@ -506,28 +521,115 @@ function createEvent() {
 
 //  GET All Events function
 //=====================================================================
-function getAllEvents() {
+async function getAllEvents() {
 
-    console.log(" ");
-    console.log('==========================================');
-    console.log('GET All Events');
-    console.log('GET http://127.0.0.1:3070/events');
+    let valid = await checkExpirationToken();
+    console.log("valid:", valid);
+    switch (valid) {
+        case true:
+            console.log(" ");
+            console.log('==========================================');
+            console.log('GET All Events');
+            console.log('GET http://127.0.0.1:3070/events');
 
+            console.log("accessToken:", accessToken);
+
+            fetch(URL + '/events', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': "Bearer " + accessToken
+                }
+            })
+
+                .then(res => res.json())
+                .then(data => {
+                    events = data
+                    console.log("events:", data)
+                    // loadEventsTable(events);
+                })
+                // .then(getSummary)
+                .catch(error => {
+                    // enter your logic for when there is an error (ex. error toast)
+                    console.log("error:", error);
+                })
+            break;
+        case false:
+            console.log("before update accessToken:", accessToken);
+            go();
+            break;
+    }
+
+}
+
+async function af1() {
+    let tokenObj = {};
+
+    console.log("refreshToken:", refreshToken);
+
+    tokenObj.token = refreshToken;
+
+    console.log("refreshTokenObj:", tokenObj);
+
+    fetch(URL + '/login/updatejwt', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tokenObj)
+    })
+        .then(console.log("tokenObj:", tokenObj))
+        .then(res => res.json())
+        .then(data => {
+            console.log("updated tokens:", data);
+            if ((data.accessToken != null) && (data.refreshToken != null)) {
+                accessToken = data.accessToken;
+                refreshToken = data.refreshToken;
+            } else {
+                alert('Something goes wrong!');
+            }
+
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+
+
+    return accessToken;
+}
+
+async function af2() {
+    let events = {};
     fetch(URL + '/events', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
         }
     })
+
         .then(res => res.json())
         .then(data => {
             events = data
-            console.log("events:",data)
+            console.log("events:", data)
             // loadEventsTable(events);
         })
         // .then(getSummary)
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
-            console.log(error);
+            console.log("error:", error);
         })
+        return events;
+  }
+
+async function go() {
+    try {
+        let a = await af1();
+        console.log("a:",a);
+        let b = await af2();
+        console.log("b:",b);
+    } catch (error) {
+        console.log(error)
+    }
 }

@@ -5,56 +5,48 @@ const jwt = require('jsonwebtoken');
 const accessTokenSecret = 'greatSecretForTokenAccessWith#-~';
 const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
-
-
-async function authenticateJWT(req, res) {
+const authenticateJWT = (req, res) => {
     const authHeader = req.headers.authorization;
-
+    let status;
     if (authHeader) {
         const token = authHeader.split(' ')[1];
 
         jwt.verify(token, accessTokenSecret, (err, user) => {
             if (err) {
-                return res.sendStatus(403);
+                status = 403;
+                // return res.sendStatus(403);
+            } else {
+                status = 200;
+                req.user = user;
             }
 
-            req.user = user;
             // next();
         });
     } else {
-        res.sendStatus(401);
+        status = 401;
+        // res.sendStatus(401);
     }
+    return status;
 };
-
-
 
 exports.getAllEvents = async (req, res) => {
     try {
+        console.log("getAllEvents");
         let status = await authenticateJWT(req, res);
         console.log("statusCode:", status);
-        const [allEvents] = await Event.getAll();
-        res.json(allEvents);
+        if (status === 200) {
+            const [allEvents] = await Event.getAll();
+            res.json(allEvents);
+        }else {
+            res.sendStatus(status);
+        }
+
     } catch (error) {
         if (!error.statusCode) {
             error.statusCode = 500;
         }
     }
 }
-// exports.getAllEvents = async (req, res) => {
-//     try {
-//         let result = await authenticateJWT(req, res);
-//         console.log("result:", result);
-//         if (result == "Expired!") {
-//             res.status(200).json({ "message": "Token expired!" });
-//         }
-//         const [allEvents] = await Event.getAll();
-//         res.status(200).json(allEvents);
-//     } catch (error) {
-//         if (!error.statusCode) {
-//             error.statusCode = 500;
-//         }
-//     }
-// }
 
 exports.createNewEvent = async (req, res) => {
 
