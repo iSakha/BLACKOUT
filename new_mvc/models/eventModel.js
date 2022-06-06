@@ -28,7 +28,7 @@ module.exports = class Event {
     }
 
     static getAll() {
-        return db.execute('SELECT * FROM `t_events`');
+        return db.execute('SELECT * FROM `v_events`');
     }
 
     static createEvent(eventObj) {
@@ -49,7 +49,7 @@ module.exports = class Event {
     }
 
     static getUsers(){
-        return db.execute('SELECT * FROM `t_users`');
+        return db.execute('SELECT * FROM `v_users`');
     }
 
     static getStatus(){

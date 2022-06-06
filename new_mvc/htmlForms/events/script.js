@@ -379,10 +379,13 @@ function getListStatus() {
 
 function loadSelectSource(data, select) {
     select.innerHTML = "";
-    let opt = document.createElement('option');
-    opt.innerHTML = "";
-    opt.value = 0;
-    select.appendChild(opt);
+    let opt;
+
+    if ((select.id == 'select-whouse') || (select.id == 'select-event-city')) {
+        opt = document.createElement('option');
+        opt.innerHTML = "";
+        select.appendChild(opt);
+    }
 
     for (let i = 0; i < data.length; i++) {
         opt = document.createElement('option');
@@ -405,7 +408,7 @@ function loadSelectSource(data, select) {
                 break;
             case 'select-manager-1':
             case 'select-manager-2':
-                opt.innerHTML = data[i].firstName + " " + data[i].lastName;
+                opt.innerHTML = data[i].fullName;
                 opt.value = data[i].id;
                 break;
             case 'select-status':
@@ -452,7 +455,7 @@ function createEventTable(data) {
     console.log('createEventTable');
     console.log("data for table: ", data);
 
-    
+
 }
 
 //  updateToken function 
@@ -532,7 +535,7 @@ function fetchAllEvents(token) {
             // enter your logic for when there is an error (ex. error toast)
             console.log("error:", error);
         })
-        return events;
+    return events;
 }
 
 function fetchNewEvent(token) {
