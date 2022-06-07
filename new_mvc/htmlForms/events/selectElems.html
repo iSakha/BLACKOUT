@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CRUD select elements</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>CRUD select elements</h1>
+
+  <div class="container">
+    <div id="e-whouses">
+      <h3>Склады отгрузки</h3>
+      <div class="container d-flex flex-row">
+        <div class="row g-3 align-items-left d-flex flex-column e-whouses-1">
+          <div class="col-8">
+            <label for="txt-wh-id" class="form-label">id</label>
+            <input type="text" class="form-control e-txt" id="txt-wh-id" disabled>
+          </div>
+          <div class="col-8">
+            <label for="txt-wh" class="form-label">warehouse</label>
+            <input type="text" class="form-control e-txt" id="txt-wh">
+          </div>
+          <div class="col-8">
+            <label for="txt-wh-color" class="form-label">color</label>
+            <input type="text" class="form-control e-txt" id="txt-wh-color">
+          </div>
+          <div class="col-8">
+            <label for="txt-wh-bgcolor" class="form-label">bgColor</label>
+            <input type="text" class="form-control e-txt" id="txt-wh-bgcolor">
+          </div>
+          <div class="col-8">
+            <label for="txt-wh-address" class="form-label">address</label>
+            <!-- <input type="text" class="form-control e-txt" id="txt-wh-address"> -->
+            <textarea type="text" class="form-control e-txt" id="txt-wh-address" cols="30" rows="5"></textarea>
+          </div>
+
+          <div class="d-flex flex-row">
+            <div class="col-3">
+              <button type="button" class="btn btn-success" id="e-wh-new">Create</button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-primary" id="e-wh-getall">Get all</button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-warning" id="e-wh-edit">Edit</button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-danger"  id="e-wh-delete">Delete</button>
+            </div>
+            
+          </div>
+        </div>
+
+        <div id="e-whouse-tbl-div" class="e-whouses-2">
+          <table class="table" id="e-tbl-wh">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">warehouse</th>
+                <th scope="col">color</th>
+                <th scope="col">bgColor</th>
+                <th scope="col">address</th>
+              </tr>
+            </thead>
+            <tbody id="e-tbody-wh">
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+    <hr>
+    <hr>
+    <div id="e-users">
+      <h3>Пользователи</h3>
+    </div>
+    <div id="e-clients">
+      <h3>Заказчики</h3>
+    </div>
+    <div id="e-phases">
+      <h3>Фазы проекта</h3>
+    </div>
+    <div id="e-locations">
+      <h3>Места проведения мероприятий</h3>
+    </div>
+    <div id="e-status">
+      <h3>Статусы мероприятий</h3>
+    </div>
+  </div>
+  <script src="e-script.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
