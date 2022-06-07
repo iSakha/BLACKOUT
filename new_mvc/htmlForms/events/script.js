@@ -184,6 +184,7 @@ function loginUser() {
             console.log(data);
             if ((data.accessToken != null) && (data.refreshToken != null)) {
                 document.getElementById('lbl-user').innerHTML = "<h3>USER: " + userObj.login + "</h3>";
+                document.getElementById('txt-event-user').value = userObj.login;
 
                 accessToken = data.accessToken;
                 refreshToken = data.refreshToken;
@@ -422,7 +423,7 @@ function loadSelectSource(data, select) {
     }
 }
 
-//  Create data source input function 
+//  CheckExpirationToken function 
 //=====================================================================
 async function checkExpirationToken() {
 
@@ -455,7 +456,70 @@ function createEventTable(data) {
     console.log('createEventTable');
     console.log("data for table: ", data);
 
+    let tbl = document.getElementById('tbl-events');
+    let tblBody = document.getElementById('tbl-body-events');
+    tblBody.innerHTML = "";
+    let row;
+    let cell;
 
+    if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+
+            row = document.createElement('tr');
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].idEvent;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].title;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].warehouse;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].start.slice(0, 10);
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].end.slice(0, 10);
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].eventCity;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].eventPlace;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].client;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].manager_1;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].manager_2;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].status;
+            row.appendChild(cell);
+
+            cell = document.createElement("td");
+            cell.innerHTML = data[i].notes;
+            row.appendChild(cell);
+
+            tblBody.appendChild(row);
+
+        }
+        tbl.append(tblBody);
+    }
 }
 
 //  updateToken function 
@@ -529,6 +593,7 @@ function fetchAllEvents(token) {
             events = data
             console.log("events:", data)
             createEventTable(events);
+            document.getElementById('event-tbl-div').classList.remove('d-none');
         })
         // .then(getSummary)
         .catch(error => {
