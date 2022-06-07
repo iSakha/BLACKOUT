@@ -56,4 +56,8 @@ module.exports = class Event {
         return db.execute('SELECT * FROM `t_status`');
     }
 
+    static getSummary(){
+        return db.execute('SELECT * FROM `v_summary_final`');
+    }
+
 }

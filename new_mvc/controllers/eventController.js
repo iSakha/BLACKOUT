@@ -144,3 +144,16 @@ exports.getStatus = async (req, res) => {
         }
     }
 }
+
+exports.getSummary = async (req, res) => {
+    try {
+        const [summary] = await Event.getSummary();
+        console.log(summary);
+        res.status(200).json(summary);
+    } catch (error) {
+        if (!error.statusCode) {
+            // error.statusCode = 500;
+            res.status(500).json(error);
+        }
+    }
+}

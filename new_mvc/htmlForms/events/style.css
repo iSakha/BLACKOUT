@@ -5,3 +5,23 @@ h1{
     text-align: center;
     font-weight: bold;
 }
+
+.warehouse{
+    
+    padding: 10px;
+    font-weight: bold ;
+    width: 160px;
+}
+
+#warehouse-minsk{
+    background-color:#00AB55;
+}
+#warehouse-moscow{
+    background-color:#FF4842;
+}
+#warehouse-kazan{
+    background-color:#FFC107;
+}
+#warehouse-piter{
+    background-color:#1890FF;
+}

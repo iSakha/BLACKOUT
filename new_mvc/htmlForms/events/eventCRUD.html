@@ -204,28 +204,71 @@
         <button id="btn-trans-move" type="button" class="btn btn-danger">Delete event</button>
       </div>
     </div>
-<hr>
-<div class="d-none" id="event-tbl-div">
-    <table class="table" id="tbl-events">
-      <thead>
-        <tr>
-          <th scope="col">idEvent</th>
-          <th scope="col">title</th>
-          <th scope="col">warehouse</th>
-          <th scope="col">start</th>
-          <th scope="col">end</th>
-          <th scope="col">eventCity</th>
-          <th scope="col">eventPlace</th>
-          <th scope="col">client</th>
-          <th scope="col">manager_1</th>
-          <th scope="col">manager_2</th>
-          <th scope="col">status</th>
-          <th scope="col">notes</th>
-        </tr>
-      </thead>
-      <tbody id="tbl-body-events"></tbody>
-    </table>
-  </div>    
+
+    <hr>
+
+    <div class="d-flex flex-row justify-content-around d-none" id="summary-div">
+      <div id="warehouse-minsk" class="d-flex flex-column warehouse">
+        <label for="">
+          <h4>Минск</h3>
+        </label>
+        <label id="sum-total-minsk">Всего:</label>
+        <label id="sum-current-minsk">На сегодня:</label>
+        <label id="sum-future-minsk">Будет:</label>
+      </div>
+      <div id="warehouse-moscow" class="d-flex flex-column warehouse">
+        <label for="">
+          <h4>Москва</h4>
+        </label>
+        <label id="sum-total-moscow">Всего:</label>
+        <label id="sum-current-moscow">На сегодня:</label>
+        <label id="sum-future-moscow">Будет:</label>
+      </div>
+      <div id="warehouse-kazan" class="d-flex flex-column warehouse">
+        <label for="">
+          <h4>Казань</h4>
+        </label>
+        <label id="sum-total-kazan">Всего:</label>
+        <label id="sum-current-kazan">На сегодня:</label>
+        <label id="sum-future-kazan">Будет:</label>
+      </div>
+      <div id="warehouse-piter" class="d-flex flex-column warehouse">
+        <label for="">
+          <h4>Питер</h4>
+        </label>
+        <label id="sum-total-piter">Всего:</label>
+        <label id="sum-current-piter">На сегодня:</label>
+        <label id="sum-future-piter">Будет:</label>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="d-none" id="event-tbl-div">
+      <table class="table" id="tbl-events">
+        <thead>
+          <tr>
+            <th scope="col">idEvent</th>
+            <th scope="col">title</th>
+            <th scope="col">warehouse</th>
+            <th scope="col">start</th>
+            <th scope="col">end</th>
+            <th scope="col">eventCity</th>
+            <th scope="col">eventPlace</th>
+            <th scope="col">client</th>
+            <th scope="col">manager_1</th>
+            <th scope="col">manager_2</th>
+            <th scope="col">status</th>
+            <th scope="col">notes</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-body-events"></tbody>
+      </table>
+
+
+    </div>
+
+
 
 
     <script src="script.js">

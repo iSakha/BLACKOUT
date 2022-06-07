@@ -381,8 +381,7 @@ function getListStatus() {
 function loadSelectSource(data, select) {
     select.innerHTML = "";
     let opt;
-
-    if ((select.id == 'select-whouse') || (select.id == 'select-event-city')) {
+    if ((select.id == 'select-whouse') || (select.id == 'select-event-city') || (select.id == 'select-event-place')) {
         opt = document.createElement('option');
         opt.innerHTML = "";
         select.appendChild(opt);
@@ -419,31 +418,6 @@ function loadSelectSource(data, select) {
         }
 
         select.appendChild(opt);
-
-    }
-}
-
-//  CheckExpirationToken function 
-//=====================================================================
-async function checkExpirationToken() {
-
-    console.log(" ");
-    console.log('==========================================');
-    console.log('checkExpirationToken');
-    let valid;
-
-    if (accessToken) {
-
-        const jwtPayload = JSON.parse(window.atob(accessToken.split('.')[1]));
-
-        console.log("jwtPayload.exp:", jwtPayload.exp * 1000);
-        console.log("Date.now():", Date.now());
-
-        if (Date.now() > jwtPayload.exp * 1000) {
-            valid = false;
-        } else valid = true;
-
-        return valid;
 
     }
 }
@@ -522,6 +496,56 @@ function createEventTable(data) {
     }
 }
 
+//  Display summary function 
+//=====================================================================
+function displaySummary(data) {
+
+    console.log(" ");
+    console.log('==========================================');
+    console.log('Display Summary');
+    console.log("sumEvents:", data)
+
+    document.getElementById('sum-total-minsk').innerHTML = "Всего: " + data[0].qty;
+    document.getElementById('sum-total-moscow').innerHTML = "Всего: " + data[1].qty;
+    document.getElementById('sum-total-kazan').innerHTML = "Всего: " + data[2].qty;
+    document.getElementById('sum-total-piter').innerHTML = "Всего: " + data[3].qty;
+
+    document.getElementById('sum-current-minsk').innerHTML = "На сегодня: " + data[0].qty_current;
+    document.getElementById('sum-current-moscow').innerHTML = "На сегодня: " + data[1].qty_current;
+    document.getElementById('sum-current-kazan').innerHTML = "На сегодня: " + data[2].qty_current;
+    document.getElementById('sum-current-piter').innerHTML = "На сегодня: " + data[3].qty_current;
+
+    document.getElementById('sum-future-minsk').innerHTML = "Будет: " + data[0].qty_future;
+    document.getElementById('sum-future-moscow').innerHTML = "Будет: " + data[1].qty_future;
+    document.getElementById('sum-future-kazan').innerHTML = "Будет: " + data[2].qty_future;
+    document.getElementById('sum-future-piter').innerHTML = "Будет: " + data[3].qty_future;
+}
+
+//  CheckExpirationToken function 
+//=====================================================================
+async function checkExpirationToken() {
+
+    console.log(" ");
+    console.log('==========================================');
+    console.log('checkExpirationToken');
+    let valid;
+
+    if (accessToken) {
+
+        const jwtPayload = JSON.parse(window.atob(accessToken.split('.')[1]));
+
+        console.log("jwtPayload.exp:", jwtPayload.exp * 1000);
+        console.log("Date.now():", Date.now());
+
+        if (Date.now() > jwtPayload.exp * 1000) {
+            valid = false;
+        } else valid = true;
+
+        return valid;
+
+    }
+}
+
 //  updateToken function 
 //=====================================================================
 function updateToken() {
@@ -594,8 +618,9 @@ function fetchAllEvents(token) {
             console.log("events:", data)
             createEventTable(events);
             document.getElementById('event-tbl-div').classList.remove('d-none');
+            document.getElementById('summary-div').classList.remove('d-none');
         })
-        // .then(getSummary)
+        .then(getSummary)
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
             console.log("error:", error);
@@ -705,4 +730,29 @@ async function getAllEvents() {
             break;
     }
 
+}
+
+async function getSummary() {
+    let sumEvents;
+    console.log(" ");
+    console.log('==========================================');
+    console.log('GET Summary');
+    console.log('GET http://127.0.0.1:3070/events/summary');
+
+    fetch(URL + '/events/summary', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            sumEvents = data;
+            console.log("sumEvents1:", sumEvents)
+            displaySummary(sumEvents);
+        })
+        .catch(error => {
+            console.log("error:", error);
+        })
+    return sumEvents;
 }

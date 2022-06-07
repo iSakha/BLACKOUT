@@ -10,5 +10,6 @@ router.get('/locations', eventController.getLocations);
 router.get('/clients', eventController.getClients);
 router.get('/users', eventController.getManagers);
 router.get('/status', eventController.getStatus);
+router.get('/summary', eventController.getSummary);
 
 module.exports = router;
