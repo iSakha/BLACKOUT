@@ -14,8 +14,8 @@
   <h1>CRUD select elements</h1>
 
   <div class="container">
+    <h3>Склады отгрузки</h3>
     <div id="e-whouses">
-      <h3>Склады отгрузки</h3>
       <div class="container d-flex flex-row">
         <div class="row g-3 align-items-left d-flex flex-column e-whouses-1">
           <div class="col-8">
@@ -51,9 +51,9 @@
               <button type="button" class="btn btn-warning" id="e-wh-edit">Edit</button>
             </div>
             <div class="col-3">
-              <button type="button" class="btn btn-danger"  id="e-wh-delete">Delete</button>
+              <button type="button" class="btn btn-danger" id="e-wh-delete">Delete</button>
             </div>
-            
+
           </div>
         </div>
 
@@ -81,18 +81,161 @@
 
     <hr>
     <hr>
+
     <div id="e-users">
       <h3>Пользователи</h3>
+      <div id="e-users">
+        <div class="container d-flex flex-row">
+          <div class="row g-3 align-items-left d-flex flex-column e-users-1">
+            <div class="col-8">
+              <label for="txt-users-id" class="form-label">id</label>
+              <input type="text" class="form-control e-txt" id="txt-users-id" disabled>
+            </div>
+            <div class="col-8">
+              <label for="txt-users-login" class="form-label">login</label>
+              <input type="text" class="form-control e-txt" id="txt-users-login">
+            </div>
+            <div class="col-8">
+              <label for="txt-users-pass" class="form-label">pass</label>
+              <input type="text" class="form-control e-txt" id="txt-users-pass">
+            </div>
+            <div class="col-8">
+              <label for="txt-users-fname" class="form-label">firstName</label>
+              <input type="text" class="form-control e-txt" id="txt-users-fname">
+            </div>
+            <div class="col-8">
+              <label for="txt-users-lname" class="form-label">lastName</label>
+              <input type="text" class="form-control e-txt" id="txt-users-lname">
+            </div>
+            <div class="col-8">
+              <label for="txt-users-role" class="form-label">role</label>
+              <input type="text" class="form-control e-txt" id="txt-users-role">
+            </div>
+            <div class="col-8">
+              <label for="txt-users-avatar" class="form-label">avatar</label>
+              <input type="text" class="form-control e-txt" id="txt-users-avatar">
+            </div>
+
+
+            <div class="d-flex flex-row">
+              <div class="col-3">
+                <button type="button" class="btn btn-success" id="e-users-new">Create</button>
+              </div>
+              <div class="col-3">
+                <button type="button" class="btn btn-primary" id="e-users-getall">Get all</button>
+              </div>
+              <div class="col-3">
+                <button type="button" class="btn btn-warning" id="e-users-edit">Edit</button>
+              </div>
+              <div class="col-3">
+                <button type="button" class="btn btn-danger" id="e-users-delete">Delete</button>
+              </div>
+
+            </div>
+          </div>
+
+          <div id="e-users-tbl-div" class="e-users-2">
+            <table class="table" id="e-tbl-users">
+              <thead>
+                <tr>
+                  <th scope="col">id</th>
+                  <th scope="col">login</th>
+                  <th scope="col">pass</th>
+                  <th scope="col">firstName</th>
+                  <th scope="col">lastName</th>
+                  <th scope="col">role</th>
+                  <th scope="col">avatar</th>
+                </tr>
+              </thead>
+              <tbody id="e-tbody-users">
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+
+
+      </div>
     </div>
+
+    <hr>
+    <hr>
+
+    <h3>Заказчики</h3>
     <div id="e-clients">
-      <h3>Заказчики</h3>
+      <div class="container d-flex flex-row">
+        <div class="row g-3 align-items-left d-flex flex-column e-clients-1">
+          <div class="col-8">
+            <label for="txt-clients-id" class="form-label">id</label>
+            <input type="text" class="form-control e-txt" id="txt-clients-id" disabled>
+          </div>
+          <div class="col-8">
+            <label for="txt-clients" class="form-label">client</label>
+            <input type="text" class="form-control e-txt" id="txt-clients">
+          </div>
+          <div class="col-8">
+            <label for="txt-clients-descript" class="form-label">clientDescription</label>
+            <input type="text" class="form-control e-txt" id="txt-clients-descript">
+          </div>
+          <div class="col-8">
+            <label for="txt-clients-comments" class="form-label">comments</label>
+            <input type="text" class="form-control e-txt" id="txt-clients-comments">
+          </div>
+
+          <div class="d-flex flex-row">
+            <div class="col-3">
+              <button type="button" class="btn btn-success" id="e-clients-new">Create</button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-primary" id="e-clients-getall">Get all</button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-warning" id="e-clients-edit">Edit</button>
+            </div>
+            <div class="col-3">
+              <button type="button" class="btn btn-danger" id="e-clients-delete">Delete</button>
+            </div>
+
+          </div>
+        </div>
+
+        <div id="e-clients-tbl-div" class="e-clients-2">
+          <table class="table" id="e-tbl-clients">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">client</th>
+                <th scope="col">clientDescription</th>
+                <th scope="col">comments</th>
+              </tr>
+            </thead>
+            <tbody id="e-tbody-clients">
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
     </div>
+
+    <hr>
+    <hr>
+
     <div id="e-phases">
       <h3>Фазы проекта</h3>
     </div>
+
+    <hr>
+    <hr>
+
     <div id="e-locations">
       <h3>Места проведения мероприятий</h3>
     </div>
+
+    <hr>
+    <hr>
+
     <div id="e-status">
       <h3>Статусы мероприятий</h3>
     </div>

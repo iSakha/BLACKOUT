@@ -11,7 +11,7 @@ let accessToken;
 let refreshToken;
 
 
-document.addEventListener('DOMContentLoaded', init);
+// document.addEventListener('DOMContentLoaded', init);
 
 document.getElementById('btn-login').addEventListener('click', loginUser);
 
@@ -154,8 +154,6 @@ function init() {
     document.getElementById('date-event-start').valueAsDate = new Date();
     document.getElementById('date-event-end').valueAsDate = new Date();
 
-    document.getElementById('txt-event-user').value = "testUser";
-
 }
 
 //  Login function 
@@ -163,7 +161,7 @@ function init() {
 function loginUser() {
     console.log('==========================================');
     console.log('Login user');
-    console.log('GET http://127.0.0.1:3070/login');
+    console.log('POST http://127.0.0.1:3070/login');
     let login = document.getElementById('txt-login').value;
     let pass = document.getElementById('txt-pass').value;
 
@@ -195,6 +193,7 @@ function loginUser() {
             }
 
         })
+        .then(init)
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
             console.log(error)
@@ -454,11 +453,11 @@ function createEventTable(data) {
             row.appendChild(cell);
 
             cell = document.createElement("td");
-            cell.innerHTML = data[i].start.slice(0, 10);
+            cell.innerHTML = data[i].start.slice(0, 16);
             row.appendChild(cell);
 
             cell = document.createElement("td");
-            cell.innerHTML = data[i].end.slice(0, 10);
+            cell.innerHTML = data[i].end.slice(0, 16);
             row.appendChild(cell);
 
             cell = document.createElement("td");
@@ -534,6 +533,7 @@ async function checkExpirationToken() {
 
         const jwtPayload = JSON.parse(window.atob(accessToken.split('.')[1]));
 
+        console.log("jwtPayload", jwtPayload);
         console.log("jwtPayload.exp:", jwtPayload.exp * 1000);
         console.log("Date.now():", Date.now());
 
@@ -605,6 +605,7 @@ function updateToken() {
 //=====================================================================
 //=====================================================================
 function fetchAllEvents(token) {
+    let events;
     fetch(URL + '/events', {
         method: 'GET',
         headers: {
@@ -732,6 +733,8 @@ async function getAllEvents() {
 
 }
 
+//  GET summary function
+//=====================================================================
 async function getSummary() {
     let sumEvents;
     console.log(" ");
@@ -756,3 +759,19 @@ async function getSummary() {
         })
     return sumEvents;
 }
+
+//  Click event table
+//=====================================================================
+tblBody = document.getElementById('tbl-body-events');
+tblBody.addEventListener('click', (e) => {
+    // console.log(e.target);
+    let td = e.target;
+    let row = td.parentNode;
+
+    document.getElementById('txt-event-id').value = row.children[0].innerHTML;
+    document.getElementById('txt-event-title').value = row.children[1].innerHTML;
+    document.getElementById('txt-event-user').value = row.children[2].innerHTML;
+    document.getElementById('date-event-start').value = row.children[3].innerHTML.slice(0, 10);
+    document.getElementById('date-event-end').value = row.children[4].innerHTML.slice(0, 10);
+
+});

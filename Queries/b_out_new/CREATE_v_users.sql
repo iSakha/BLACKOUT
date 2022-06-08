@@ -2,6 +2,7 @@ CREATE VIEW `v_users` AS
 SELECT 
 `t_users`.`id` AS `id`,
 `t_users`.`login` AS `login`,
+`t_users`.`pass` AS `pass`,
 `t_users`.`crypto` AS `crypto`,
 `t_users`.`firstName` AS `firstName`,
 `t_users`.`lastName` AS `lastName`,

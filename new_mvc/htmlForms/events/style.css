@@ -26,9 +26,9 @@ h1{
     background-color:#1890FF;
 }
 
-.e-whouses-1{
+.e-whouses-1, .e-users-1, .e-clients-1{
     width: 40%;
 }
-.e-whouses-2{
+.e-whouses-2, .e-users-2, .e-clients-2{
     width: 60%;
 }
