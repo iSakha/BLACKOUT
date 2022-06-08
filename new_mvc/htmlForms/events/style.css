@@ -6,6 +6,11 @@ h1{
     font-weight: bold;
 }
 
+#phase-time-start-h, #phase-time-start-m, #phase-time-end-h, #phase-time-end-m{
+    text-align: center;
+    font-weight: bold;
+}
+
 .warehouse{
     
     padding: 10px;
@@ -31,4 +36,9 @@ h1{
 }
 .e-whouses-2, .e-users-2, .e-clients-2{
     width: 60%;
+}
+
+.phase-div{
+    background-color: rgb(208, 225, 240);
+    padding-bottom: 30px;
 }
