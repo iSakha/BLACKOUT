@@ -61,7 +61,7 @@
         <input type="date" class="form-control" id="date-event-end">
       </div>
       <div class="col-4">
-        <label for="select-whouse" class="form-label" required>Склад отгрузки</label>
+        <label for="select-whouse" class="form-label">Склад отгрузки</label>
         <select class="form-select" id="select-whouse">
         </select>
       </div>
@@ -190,7 +190,7 @@
       </div>
     </div>
     <br>
-    <div class="row g-3 align-items-center phase-div">
+    <div class="row g-3 align-items-center phase-div d-none">
       <h5>Фазы мероприятия</h5>
       <div class="col-4">
         <label for="date-phase-start" class="form-label">Дата начала фазы</label>
@@ -241,7 +241,7 @@
       </div>
     </div>
     <br>
-    <div class="row g-3 align-items-center phase-div">
+    <div class="row g-3 align-items-center phase-div d-none">
       <div class="col-4">
         <label for="date-phase-end" class="form-label">Дата окончания фазы</label>
         <input type="date" class="form-control" id="date-phase-end">
@@ -304,13 +304,13 @@
         <button id="btn-event-read" type="button" class="btn btn-primary">Get all events</button>
       </div>
       <div class="">
-        <button id="btn-trans-move" type="button" class="btn btn-warning">Update event</button>
+        <button id="btn-event-update" type="button" class="btn btn-warning">Update event</button>
       </div>
       <div class="">
-        <button id="btn-trans-move" type="button" class="btn btn-danger">Delete event</button>
+        <button id="btn-event-delete" type="button" class="btn btn-danger">Delete event</button>
       </div>
       <div class="">
-        <button id="btn-trans-move" type="button" class="btn btn-outline-dark">Event details</button>
+        <button id="btn-event-details" type="button" class="btn btn-outline-dark">Event details</button>
       </div>
     </div>
 

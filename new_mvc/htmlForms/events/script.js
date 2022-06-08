@@ -129,6 +129,11 @@ document.getElementById('select-status').addEventListener('change', (e) => {
     };
 });
 
+document.getElementById('btn-event-details').addEventListener('click', () => {
+    document.getElementsByClassName('phase-div')[0].classList.remove('d-none');
+    document.getElementsByClassName('phase-div')[1].classList.remove('d-none');
+});
+
 
 //          C R U D
 //=====================================================================
