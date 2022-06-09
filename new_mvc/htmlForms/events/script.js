@@ -647,6 +647,30 @@ function fetchAllEvents(token) {
         })
     return events;
 }
+function fetchOneEvent(token, idEvent) {
+    let events;
+    fetch(URL + '/events/id/' + idEvent, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            events = data
+            console.log("get one event:", data)
+
+        })
+        // .then(getSummary)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log("error:", error);
+        })
+    return events;
+}
+
+
 
 function fetchNewEvent(token) {
     fetch(URL + '/events', {
@@ -754,8 +778,32 @@ async function getAllEvents() {
 
 //  GET One function
 //=====================================================================
-function getOne(idEvent) {
+async function getOne(idEvent) {
     console.log("idEvent:", idEvent);
+    let valid = await checkExpirationToken();
+
+    switch (valid) {
+        case true:
+            console.log(" ");
+            console.log('==========================================');
+            console.log('GET All Events');
+            console.log('GET http://127.0.0.1:3070/events/id' + idEvent);
+
+            console.log("accessToken:", accessToken);
+
+
+            fetchOneEvent(accessToken, idEvent);
+
+            break;
+
+        case false:
+
+            console.log("before update accessToken:", accessToken);
+
+            updateToken()
+                .then(() => fetchOneEvent(accessToken, idEvent))
+            break;
+    }
 }
 
 //  GET summary function

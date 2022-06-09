@@ -50,10 +50,20 @@ exports.getAllEvents = async (req, res) => {
 
 exports.getOne = async (req, res) => {
 try {
-    const [event] = await Event.getOne(req.params.id);
-    res.json(event);
+    console.log("getAllEvents");
+    let status = await authenticateJWT(req, res);
+    console.log("statusCode:", status);
+    if (status === 200) {
+        const [event] = await Event.getOne(req.params.id);
+        res.json(event);
+    }else {
+        res.sendStatus(status);
+    }
+
 } catch (error) {
-    
+    if (!error.statusCode) {
+        error.statusCode = 500;
+    }
 }
 }
 
