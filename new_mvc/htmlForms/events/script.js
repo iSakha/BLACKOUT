@@ -425,6 +425,7 @@ async function getListPhases() {
 //=====================================================================
 
 function loadSelectSource(data, select) {
+    console.log("phases:", data);
     select.innerHTML = "";
     let opt;
     if ((select.id == 'select-whouse') || (select.id == 'select-event-city') || (select.id == 'select-event-place')) {
@@ -762,8 +763,8 @@ function fetchPhases(token) {
         .then(res => res.json())
         .then(data => {
             phases = data
-            console.log("phases:", phases);
-            loadSelectSource(selectPhase, phases)
+            // console.log("phases:", phases);
+            loadSelectSource(phases, selectPhase)
         })
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
