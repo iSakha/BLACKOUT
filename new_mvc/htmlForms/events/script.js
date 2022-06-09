@@ -141,9 +141,23 @@ document.getElementById('btn-event-details').addEventListener('click', () => {
 //  CREATE Event 
 //=====================================================================
 document.getElementById('btn-event-create').addEventListener('click', createEvent);
+
+//  Get All Events 
+//=====================================================================
 document.getElementById('btn-event-read').addEventListener('click', getAllEvents);
 
+//  Get One Event 
+//=====================================================================
+tblBody = document.getElementById('tbl-body-events');
+tblBody.addEventListener('click', (e) => {
+    // console.log(e.target);
+    let td = e.target;
+    let row = td.parentNode;
+    let id = row.children[0].innerHTML;
+    getOne(id);
 
+
+});
 
 //          F U N C T I O N S
 // --------------------------------------------------------------------
@@ -736,6 +750,12 @@ async function getAllEvents() {
             break;
     }
 
+}
+
+//  GET One function
+//=====================================================================
+function getOne(idEvent) {
+    console.log("idEvent:", idEvent);
 }
 
 //  GET summary function

@@ -27,8 +27,20 @@ module.exports = class Event {
         this.is_deleted = null;
     }
 
-    static getAll() {
-        return db.execute('SELECT * FROM `v_events`');
+    static getAll() {       
+        try {
+           return db.execute('SELECT * FROM `v_events`'); 
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static getOne(idEvent) {
+        try {
+           return db.execute('SELECT * FROM `v_events` WHERE `idEvent`=?', [idEvent]); 
+        } catch (error) {
+            return error;
+        }        
     }
 
     static createEvent(eventObj) {

@@ -5,6 +5,7 @@ const router = express.Router();
 console.log("Test Test Test Test");
 
 router.get('/', eventController.getAllEvents);
+router.get('/id/:id', eventController.getOne);
 router.post('/', eventController.createNewEvent);
 router.get('/locations', eventController.getLocations);
 router.get('/clients', eventController.getClients);

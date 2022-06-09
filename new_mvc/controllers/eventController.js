@@ -48,6 +48,16 @@ exports.getAllEvents = async (req, res) => {
     }
 }
 
+exports.getOne = async (req, res) => {
+try {
+    const [event] = await Event.getOne(req.params.id);
+    res.json(event);
+} catch (error) {
+    
+}
+}
+
+
 exports.createNewEvent = async (req, res) => {
 
     if (utils.validateInputData(req.body)) {
