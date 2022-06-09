@@ -514,6 +514,29 @@ function createEventTable(data) {
     }
 }
 
+//  Fill Event Form function 
+//=====================================================================
+function fillEventForm(event) {
+    console.log(" ");
+    console.log('==========================================');
+    console.log('Fill event form');
+    console.log("event:", event);
+
+    document.getElementById('txt-event-id').value = event[0].idEvent;
+    document.getElementById('txt-event-title').value = event[0].title;
+    document.getElementById('txt-event-user').value = event[0].createdBy;
+    document.getElementById('date-event-start').value = event[0].start.slice(0,10);
+    document.getElementById('date-event-end').value = event[0].end.slice(0,10);
+    document.getElementById('select-whouse').selectedIndex = event[0].idWarehouse;
+    document.getElementById('txt-notes').value = event[0].notes;
+    document.getElementById('select-event-city').selectedIndex = event[0].idEventCity - 1;
+    // document.getElementById('select-event-place').selectedIndex
+    document.getElementById('select-event-client').selectedIndex = event[0].idClient - 1;
+    document.getElementById('select-manager-1').selectedIndex = event[0].idManager_1 - 1;
+    document.getElementById('select-manager-2').selectedIndex = event[0].idManager_2 - 1;
+    document.getElementById('select-status').selectedIndex = event[0].idStatus - 1;
+}
+
 //  Display summary function 
 //=====================================================================
 function displaySummary(data) {
@@ -647,8 +670,10 @@ function fetchAllEvents(token) {
         })
     return events;
 }
+
+
 function fetchOneEvent(token, idEvent) {
-    let events;
+    let event;
     fetch(URL + '/events/id/' + idEvent, {
         method: 'GET',
         headers: {
@@ -656,18 +681,18 @@ function fetchOneEvent(token, idEvent) {
             'Authorization': "Bearer " + token
         }
     })
-        .then(res => res.json())
+        .then(res => res.json())       
         .then(data => {
-            events = data
+            event = data
             console.log("get one event:", data)
-
+            fillEventForm(event)
         })
-        // .then(getSummary)
+        // .then()
         .catch(error => {
             // enter your logic for when there is an error (ex. error toast)
             console.log("error:", error);
         })
-    return events;
+    return event;
 }
 
 
@@ -832,19 +857,3 @@ async function getSummary() {
         })
     return sumEvents;
 }
-
-//  Click event table
-//=====================================================================
-tblBody = document.getElementById('tbl-body-events');
-tblBody.addEventListener('click', (e) => {
-    // console.log(e.target);
-    let td = e.target;
-    let row = td.parentNode;
-
-    document.getElementById('txt-event-id').value = row.children[0].innerHTML;
-    document.getElementById('txt-event-title').value = row.children[1].innerHTML;
-    document.getElementById('txt-event-user').value = row.children[2].innerHTML;
-    document.getElementById('date-event-start').value = row.children[3].innerHTML.slice(0, 10);
-    document.getElementById('date-event-end').value = row.children[4].innerHTML.slice(0, 10);
-
-});
