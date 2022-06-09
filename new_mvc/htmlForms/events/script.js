@@ -387,10 +387,38 @@ function getListStatus() {
             console.log("status:", data);
             loadSelectSource(data, selectStatus);
         })
-        // .then(getListStatus)
+        .then(getListPhases)
         .catch(error => {
             console.log("error:", error)
         })
+}
+
+//  GetListPhases function 
+//=====================================================================
+async function getListPhases() {
+    let valid = await checkExpirationToken();
+
+    switch (valid) {
+        case true:
+            console.log(" ");
+            console.log('==========================================');
+            console.log('Get list of phases');
+            console.log('GET http://127.0.0.1:3070/events/phase');
+
+            console.log("accessToken:", accessToken);
+
+            fetchPhases(accessToken);
+
+            break;
+
+        case false:
+
+            console.log("before update accessToken:", accessToken);
+
+            updateToken()
+                .then(() => fetchPhases(accessToken))
+            break;
+    }
 }
 
 //  Create data source input function 
@@ -431,6 +459,10 @@ function loadSelectSource(data, select) {
                 break;
             case 'select-status':
                 opt.innerHTML = data[i].status;
+                opt.value = data[i].id;
+                break;
+            case 'select-phase':
+                opt.innerHTML = data[i].phase;
                 opt.value = data[i].id;
                 break;
         }
@@ -715,6 +747,29 @@ function fetchNewEvent(token) {
             // enter your logic for when there is an error (ex. error toast)
             console.log(error)
         })
+}
+
+function fetchPhases(token) {
+    let selectPhase = document.getElementById('select-phase');
+    let phases = {};
+    fetch(URL + '/events/phase', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            phases = data
+            console.log("phases:", phases);
+            loadSelectSource(selectPhase, phases)
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log("error:", error);
+        })
+    return phases;
 }
 
 //  CRUD functions 

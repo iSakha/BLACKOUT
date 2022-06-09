@@ -72,4 +72,8 @@ module.exports = class Event {
         return db.execute('SELECT * FROM `v_summary_final`');
     }
 
+    static getPhases(){
+        return db.execute('SELECT * FROM `t_phase`');
+    }
+
 }

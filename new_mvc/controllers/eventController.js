@@ -165,6 +165,25 @@ exports.getStatus = async (req, res) => {
     }
 }
 
+exports.getPhases = async (req, res) => {
+    try {
+        console.log("getPhases");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [phase] = await Event.getPhases();
+            res.json(phase);
+        }else {
+            res.sendStatus(status);
+        }
+    
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+}
+
 exports.getSummary = async (req, res) => {
     try {
         const [summary] = await Event.getSummary();
