@@ -201,7 +201,6 @@ function loginUser() {
             console.log(data);
             if ((data.accessToken != null) && (data.refreshToken != null)) {
                 document.getElementById('lbl-user').innerHTML = "<h3>USER: " + userObj.login + "</h3>";
-                document.getElementById('txt-event-user').value = userObj.login;
 
                 accessToken = data.accessToken;
                 refreshToken = data.refreshToken;
@@ -358,11 +357,22 @@ function getListManagers() {
             console.log("users:", data);
             loadSelectSource(data, selectManager_1);
             loadSelectSource(data, selectManager_2);
-        })
+            getCurrentUser(data);
+        })        
         .then(getListStatus)
         .catch(error => {
             console.log("error:", error)
         })
+}
+
+function getCurrentUser(oUsers) {
+
+    console.log("oUsers:",oUsers);
+    let currentUserLogin = document.getElementById('lbl-user').innerText.slice(6);
+    let oUser = oUsers.find(e => e.login === currentUserLogin);
+    let user = oUser.fullName;
+    document.getElementById('txt-event-user').value = user;
+
 }
 
 //  GetListStatus function 
@@ -558,8 +568,8 @@ function fillEventForm(event) {
     document.getElementById('txt-event-id').value = event[0].idEvent;
     document.getElementById('txt-event-title').value = event[0].title;
     document.getElementById('txt-event-user').value = event[0].createdBy;
-    document.getElementById('date-event-start').value = event[0].start.slice(0,10);
-    document.getElementById('date-event-end').value = event[0].end.slice(0,10);
+    document.getElementById('date-event-start').value = event[0].start.slice(0, 10);
+    document.getElementById('date-event-end').value = event[0].end.slice(0, 10);
     document.getElementById('select-whouse').selectedIndex = event[0].idWarehouse;
     document.getElementById('txt-notes').value = event[0].notes;
     document.getElementById('select-event-city').selectedIndex = event[0].idEventCity - 1;
@@ -714,7 +724,7 @@ function fetchOneEvent(token, idEvent) {
             'Authorization': "Bearer " + token
         }
     })
-        .then(res => res.json())       
+        .then(res => res.json())
         .then(data => {
             event = data
             console.log("get one event:", data)
