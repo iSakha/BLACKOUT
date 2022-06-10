@@ -860,17 +860,20 @@ async function createEvent() {
     } else eventObj.idManager_2 = null;
 
     if (document.getElementById('select-event-city').value >= 1) {
-        eventObj.idEventCity = parseInt(document.getElementById('select-manager-2').value);
+        eventObj.idEventCity = parseInt(document.getElementById('select-event-city').value);
     } else eventObj.idEventCity = null;
+
+    if (document.getElementById('select-event-place').value >= 1) {
+        eventObj.idEventPlace = parseInt(document.getElementById('select-event-place').value);
+    } else eventObj.idEventPlace = null;
+
+    if (document.getElementById('select-event-client').value >= 1) {
+        eventObj.idClient = parseInt(document.getElementById('select-event-client').value);
+    } else eventObj.idClient = null;
 
     console.log("createEvent eventObj:", eventObj)
 
-    // this.idEventCity = 1;
-    // this.idEventPlace = 1;
-    // this.idClient = 1;
 
-    // this.createdAt = null;
-    // this.notes = null;
     // this.idStatus = 1;
     // this.idPhase = 1;
     // this.phaseTimeStart = null;
