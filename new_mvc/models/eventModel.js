@@ -10,21 +10,23 @@ module.exports = class Event {
         this.title = oEvent.title;
         this.start = oEvent.start;
         this.end = null;
-        this.idManager_1 = null;
-        this.idManager_2 = null;
-        this.idEventCity = null;
-        this.idEventPlace = null;
-        this.idClient = null;
-        this.idCreatedBy = null;
+        this.idManager_1 = 1;
+        this.idManager_2 = 1;
+        this.idEventCity = 1;
+        this.idEventPlace = 1;
+        this.idClient = 1;
+        this.idCreatedBy = 1;
         this.createdAt = null;
         this.notes = null;
-        this.idStatus = null;
-        this.idPhase = null;
+        this.idStatus = 1;
+        this.idPhase = 1;
         this.phaseTimeStart = null;
         this.phaseTimeEnd = null;
-        this.idUpdatedBy = null;
+        this.idUpdatedBy = 1;
         this.updatedAt = null;
+        this.filledUp = 0;
         this.is_deleted = null;
+
     }
 
     static getAll() {       
@@ -44,6 +46,15 @@ module.exports = class Event {
     }
 
     static createEvent(eventObj) {
+        console.log("eventObj:", eventObj);
+        try {
+            return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, start, end, idManager_1, idManager_2, idEventCity, idEventPlace, idClient, idCreatedBy, createdAt, notes, idStatus, idPhase, phaseTimeStart, phaseTimeEnd, idUpdatedBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.start, eventObj.end, eventObj.idManager_1, eventObj.idManager_2, eventObj.idEventCity, eventObj.idEventPlace, eventObj.idClient, eventObj.idCreatedBy, eventObj.createdAt, eventObj.notes, eventObj.idStatus, eventObj.idPhase, eventObj.phaseTimeStart, eventObj.phaseTimeEnd, eventObj.idUpdatedBy]);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static updateEvent(eventObj) {
         console.log("eventObj:", eventObj);
         try {
             return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, start, end, idManager_1, idManager_2, idEventCity, idEventPlace, idClient, idCreatedBy, createdAt, notes, idStatus, idPhase, phaseTimeStart, phaseTimeEnd, idUpdatedBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.start, eventObj.end, eventObj.idManager_1, eventObj.idManager_2, eventObj.idEventCity, eventObj.idEventPlace, eventObj.idClient, eventObj.idCreatedBy, eventObj.createdAt, eventObj.notes, eventObj.idStatus, eventObj.idPhase, eventObj.phaseTimeStart, eventObj.phaseTimeEnd, eventObj.idUpdatedBy]);

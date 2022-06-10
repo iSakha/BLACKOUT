@@ -113,6 +113,52 @@ exports.createNewEvent = async (req, res) => {
 
 }
 
+exports.updateEvent = async (req, res) => {
+
+    console.log("updateEvent req.body:", req.body);
+
+    if (utils.validateInputData(req.body)) {
+
+        try {            
+            await authenticateJWT(req, res);
+
+            // res.setHeader("Access-Control-Allow-Origin", "*");
+            // res.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH, POST");
+            // res.setHeader("Access-Control-Allow-Credentials", true);
+            // res.setHeader(
+            //     "Access-Control-Allow-Headers",
+            //     "X-Requested-With,content-type,Origin,Accept,Authorization"
+            // );
+
+            let myEvent = new Event(req.body);
+            console.log("myEvent:", myEvent);
+
+            Object.keys(req.body).forEach((key) => {
+
+                myEvent[key] = req.body[key];
+
+            });
+
+            myEvent.createdAt = utils.currentDateTime();
+            // myEvent.idEvent = utils.createEventId();
+
+            const [event] = await Event.createEvent(myEvent);
+            // res.status(200).json({ "message": "created" });
+            res.status(200).json(event);
+
+
+        } catch (error) {
+            if (!error.statusCode) {
+                console.log("error:", error);
+                error.statusCode = 500;
+                res.status(500).json(error);
+            }
+        }
+    } else res.status(400).json("Не указаны обязательные поля");
+
+
+}
+
 exports.getLocations = async (req, res) => {
     try {
         const [locations] = await Event.getLocations();

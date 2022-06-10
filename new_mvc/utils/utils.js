@@ -47,6 +47,8 @@ function createEventId() {
 }
 
 function validateInputData(data) {
+    console.log("validate data.title:" ,data.title);
+    console.log("validate data.idWarehouse:" ,data.idWarehouse);
     if((data.title !=null) && (data.idWarehouse !=null)) {
         return true;
     }else return false;

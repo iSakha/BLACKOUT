@@ -4,11 +4,12 @@ const PORT = 3070;
 const URL = HOST + ':' + PORT;
 
 let eventLocations = {};
-let eventObj = {};
 let selectedEventId;
 
 let accessToken;
 let refreshToken;
+
+let idUser;
 
 
 // document.addEventListener('DOMContentLoaded', init);
@@ -38,96 +39,97 @@ document.getElementById('date-event-start').addEventListener('change', () => {
     document.getElementById('date-event-end').value = document.getElementById('date-event-start').value;
 });
 
-// Event object  
-//====================================================================
 
-document.getElementById('txt-event-title').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.title = e.target.value;
-    } else {
-        delete eventObj.title;
-    };
-});
+// // Event object  
+// //====================================================================
 
-document.getElementById('date-event-start').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.start = e.target.value;
-    } else {
-        delete eventObj.start;
-    };
-});
+// document.getElementById('txt-event-title').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.title = e.target.value;
+//     } else {
+//         delete eventObj.title;
+//     };
+// });
 
-document.getElementById('date-event-end').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.end = e.target.value;
-    } else {
-        delete eventObj.end;
-    };
-});
+// document.getElementById('date-event-start').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.start = e.target.value;
+//     } else {
+//         delete eventObj.start;
+//     };
+// });
 
-document.getElementById('select-whouse').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.idWarehouse = e.target.value;
-    } else {
-        delete eventObj.idWarehouse;
-    };
-});
+// document.getElementById('date-event-end').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.end = e.target.value;
+//     } else {
+//         delete eventObj.end;
+//     };
+// });
 
-document.getElementById('txt-notes').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.notes = e.target.value;
-    } else {
-        delete eventObj.notes;
-    };
-});
+// document.getElementById('select-whouse').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.idWarehouse = e.target.value;
+//     } else {
+//         delete eventObj.idWarehouse;
+//     };
+// });
 
-document.getElementById('select-event-city').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.idEventCity = e.target.value;
-    } else {
-        delete eventObj.idEventCity;
-    };
-});
+// document.getElementById('txt-notes').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.notes = e.target.value;
+//     } else {
+//         delete eventObj.notes;
+//     };
+// });
 
-document.getElementById('select-event-place').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.idEventPlace = e.target.value;
-    } else {
-        delete eventObj.idEventPlace;
-    };
-});
+// document.getElementById('select-event-city').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.idEventCity = e.target.value;
+//     } else {
+//         delete eventObj.idEventCity;
+//     };
+// });
 
-document.getElementById('select-event-client').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.idClient = e.target.value;
-    } else {
-        delete eventObj.idClient;
-    };
-});
+// document.getElementById('select-event-place').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.idEventPlace = e.target.value;
+//     } else {
+//         delete eventObj.idEventPlace;
+//     };
+// });
 
-document.getElementById('select-manager-1').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.idManager_1 = e.target.value;
-    } else {
-        delete eventObj.idManager_1;
-    };
-});
+// document.getElementById('select-event-client').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.idClient = e.target.value;
+//     } else {
+//         delete eventObj.idClient;
+//     };
+// });
 
-document.getElementById('select-manager-2').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.idManager_2 = e.target.value;
-    } else {
-        delete eventObj.idManager_2;
-    };
-});
+// document.getElementById('select-manager-1').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.idManager_1 = e.target.value;
+//     } else {
+//         delete eventObj.idManager_1;
+//     };
+// });
 
-document.getElementById('select-status').addEventListener('change', (e) => {
-    if (e.target.value) {
-        eventObj.idStatus = e.target.value;
-    } else {
-        delete eventObj.idStatus;
-    };
-});
+// document.getElementById('select-manager-2').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.idManager_2 = e.target.value;
+//     } else {
+//         delete eventObj.idManager_2;
+//     };
+// });
+
+// document.getElementById('select-status').addEventListener('change', (e) => {
+//     if (e.target.value) {
+//         eventObj.idStatus = e.target.value;
+//     } else {
+//         delete eventObj.idStatus;
+//     };
+// });
 
 document.getElementById('btn-event-details').addEventListener('click', () => {
     document.getElementsByClassName('phase-div')[0].classList.remove('d-none');
@@ -141,6 +143,10 @@ document.getElementById('btn-event-details').addEventListener('click', () => {
 //  CREATE Event 
 //=====================================================================
 document.getElementById('btn-event-create').addEventListener('click', createEvent);
+
+//  UPDATE Event 
+//=====================================================================
+document.getElementById('btn-event-update').addEventListener('click', updateEvent);
 
 //  Get All Events 
 //=====================================================================
@@ -358,7 +364,7 @@ function getListManagers() {
             loadSelectSource(data, selectManager_1);
             loadSelectSource(data, selectManager_2);
             getCurrentUser(data);
-        })        
+        })
         .then(getListStatus)
         .catch(error => {
             console.log("error:", error)
@@ -367,10 +373,12 @@ function getListManagers() {
 
 function getCurrentUser(oUsers) {
 
-    console.log("oUsers:",oUsers);
+    console.log("oUsers:", oUsers);
     let currentUserLogin = document.getElementById('lbl-user').innerText.slice(6);
     let oUser = oUsers.find(e => e.login === currentUserLogin);
     let user = oUser.fullName;
+    idUser = oUser.id
+    console.log("idUser:", idUser);
     document.getElementById('txt-event-user').value = user;
 
 }
@@ -572,7 +580,7 @@ function fillEventForm(event) {
     document.getElementById('date-event-end').value = event[0].end.slice(0, 10);
     document.getElementById('select-whouse').selectedIndex = event[0].idWarehouse;
     document.getElementById('txt-notes').value = event[0].notes;
-    document.getElementById('select-event-city').selectedIndex = event[0].idEventCity - 1;
+    document.getElementById('select-event-city').selectedIndex = event[0].idEventCity - 2;
     // document.getElementById('select-event-place').selectedIndex
     document.getElementById('select-event-client').selectedIndex = event[0].idClient - 1;
     document.getElementById('select-manager-1').selectedIndex = event[0].idManager_1 - 1;
@@ -760,6 +768,26 @@ function fetchNewEvent(token) {
         })
 }
 
+function fetchUpdateEvent(token) {
+    fetch(URL + '/events', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
+
+        },
+        body: JSON.stringify(eventObj)
+    })
+        .then(res => res.json())
+        .then(data => {
+            console.log("data:", data);
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
 function fetchPhases(token) {
     let selectPhase = document.getElementById('select-phase');
     let phases = {};
@@ -792,24 +820,73 @@ function fetchPhases(token) {
 
 async function createEvent() {
 
-    let start = document.getElementById('date-event-start').value;
-    let end = document.getElementById('date-event-end').value;
+    let eventObj = {};
 
-    let startH = document.getElementById('select-time-start-h');
-    let startM = document.getElementById('select-time-start-m');
-    let endH = document.getElementById('select-time-end-h');
-    let endM = document.getElementById('select-time-end-m');
+    if (document.getElementById('txt-event-id').value != "") {
+        eventObj.idEvent = document.getElementById('txt-event-id').value;
+    } else eventObj.idEvent = null;
 
-    let hourStart = startH.options[startH.selectedIndex].value;
-    let hourEnd = startM.options[startM.selectedIndex].value;
-    let minStart = endH.options[endH.selectedIndex].value;
-    let minEnd = endM.options[endM.selectedIndex].value;
+    if (document.getElementById('txt-event-title').value != "") {
+        eventObj.title = document.getElementById('txt-event-title').value;
+    } else eventObj.title = null;
 
-    eventObj.start = start + "T" + hourStart + ":" + minStart + ":00";
-    eventObj.end = end + "T" + hourEnd + ":" + minEnd + ":00";
+    if (document.getElementById('select-whouse').value >= 1) {
+        eventObj.idWarehouse = parseInt(document.getElementById('select-whouse').value);
+    } else eventObj.idWarehouse = null;
+
+    eventObj.idCreatedBy = idUser;
+
+    let startDate = document.getElementById('date-event-start').value;
+    let endDate = document.getElementById('date-event-end').value;
+
+    let hourStart = document.getElementById('txt-time-start-h').value;
+    let hourEnd = document.getElementById('txt-time-end-h').value;
+    let minStart = document.getElementById('txt-time-start-m').value;
+    let minEnd = document.getElementById('txt-time-end-m').value;
+
+    eventObj.start = startDate + "T" + hourStart + ":" + minStart + ":00";
+    eventObj.end = endDate + "T" + hourEnd + ":" + minEnd + ":00";
+
+    if (document.getElementById('txt-notes').value != "") {
+        eventObj.notes = document.getElementById('txt-notes').value;
+    } else eventObj.notes = null;
+
+    if (document.getElementById('select-manager-1').value >= 1) {
+        eventObj.idManager_1 = parseInt(document.getElementById('select-manager-1').value);
+    } else eventObj.idManager_1 = null;
+
+    if (document.getElementById('select-manager-2').value >= 1) {
+        eventObj.idManager_2 = parseInt(document.getElementById('select-manager-2').value);
+    } else eventObj.idManager_2 = null;
+
+    if (document.getElementById('select-event-city').value >= 1) {
+        eventObj.idEventCity = parseInt(document.getElementById('select-manager-2').value);
+    } else eventObj.idEventCity = null;
+
+    console.log("createEvent eventObj:", eventObj)
+
+    // this.idEventCity = 1;
+    // this.idEventPlace = 1;
+    // this.idClient = 1;
+
+    // this.createdAt = null;
+    // this.notes = null;
+    // this.idStatus = 1;
+    // this.idPhase = 1;
+    // this.phaseTimeStart = null;
+    // this.phaseTimeEnd = null;
+    // this.idUpdatedBy = 1;
+    // this.updatedAt = null;
+    // this.filledUp = 0;
+    // this.is_deleted = null;
 
 
-    console.log("eventObj:", eventObj);
+    // eventObj.start = start + "T" + hourStart + ":" + minStart + ":00";
+    // eventObj.end = end + "T" + hourEnd + ":" + minEnd + ":00";
+    // eventObj.idCreatedBy = idUser;
+
+    // console.log("eventObj:", eventObj);
+
     let valid = await checkExpirationToken();
     switch (valid) {
         case true:
@@ -820,7 +897,55 @@ async function createEvent() {
 
             console.log("accessToken:", accessToken);
 
-            fetchNewEvent(accessToken);
+            // fetchNewEvent(accessToken);
+
+            break;
+
+        case false:
+
+            console.log("before update accessToken:", accessToken);
+
+            updateToken()
+                .then(() => fetchNewEvent(accessToken))
+
+            break;
+    }
+
+}
+
+async function updateEvent() {
+
+    let start = document.getElementById('date-event-start').value;
+    let end = document.getElementById('date-event-end').value;
+
+    let startH = document.getElementById('select-time-start-h');
+    let startM = document.getElementById('select-time-start-m');
+    let endH = document.getElementById('select-time-end-h');
+    let endM = document.getElementById('select-time-end-m');
+
+    let hourStart = startH.value;
+    let hourEnd = startM.value;
+    let minStart = endH.value;
+    let minEnd = endM.value;
+
+    eventObj.start = start + "T" + hourStart + ":" + minStart + ":00";
+    eventObj.end = end + "T" + hourEnd + ":" + minEnd + ":00";
+    eventObj.idCreatedBy = idUser;
+    eventObj.idEvent = document.getElementById('txt-event-id').value;
+
+    console.log("eventObj:", eventObj);
+
+    let valid = await checkExpirationToken();
+    switch (valid) {
+        case true:
+            console.log(" ");
+            console.log('==========================================');
+            console.log('Create event');
+            console.log('POST http://127.0.0.1:3070/events');
+
+            console.log("accessToken:", accessToken);
+
+            fetchUpdateEvent(accessToken);
 
             break;
 
