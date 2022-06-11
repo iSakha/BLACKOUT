@@ -780,7 +780,7 @@ function fetchNewEvent(token, eventObj) {
 }
 
 function fetchUpdateEvent(token, eventObj) {
-    fetch(URL + '/events', {
+    fetch(URL + '/events/id/' + eventObj.idEvent, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -995,8 +995,8 @@ async function updateEvent() {
         case true:
             console.log(" ");
             console.log('==========================================');
-            console.log('Create event');
-            console.log('POST http://127.0.0.1:3070/events');
+            console.log('Update event');
+            console.log('PUT http://127.0.0.1:3070/events/id/' + eventObj.idEvent);
 
             console.log("accessToken:", accessToken);
 

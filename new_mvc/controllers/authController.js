@@ -32,7 +32,7 @@ exports.validateUser = async (req, res) => {
                     user.password = row[0].crypto,
                     user.role = row[0].role
                 console.log("user:", user);
-                const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '2m' });
+                const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '20m' });
                 const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
 
                 res.status(200).json({
@@ -68,7 +68,7 @@ exports.updateToken = async (req, res) => {
             return res.sendStatus(403);
         }
 
-        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '2m' });
+        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '20m' });
         const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
 
         console.log("updated accessToken:", accessToken);

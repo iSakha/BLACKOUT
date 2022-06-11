@@ -29,9 +29,17 @@ module.exports = class Event {
 
     }
 
-    static getAll() {       
+    static getAllLatest() {       
         try {
            return db.execute('SELECT * FROM `v_events_latest_state`'); 
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static getAll() {       
+        try {
+           return db.execute('SELECT * FROM `v_events`'); 
         } catch (error) {
             return error;
         }
@@ -44,6 +52,14 @@ module.exports = class Event {
             return error;
         }        
     }
+
+    static getOneHistory(idEvent) {
+        try {
+           return db.execute('SELECT * FROM `v_events` WHERE `idEvent`=?', [idEvent]); 
+        } catch (error) {
+            return error;
+        }        
+    }    
 
     static createEvent(eventObj) {
         console.log("eventObj:", eventObj);

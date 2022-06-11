@@ -29,7 +29,26 @@ const authenticateJWT = (req, res) => {
     return status;
 };
 
-exports.getAllEvents = async (req, res) => {
+exports.getAllLatest = async (req, res) => {
+    try {
+        console.log("getAllEvents");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [allEvents] = await Event.getAllLatest();
+            res.json(allEvents);
+        }else {
+            res.sendStatus(status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+}
+
+exports.getAll = async (req, res) => {
     try {
         console.log("getAllEvents");
         let status = await authenticateJWT(req, res);
@@ -50,11 +69,30 @@ exports.getAllEvents = async (req, res) => {
 
 exports.getOne = async (req, res) => {
 try {
-    console.log("getAllEvents");
+    console.log("getOne");
     let status = await authenticateJWT(req, res);
     console.log("statusCode:", status);
     if (status === 200) {
         const [event] = await Event.getOne(req.params.id);
+        res.json(event);
+    }else {
+        res.sendStatus(status);
+    }
+
+} catch (error) {
+    if (!error.statusCode) {
+        error.statusCode = 500;
+    }
+}
+}
+
+exports.getOneHistory = async (req, res) => {
+try {
+    console.log("getOneHistory");
+    let status = await authenticateJWT(req, res);
+    console.log("statusCode:", status);
+    if (status === 200) {
+        const [event] = await Event.getOneHistory(req.params.id);
         res.json(event);
     }else {
         res.sendStatus(status);
@@ -155,11 +193,12 @@ exports.updateEvent = async (req, res) => {
             });
 
             myEvent.createdAt = utils.currentDateTime();
+            myEvent.idEvent = req.params.id;
 
             console.log("--------------------------------------------")
             console.log("createNewEvent myEvent:", myEvent);
-            
-            const [event] = await Event.createEvent(myEvent);
+
+            const [event] = await Event.updateEvent(myEvent);
             // res.status(200).json({ "message": "created" });
             res.status(200).json(event);
 
