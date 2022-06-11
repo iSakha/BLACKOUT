@@ -167,6 +167,11 @@ tblBody.addEventListener('click', (e) => {
 
 });
 
+//  Set phase 
+//=====================================================================
+document.getElementById('btn-set-phase').addEventListener('click', setPhase);
+
+
 //          F U N C T I O N S
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
@@ -759,7 +764,7 @@ function fetchOneEvent(token, idEvent) {
 
 
 function fetchNewEvent(token, eventObj) {
-    console.log("fetchNewEvent eventObj:" ,eventObj);
+    console.log("fetchNewEvent eventObj:", eventObj);
     fetch(URL + '/events', {
         method: 'POST',
         headers: {
@@ -924,6 +929,12 @@ async function updateEvent() {
 
     let eventObj = {};
 
+    let oPhase = setPhase();
+
+    if(oPhase.idPhase > 1) {
+        eventObj.phase = oPhase;
+    }else eventObj.phase = null;
+
     if (document.getElementById('txt-event-id').value != "") {
         eventObj.idEvent = document.getElementById('txt-event-id').value;
     } else eventObj.idEvent = null;
@@ -940,7 +951,7 @@ async function updateEvent() {
     let idCreatedBy = oUsers.find(e => e.fullName === eventObj.createdBy);
     eventObj.idCreatedBy = idCreatedBy.id;
 
-    console.log("idCreatedBy:",eventObj.idCreatedBy)
+    console.log("idCreatedBy:", eventObj.idCreatedBy)
 
     eventObj.idUpdatedBy = idUser;
 
@@ -1102,4 +1113,27 @@ async function getSummary() {
             console.log("error:", error);
         })
     return sumEvents;
+}
+
+//  SET phase function
+//=====================================================================
+function setPhase() {
+    let oPhase = {};
+    oPhase.idEvent = document.getElementById('txt-event-id').value;
+    oPhase.idPhase = parseInt(document.getElementById('select-phase').value);
+
+    let startDate = document.getElementById('date-phase-start').value;
+    let endDate = document.getElementById('date-phase-end').value;
+
+    let hourStart = document.getElementById('phase-time-start-h').value;
+    let hourEnd = document.getElementById('phase-time-end-h').value;
+    let minStart = document.getElementById('phase-time-start-m').value;
+    let minEnd = document.getElementById('phase-time-end-m').value;
+
+    oPhase.startPhase = startDate + "T" + hourStart + ":" + minStart + ":00";
+    oPhase.endPhase = endDate + "T" + hourEnd + ":" + minEnd + ":00";
+
+    console.log("oPhase:", oPhase);
+
+    return oPhase;
 }

@@ -196,9 +196,12 @@ exports.updateEvent = async (req, res) => {
             myEvent.idEvent = req.params.id;
 
             console.log("--------------------------------------------")
-            console.log("createNewEvent myEvent:", myEvent);
+            console.log("updatedEventEvent myEvent:", myEvent);
 
-            const [event] = await Event.updateEvent(myEvent);
+
+
+            const [event] = await Event.updateEvent(myEvent)
+            .then(console.log("testing async"))
             // res.status(200).json({ "message": "created" });
             res.status(200).json(event);
 

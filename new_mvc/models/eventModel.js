@@ -27,6 +27,9 @@ module.exports = class Event {
         this.filledUp = 0;
         this.is_deleted = null;
 
+        // this.event_phase = [{}];
+
+
     }
 
     static getAllLatest() {       
