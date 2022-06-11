@@ -73,6 +73,7 @@ exports.createNewEvent = async (req, res) => {
     if (utils.validateInputData(req.body)) {
 
         try {
+            console.log("--------------------------------------------")
             console.log("req.body:", req.body);
             await authenticateJWT(req, res);
 
@@ -85,16 +86,23 @@ exports.createNewEvent = async (req, res) => {
             // );
 
             let myEvent = new Event(req.body);
+            console.log("--------------------------------------------")
             console.log("myEvent:", myEvent);
 
             Object.keys(req.body).forEach((key) => {
 
-                myEvent[key] = req.body[key];
+                if(req.body[key] != null) {
+                    myEvent[key] = req.body[key];
+                }
+                
 
             });
 
             myEvent.createdAt = utils.currentDateTime();
             myEvent.idEvent = utils.createEventId();
+
+            console.log("--------------------------------------------")
+            console.log("myEvent:", myEvent);
 
             const [newEvent] = await Event.createEvent(myEvent);
             // res.status(200).json({ "message": "created" });

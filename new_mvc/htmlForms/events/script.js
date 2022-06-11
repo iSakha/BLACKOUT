@@ -9,6 +9,8 @@ let selectedEventId;
 let accessToken;
 let refreshToken;
 
+let oUsers = {};
+
 let idUser;
 
 
@@ -137,7 +139,7 @@ document.getElementById('btn-event-details').addEventListener('click', () => {
 });
 
 
-//          C R U D
+//          C R U D buttons
 //=====================================================================
 
 //  CREATE Event 
@@ -361,9 +363,10 @@ function getListManagers() {
         .then(res => res.json())
         .then(data => {
             console.log("users:", data);
-            loadSelectSource(data, selectManager_1);
-            loadSelectSource(data, selectManager_2);
-            getCurrentUser(data);
+            oUsers = data;
+            loadSelectSource(oUsers, selectManager_1);
+            loadSelectSource(oUsers, selectManager_2);
+            getCurrentUser(oUsers);
         })
         .then(getListStatus)
         .catch(error => {
@@ -578,6 +581,13 @@ function fillEventForm(event) {
     document.getElementById('txt-event-user').value = event[0].createdBy;
     document.getElementById('date-event-start').value = event[0].start.slice(0, 10);
     document.getElementById('date-event-end').value = event[0].end.slice(0, 10);
+
+    document.getElementById('txt-time-start-h').value = event[0].start.slice(11, 13);
+    document.getElementById('txt-time-start-m').value = event[0].start.slice(14, 16);
+    document.getElementById('txt-time-end-h').value = event[0].end.slice(11, 13);
+    document.getElementById('txt-time-end-m').value = event[0].end.slice(14, 16);
+
+
     document.getElementById('select-whouse').selectedIndex = event[0].idWarehouse;
     document.getElementById('txt-notes').value = event[0].notes;
     document.getElementById('select-event-city').selectedIndex = event[0].idEventCity - 2;
@@ -748,7 +758,8 @@ function fetchOneEvent(token, idEvent) {
 
 
 
-function fetchNewEvent(token) {
+function fetchNewEvent(token, eventObj) {
+    console.log("fetchNewEvent eventObj:" ,eventObj);
     fetch(URL + '/events', {
         method: 'POST',
         headers: {
@@ -835,6 +846,102 @@ async function createEvent() {
     } else eventObj.idWarehouse = null;
 
     eventObj.idCreatedBy = idUser;
+    eventObj.idUpdatedBy = idUser;
+
+    let startDate = document.getElementById('date-event-start').value;
+    let endDate = document.getElementById('date-event-end').value;
+
+    let hourStart = document.getElementById('txt-time-start-h').value;
+    let hourEnd = document.getElementById('txt-time-end-h').value;
+    let minStart = document.getElementById('txt-time-start-m').value;
+    let minEnd = document.getElementById('txt-time-end-m').value;
+
+    eventObj.start = startDate + "T" + hourStart + ":" + minStart + ":00";
+    eventObj.end = endDate + "T" + hourEnd + ":" + minEnd + ":00";
+
+    if (document.getElementById('txt-notes').value != "") {
+        eventObj.notes = document.getElementById('txt-notes').value;
+    } else eventObj.notes = null;
+
+    if (document.getElementById('select-manager-1').value > 1) {
+        eventObj.idManager_1 = parseInt(document.getElementById('select-manager-1').value);
+    } else eventObj.idManager_1 = null;
+
+    if (document.getElementById('select-manager-2').value > 1) {
+        eventObj.idManager_2 = parseInt(document.getElementById('select-manager-2').value);
+    } else eventObj.idManager_2 = null;
+
+    if (document.getElementById('select-event-city').value > 1) {
+        eventObj.idEventCity = parseInt(document.getElementById('select-event-city').value);
+    } else eventObj.idEventCity = null;
+
+    if (document.getElementById('select-event-place').value > 1) {
+        eventObj.idEventPlace = parseInt(document.getElementById('select-event-place').value);
+    } else eventObj.idEventPlace = null;
+
+    if (document.getElementById('select-event-client').value > 1) {
+        eventObj.idClient = parseInt(document.getElementById('select-event-client').value);
+    } else eventObj.idClient = null;
+
+    if (document.getElementById('select-status').value > 1) {
+        eventObj.idStatus = parseInt(document.getElementById('select-status').value);
+    } else eventObj.idStatus = null;
+
+    eventObj.idPhase = null;
+    eventObj.phaseTimeStart = null;
+    eventObj.phaseTimeEnd = null;
+    eventObj.filledUp = null;
+
+    console.log("createEvent eventObj:", eventObj)
+
+    let valid = await checkExpirationToken();
+    switch (valid) {
+        case true:
+            console.log(" ");
+            console.log('==========================================');
+            console.log('Create event');
+            console.log('POST http://127.0.0.1:3070/events');
+
+            console.log("accessToken:", accessToken);
+
+            fetchNewEvent(accessToken, eventObj);
+
+            break;
+
+        case false:
+
+            console.log("before update accessToken:", accessToken);
+
+            updateToken()
+                .then(() => fetchNewEvent(accessToken, eventObj))
+
+            break;
+    }
+
+}
+
+async function updateEvent() {
+
+    let eventObj = {};
+
+    if (document.getElementById('txt-event-id').value != "") {
+        eventObj.idEvent = document.getElementById('txt-event-id').value;
+    } else eventObj.idEvent = null;
+
+    if (document.getElementById('txt-event-title').value != "") {
+        eventObj.title = document.getElementById('txt-event-title').value;
+    } else eventObj.title = null;
+
+    if (document.getElementById('select-whouse').value >= 1) {
+        eventObj.idWarehouse = parseInt(document.getElementById('select-whouse').value);
+    } else eventObj.idWarehouse = null;
+
+    eventObj.createdBy = document.getElementById('txt-event-user').value;
+    eventObj.idCreatedBy = oUsers.find(e => e.fullName === eventObj.createdBy);
+
+    console.log("idCreatedBy:",eventObj.idCreatedBy)
+
+    eventObj.idUpdatedBy = idUser;
 
     let startDate = document.getElementById('date-event-start').value;
     let endDate = document.getElementById('date-event-end').value;
@@ -871,96 +978,40 @@ async function createEvent() {
         eventObj.idClient = parseInt(document.getElementById('select-event-client').value);
     } else eventObj.idClient = null;
 
-    console.log("createEvent eventObj:", eventObj)
+    if (document.getElementById('select-status').value >= 1) {
+        eventObj.idStatus = parseInt(document.getElementById('select-status').value);
+    } else eventObj.idStatus = null;
 
+    eventObj.idPhase = null;
+    eventObj.phaseTimeStart = null;
+    eventObj.phaseTimeEnd = null;
+    eventObj.filledUp = null;
 
-    // this.idStatus = 1;
-    // this.idPhase = 1;
-    // this.phaseTimeStart = null;
-    // this.phaseTimeEnd = null;
-    // this.idUpdatedBy = 1;
-    // this.updatedAt = null;
-    // this.filledUp = 0;
-    // this.is_deleted = null;
+    console.log("updateEvent eventObj:", eventObj);
 
+    // let valid = await checkExpirationToken();
+    // switch (valid) {
+    //     case true:
+    //         console.log(" ");
+    //         console.log('==========================================');
+    //         console.log('Create event');
+    //         console.log('POST http://127.0.0.1:3070/events');
 
-    // eventObj.start = start + "T" + hourStart + ":" + minStart + ":00";
-    // eventObj.end = end + "T" + hourEnd + ":" + minEnd + ":00";
-    // eventObj.idCreatedBy = idUser;
+    //         console.log("accessToken:", accessToken);
 
-    // console.log("eventObj:", eventObj);
+    //         // fetchUpdateEvent(accessToken);
 
-    let valid = await checkExpirationToken();
-    switch (valid) {
-        case true:
-            console.log(" ");
-            console.log('==========================================');
-            console.log('Create event');
-            console.log('POST http://127.0.0.1:3070/events');
+    //         break;
 
-            console.log("accessToken:", accessToken);
+    //     case false:
 
-            // fetchNewEvent(accessToken);
+    //         console.log("before update accessToken:", accessToken);
 
-            break;
+    //         updateToken()
+    //             .then(() => fetchNewEvent(accessToken))
 
-        case false:
-
-            console.log("before update accessToken:", accessToken);
-
-            updateToken()
-                .then(() => fetchNewEvent(accessToken))
-
-            break;
-    }
-
-}
-
-async function updateEvent() {
-
-    let start = document.getElementById('date-event-start').value;
-    let end = document.getElementById('date-event-end').value;
-
-    let startH = document.getElementById('select-time-start-h');
-    let startM = document.getElementById('select-time-start-m');
-    let endH = document.getElementById('select-time-end-h');
-    let endM = document.getElementById('select-time-end-m');
-
-    let hourStart = startH.value;
-    let hourEnd = startM.value;
-    let minStart = endH.value;
-    let minEnd = endM.value;
-
-    eventObj.start = start + "T" + hourStart + ":" + minStart + ":00";
-    eventObj.end = end + "T" + hourEnd + ":" + minEnd + ":00";
-    eventObj.idCreatedBy = idUser;
-    eventObj.idEvent = document.getElementById('txt-event-id').value;
-
-    console.log("eventObj:", eventObj);
-
-    let valid = await checkExpirationToken();
-    switch (valid) {
-        case true:
-            console.log(" ");
-            console.log('==========================================');
-            console.log('Create event');
-            console.log('POST http://127.0.0.1:3070/events');
-
-            console.log("accessToken:", accessToken);
-
-            fetchUpdateEvent(accessToken);
-
-            break;
-
-        case false:
-
-            console.log("before update accessToken:", accessToken);
-
-            updateToken()
-                .then(() => fetchNewEvent(accessToken))
-
-            break;
-    }
+    //         break;
+    // }
 
 }
 
