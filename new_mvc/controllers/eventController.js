@@ -74,7 +74,8 @@ exports.createNewEvent = async (req, res) => {
 
         try {
             console.log("--------------------------------------------")
-            console.log("req.body:", req.body);
+            console.log("createNewEvent req.body:", req.body);
+
             await authenticateJWT(req, res);
 
             // res.setHeader("Access-Control-Allow-Origin", "*");
@@ -87,7 +88,7 @@ exports.createNewEvent = async (req, res) => {
 
             let myEvent = new Event(req.body);
             console.log("--------------------------------------------")
-            console.log("myEvent:", myEvent);
+            console.log("createNewEvent myEvent:", myEvent);
 
             Object.keys(req.body).forEach((key) => {
 
@@ -102,7 +103,7 @@ exports.createNewEvent = async (req, res) => {
             myEvent.idEvent = utils.createEventId();
 
             console.log("--------------------------------------------")
-            console.log("myEvent:", myEvent);
+            console.log("createNewEvent myEvent:", myEvent);
 
             const [newEvent] = await Event.createEvent(myEvent);
             // res.status(200).json({ "message": "created" });
@@ -127,8 +128,11 @@ exports.updateEvent = async (req, res) => {
 
     if (utils.validateInputData(req.body)) {
 
-        try {            
-            await authenticateJWT(req, res);
+        try {   
+            console.log("--------------------------------------------")
+            console.log("updateEvent req.body:", req.body);
+
+            await authenticateJWT(req, res);         
 
             // res.setHeader("Access-Control-Allow-Origin", "*");
             // res.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH, POST");
@@ -139,17 +143,22 @@ exports.updateEvent = async (req, res) => {
             // );
 
             let myEvent = new Event(req.body);
-            console.log("myEvent:", myEvent);
+            console.log("--------------------------------------------")
+            console.log("updateEvent myEvent:", myEvent);
 
             Object.keys(req.body).forEach((key) => {
 
-                myEvent[key] = req.body[key];
+                if(req.body[key] != null) {
+                    myEvent[key] = req.body[key];
+                }
 
             });
 
             myEvent.createdAt = utils.currentDateTime();
-            // myEvent.idEvent = utils.createEventId();
 
+            console.log("--------------------------------------------")
+            console.log("createNewEvent myEvent:", myEvent);
+            
             const [event] = await Event.createEvent(myEvent);
             // res.status(200).json({ "message": "created" });
             res.status(200).json(event);

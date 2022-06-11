@@ -1,8 +1,8 @@
 SELECT
- `t_events`.`idWarehouse` AS `idWarehouse`,
+ `v_s_events`.`idWarehouse` AS `idWarehouse`,
  `t_warehouses`.`warehouse` AS `warehouse`,
- COUNT(`t_events`.`idWarehouse`) - 1 AS `qty` 
- FROM `t_events` 
+ COUNT(`v_s_events`.`idWarehouse`) - 1 AS `qty` 
+ FROM `v_s_events` 
  JOIN `t_warehouses` 
- ON`t_events`.`idWarehouse` = `t_warehouses`.`id` 
- GROUP BY `t_events`.`idWarehouse`
+ ON`v_s_events`.`idWarehouse` = `t_warehouses`.`id` 
+ GROUP BY `v_s_events`.`idWarehouse`

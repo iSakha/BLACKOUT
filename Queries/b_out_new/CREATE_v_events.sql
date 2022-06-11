@@ -19,7 +19,8 @@ CONCAT(`m3`.`firstName`,' ',`m3`.`lastName`) AS `createdBy`,
 `t_events`.`idManager_1` AS `idManager_1`,
 CONCAT(`m1`.`firstName`,' ',`m1`.`lastName`) AS `manager_1`,
 `t_events`.`idManager_2` AS `idManager_2`,
-CONCAT(`m2`.`firstName`,' ',`m2`.`lastName`) AS `manager_2`
+CONCAT(`m2`.`firstName`,' ',`m2`.`lastName`) AS `manager_2`,
+`t_events`.`updatedAt` AS `updatedAt`
 
 
 FROM
@@ -40,3 +41,5 @@ JOIN `t_users` `m2`
 ON `t_events`.`idManager_2` = `m2`.`id`
 JOIN `t_users` `m3` 
 ON `t_events`.`idCreatedBy` = `m3`.`id`
+
+

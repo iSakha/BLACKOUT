@@ -9,7 +9,7 @@ module.exports = class Event {
         this.idWarehouse = oEvent.idWarehouse;
         this.title = oEvent.title;
         this.start = oEvent.start;
-        this.end = null;
+        this.end = oEvent.end;
         this.idManager_1 = 1;
         this.idManager_2 = 1;
         this.idEventCity = 1;
@@ -31,7 +31,7 @@ module.exports = class Event {
 
     static getAll() {       
         try {
-           return db.execute('SELECT * FROM `v_events`'); 
+           return db.execute('SELECT * FROM `v_events_latest_state`'); 
         } catch (error) {
             return error;
         }
@@ -39,7 +39,7 @@ module.exports = class Event {
 
     static getOne(idEvent) {
         try {
-           return db.execute('SELECT * FROM `v_events` WHERE `idEvent`=?', [idEvent]); 
+           return db.execute('SELECT * FROM `v_events_latest_state` WHERE `idEvent`=?', [idEvent]); 
         } catch (error) {
             return error;
         }        

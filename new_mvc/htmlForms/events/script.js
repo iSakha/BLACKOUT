@@ -590,7 +590,7 @@ function fillEventForm(event) {
 
     document.getElementById('select-whouse').selectedIndex = event[0].idWarehouse;
     document.getElementById('txt-notes').value = event[0].notes;
-    document.getElementById('select-event-city').selectedIndex = event[0].idEventCity - 2;
+    document.getElementById('select-event-city').selectedIndex = event[0].idEventCity - 1;
     // document.getElementById('select-event-place').selectedIndex
     document.getElementById('select-event-client').selectedIndex = event[0].idClient - 1;
     document.getElementById('select-manager-1').selectedIndex = event[0].idManager_1 - 1;
@@ -779,7 +779,7 @@ function fetchNewEvent(token, eventObj) {
         })
 }
 
-function fetchUpdateEvent(token) {
+function fetchUpdateEvent(token, eventObj) {
     fetch(URL + '/events', {
         method: 'PUT',
         headers: {
@@ -841,7 +841,7 @@ async function createEvent() {
         eventObj.title = document.getElementById('txt-event-title').value;
     } else eventObj.title = null;
 
-    if (document.getElementById('select-whouse').value >= 1) {
+    if (document.getElementById('select-whouse').value > 1) {
         eventObj.idWarehouse = parseInt(document.getElementById('select-whouse').value);
     } else eventObj.idWarehouse = null;
 
@@ -937,7 +937,8 @@ async function updateEvent() {
     } else eventObj.idWarehouse = null;
 
     eventObj.createdBy = document.getElementById('txt-event-user').value;
-    eventObj.idCreatedBy = oUsers.find(e => e.fullName === eventObj.createdBy);
+    let idCreatedBy = oUsers.find(e => e.fullName === eventObj.createdBy);
+    eventObj.idCreatedBy = idCreatedBy.id;
 
     console.log("idCreatedBy:",eventObj.idCreatedBy)
 
@@ -989,29 +990,29 @@ async function updateEvent() {
 
     console.log("updateEvent eventObj:", eventObj);
 
-    // let valid = await checkExpirationToken();
-    // switch (valid) {
-    //     case true:
-    //         console.log(" ");
-    //         console.log('==========================================');
-    //         console.log('Create event');
-    //         console.log('POST http://127.0.0.1:3070/events');
+    let valid = await checkExpirationToken();
+    switch (valid) {
+        case true:
+            console.log(" ");
+            console.log('==========================================');
+            console.log('Create event');
+            console.log('POST http://127.0.0.1:3070/events');
 
-    //         console.log("accessToken:", accessToken);
+            console.log("accessToken:", accessToken);
 
-    //         // fetchUpdateEvent(accessToken);
+            fetchUpdateEvent(accessToken, eventObj);
 
-    //         break;
+            break;
 
-    //     case false:
+        case false:
 
-    //         console.log("before update accessToken:", accessToken);
+            console.log("before update accessToken:", accessToken);
 
-    //         updateToken()
-    //             .then(() => fetchNewEvent(accessToken))
+            updateToken()
+                .then(() => fetchUpdateEvent(accessToken, eventObj))
 
-    //         break;
-    // }
+            break;
+    }
 
 }
 
