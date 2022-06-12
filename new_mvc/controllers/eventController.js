@@ -37,8 +37,22 @@ exports.getAllLatest = async (req, res) => {
         console.log("statusCode:", status);
         if (status === 200) {
             const [allEvents] = await Event.getAllLatest();
+            console.log("allEvents:", allEvents);
+            const [phases] = await Phase.getAllPhase();
+            console.log("phases:", phases);
+
+            for (let i = 0; i < allEvents.length; i++) {
+
+                let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
+                console.log("foundPhase:",i,foundPhase);
+                if(foundPhase.length > 0) {
+                    allEvents[i].phase = foundPhase
+                }else allEvents[i].phase = null;
+
+            }
+
             res.json(allEvents);
-        }else {
+        } else {
             res.sendStatus(status);
         }
 
@@ -57,7 +71,7 @@ exports.getAll = async (req, res) => {
         if (status === 200) {
             const [allEvents] = await Event.getAll();
             res.json(allEvents);
-        }else {
+        } else {
             res.sendStatus(status);
         }
 
@@ -69,41 +83,41 @@ exports.getAll = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-try {
-    console.log("getOne");
-    let status = await authenticateJWT(req, res);
-    console.log("statusCode:", status);
-    if (status === 200) {
-        const [event] = await Event.getOne(req.params.id);
-        res.json(event);
-    }else {
-        res.sendStatus(status);
-    }
+    try {
+        console.log("getOne");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [event] = await Event.getOne(req.params.id);
+            res.json(event);
+        } else {
+            res.sendStatus(status);
+        }
 
-} catch (error) {
-    if (!error.statusCode) {
-        error.statusCode = 500;
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
     }
-}
 }
 
 exports.getOneHistory = async (req, res) => {
-try {
-    console.log("getOneHistory");
-    let status = await authenticateJWT(req, res);
-    console.log("statusCode:", status);
-    if (status === 200) {
-        const [event] = await Event.getOneHistory(req.params.id);
-        res.json(event);
-    }else {
-        res.sendStatus(status);
-    }
+    try {
+        console.log("getOneHistory");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [event] = await Event.getOneHistory(req.params.id);
+            res.json(event);
+        } else {
+            res.sendStatus(status);
+        }
 
-} catch (error) {
-    if (!error.statusCode) {
-        error.statusCode = 500;
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
     }
-}
 }
 
 
@@ -131,10 +145,10 @@ exports.createNewEvent = async (req, res) => {
 
             Object.keys(req.body).forEach((key) => {
 
-                if(req.body[key] != null) {
+                if (req.body[key] != null) {
                     myEvent[key] = req.body[key];
                 }
-                
+
 
             });
 
@@ -167,11 +181,11 @@ exports.updateEvent = async (req, res) => {
 
     if (utils.validateInputData(req.body)) {
 
-        try {   
+        try {
             console.log("--------------------------------------------")
             console.log("updateEvent req.body:", req.body);
 
-            await authenticateJWT(req, res);         
+            await authenticateJWT(req, res);
 
             // res.setHeader("Access-Control-Allow-Origin", "*");
             // res.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH, POST");
@@ -187,7 +201,7 @@ exports.updateEvent = async (req, res) => {
 
             Object.keys(req.body).forEach((key) => {
 
-                if(req.body[key] != null) {
+                if (req.body[key] != null) {
                     myEvent[key] = req.body[key];
                 }
 
@@ -279,10 +293,10 @@ exports.getPhases = async (req, res) => {
         if (status === 200) {
             const [phase] = await Event.getPhases();
             res.json(phase);
-        }else {
+        } else {
             res.sendStatus(status);
         }
-    
+
     } catch (error) {
         if (!error.statusCode) {
             error.statusCode = 500;

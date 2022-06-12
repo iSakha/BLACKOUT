@@ -40,6 +40,14 @@ module.exports = class Event {
         }
     }
 
+    // static getAllLatest() {       
+    //     try {
+    //        return db.execute('SELECT * FROM `v_event_full`'); 
+    //     } catch (error) {
+    //         return error;
+    //     }
+    // }
+
     static getAll() {       
         try {
            return db.execute('SELECT * FROM `v_events`'); 
