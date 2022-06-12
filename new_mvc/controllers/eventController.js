@@ -1,6 +1,7 @@
 const Event = require('../models/eventModel');
 const utils = require('../utils/utils');
 const jwt = require('jsonwebtoken');
+const Phase = require('../models/phaseModel');
 
 const accessTokenSecret = 'greatSecretForTokenAccessWith#-~';
 const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
@@ -201,7 +202,7 @@ exports.updateEvent = async (req, res) => {
 
 
             const [event] = await Event.updateEvent(myEvent)
-            .then(console.log("testing async"))
+            await Phase.createPhase(myEvent.phase)
             // res.status(200).json({ "message": "created" });
             res.status(200).json(event);
 
