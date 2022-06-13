@@ -1,37 +1,39 @@
-const Event = require('../models/eventModel');
-const utils = require('../utils/utils');
 const jwt = require('jsonwebtoken');
+const Event = require('../models/eventModel');
 const Phase = require('../models/phaseModel');
+const utils = require('../utils/utils');
+const auth = require('../controllers/authController')
 
-const accessTokenSecret = 'greatSecretForTokenAccessWith#-~';
-const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
-const authenticateJWT = (req, res) => {
-    const authHeader = req.headers.authorization;
-    let status;
-    if (authHeader) {
-        const token = authHeader.split(' ')[1];
+// const accessTokenSecret = 'greatSecretForTokenAccessWith#-~';
+// const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
-        jwt.verify(token, accessTokenSecret, (err, user) => {
-            if (err) {
-                status = 403;
-            } else {
-                status = 200;
-                req.user = user;
-            }
-        });
-    } else {
-        status = 401;
-    }
-    return status;
-};
+// const authenticateJWT = (req, res) => {
+//     const authHeader = req.headers.authorization;
+//     let status;
+//     if (authHeader) {
+//         const token = authHeader.split(' ')[1];
+
+//         jwt.verify(token, accessTokenSecret, (err, user) => {
+//             if (err) {
+//                 status = 403;
+//             } else {
+//                 status = 200;
+//                 req.user = user;
+//             }
+//         });
+//     } else {
+//         status = 401;
+//     }
+//     return status;
+// };
 
 // Events queries
 // =====================================================================
 exports.getAllLatest = async (req, res) => {
     try {
         console.log("getAllEvents");
-        let status = await authenticateJWT(req, res);
+        let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status);
         if (status === 200) {
             const [allEvents] = await Event.getAllLatest();
@@ -64,7 +66,7 @@ exports.getAllLatest = async (req, res) => {
 exports.getAll = async (req, res) => {
     try {
         console.log("getAllEvents");
-        let status = await authenticateJWT(req, res);
+        let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status);
         if (status === 200) {
             const [allEvents] = await Event.getAll();
@@ -83,7 +85,7 @@ exports.getAll = async (req, res) => {
 exports.getOne = async (req, res) => {
     try {
         console.log("getOne");
-        let status = await authenticateJWT(req, res);
+        let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status);
         if (status === 200) {
             const [event] = await Event.getOne(req.params.id);
@@ -102,7 +104,7 @@ exports.getOne = async (req, res) => {
 exports.getOneHistory = async (req, res) => {
     try {
         console.log("getOneHistory");
-        let status = await authenticateJWT(req, res);
+        let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status);
         if (status === 200) {
             const [event] = await Event.getOneHistory(req.params.id);
@@ -127,15 +129,7 @@ exports.createNewEvent = async (req, res) => {
             console.log("--------------------------------------------")
             console.log("createNewEvent req.body:", req.body);
 
-            await authenticateJWT(req, res);
-
-            // res.setHeader("Access-Control-Allow-Origin", "*");
-            // res.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH, POST");
-            // res.setHeader("Access-Control-Allow-Credentials", true);
-            // res.setHeader(
-            //     "Access-Control-Allow-Headers",
-            //     "X-Requested-With,content-type,Origin,Accept,Authorization"
-            // );
+            await auth.authenticateJWT(req, res);
 
             let myEvent = new Event(req.body);
             console.log("--------------------------------------------")
@@ -183,15 +177,7 @@ exports.updateEvent = async (req, res) => {
             console.log("--------------------------------------------")
             console.log("updateEvent req.body:", req.body);
 
-            await authenticateJWT(req, res);
-
-            // res.setHeader("Access-Control-Allow-Origin", "*");
-            // res.setHeader("Access-Control-Allow-Methods", "PUT,GET,DELETE,PATCH, POST");
-            // res.setHeader("Access-Control-Allow-Credentials", true);
-            // res.setHeader(
-            //     "Access-Control-Allow-Headers",
-            //     "X-Requested-With,content-type,Origin,Accept,Authorization"
-            // );
+            await auth.authenticateJWT(req, res);
 
             let myEvent = new Event(req.body);
             console.log("--------------------------------------------")
@@ -231,122 +217,10 @@ exports.updateEvent = async (req, res) => {
 
 }
 
-
-// Extra queries
-// =====================================================================
-
-// GET
-// =====================================================================
-exports.getLocations = async (req, res) => {
-
-    try {
-        console.log("getLocations");
-        let status = await authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status === 200) {
-            const [locations] = await Event.getLocations();
-            console.log(locations);
-            res.status(200).json(locations);
-        } else {
-            res.sendStatus(status);
-        }
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-}
-
-exports.getClients = async (req, res) => {
-    try {
-        console.log("getClients");
-        let status = await authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status === 200) {
-            const [clients] = await Event.getClients();
-            console.log(clients);
-            res.status(200).json(clients);
-        } else {
-            res.sendStatus(status);
-        }
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-}
-
-exports.getManagers = async (req, res) => {
-
-    try {
-        console.log("getManagers");
-        let status = await authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status === 200) {
-            const [users] = await Event.getUsers();
-            console.log(users);
-            res.status(200).json(users);
-        } else {
-            res.sendStatus(status);
-        }
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-
-}
-
-exports.getStatus = async (req, res) => {
-
-    try {
-        console.log("getStatus");
-        let status = await authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status === 200) {
-            const [status] = await Event.getStatus();
-            console.log(status);
-            res.status(200).json(status);
-        } else {
-            res.sendStatus(status);
-        }
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-
-}
-
-exports.getPhases = async (req, res) => {
-
-    try {
-        console.log("getPhases");
-        let status = await authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status === 200) {
-            const [phase] = await Event.getPhases();
-            console.log(status);
-            res.status(200).json(phase);
-        } else {
-            res.sendStatus(status);
-        }
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-}
-
 exports.getSummary = async (req, res) => {
     try {
         console.log("getSummary");
-        let status = await authenticateJWT(req, res);
+        let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status);
         if (status === 200) {
             const [summary] = await Event.getSummary();
@@ -363,43 +237,174 @@ exports.getSummary = async (req, res) => {
     }
 
 }
-
-exports.getWarehouses = async (req, res) => {
-    try {
-        console.log("getWarehouses");
-        let status = await authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status === 200) {
-            const [summary] = await Event.getWarehouses();
-            console.log(summary);
-            res.status(200).json(summary);
-        } else {
-            res.sendStatus(status);
-        }
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-
-}
-
-// CREATE
-// =====================================================================
-exports.newCity = async (req, res) => {
-    console.log("--------------------------------------------")
-    console.log("New City req.body:", req.body);
-
-    let city = {};
-    city.title = req.body.city;
-
-    // await authenticateJWT(req, res);
-    console.log("New City:", city);
-
-}
-// UPDATE
+// Extra queries
 // =====================================================================
 
-// DELETE
-// =====================================================================
+// // GET
+// // =====================================================================
+// exports.getLocations = async (req, res) => {
+
+//     try {
+//         console.log("getLocations");
+//         let status = await authenticateJWT(req, res);
+//         console.log("statusCode:", status);
+//         if (status === 200) {
+//             const [locations] = await Event.getLocations();
+//             console.log(locations);
+//             res.status(200).json(locations);
+//         } else {
+//             res.sendStatus(status);
+//         }
+
+//     } catch (error) {
+//         if (!error.statusCode) {
+//             error.statusCode = 500;
+//         }
+//     }
+// }
+
+// exports.getClients = async (req, res) => {
+//     try {
+//         console.log("getClients");
+//         let status = await authenticateJWT(req, res);
+//         console.log("statusCode:", status);
+//         if (status === 200) {
+//             const [clients] = await Event.getClients();
+//             console.log(clients);
+//             res.status(200).json(clients);
+//         } else {
+//             res.sendStatus(status);
+//         }
+
+//     } catch (error) {
+//         if (!error.statusCode) {
+//             error.statusCode = 500;
+//         }
+//     }
+// }
+
+// exports.getManagers = async (req, res) => {
+
+//     try {
+//         console.log("getManagers");
+//         let status = await authenticateJWT(req, res);
+//         console.log("statusCode:", status);
+//         if (status === 200) {
+//             const [users] = await Event.getUsers();
+//             console.log(users);
+//             res.status(200).json(users);
+//         } else {
+//             res.sendStatus(status);
+//         }
+
+//     } catch (error) {
+//         if (!error.statusCode) {
+//             error.statusCode = 500;
+//         }
+//     }
+
+// }
+
+// exports.getStatus = async (req, res) => {
+
+//     try {
+//         console.log("getStatus");
+//         let status = await authenticateJWT(req, res);
+//         console.log("statusCode:", status);
+//         if (status === 200) {
+//             const [status] = await Event.getStatus();
+//             console.log(status);
+//             res.status(200).json(status);
+//         } else {
+//             res.sendStatus(status);
+//         }
+
+//     } catch (error) {
+//         if (!error.statusCode) {
+//             error.statusCode = 500;
+//         }
+//     }
+
+// }
+
+// exports.getPhases = async (req, res) => {
+
+//     try {
+//         console.log("getPhases");
+//         let status = await authenticateJWT(req, res);
+//         console.log("statusCode:", status);
+//         if (status === 200) {
+//             const [phase] = await Event.getPhases();
+//             console.log(status);
+//             res.status(200).json(phase);
+//         } else {
+//             res.sendStatus(status);
+//         }
+
+//     } catch (error) {
+//         if (!error.statusCode) {
+//             error.statusCode = 500;
+//         }
+//     }
+// }
+
+// exports.getSummary = async (req, res) => {
+//     try {
+//         console.log("getSummary");
+//         let status = await authenticateJWT(req, res);
+//         console.log("statusCode:", status);
+//         if (status === 200) {
+//             const [summary] = await Event.getSummary();
+//             console.log(summary);
+//             res.status(200).json(summary);
+//         } else {
+//             res.sendStatus(status);
+//         }
+
+//     } catch (error) {
+//         if (!error.statusCode) {
+//             error.statusCode = 500;
+//         }
+//     }
+
+// }
+
+// exports.getWarehouses = async (req, res) => {
+//     try {
+//         console.log("getWarehouses");
+//         let status = await authenticateJWT(req, res);
+//         console.log("statusCode:", status);
+//         if (status === 200) {
+//             const [summary] = await Event.getWarehouses();
+//             console.log(summary);
+//             res.status(200).json(summary);
+//         } else {
+//             res.sendStatus(status);
+//         }
+
+//     } catch (error) {
+//         if (!error.statusCode) {
+//             error.statusCode = 500;
+//         }
+//     }
+
+// }
+
+// // CREATE
+// // =====================================================================
+// exports.newCity = async (req, res) => {
+//     console.log("--------------------------------------------")
+//     console.log("New City req.body:", req.body);
+
+//     let city = {};
+//     city.title = req.body.city;
+
+//     // await authenticateJWT(req, res);
+//     console.log("New City:", city);
+
+// }
+// // UPDATE
+// // =====================================================================
+
+// // DELETE
+// // =====================================================================

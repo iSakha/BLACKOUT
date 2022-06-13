@@ -1,9 +1,29 @@
-// const express = require('express');
-// const rootController = require('../controllers/rootController');
-// const router = express.Router();
+const express = require('express');
+const rootController = require('../controllers/rootController');
+const router = express.Router();
 
 
-// router.get('/checkDBconn', eventController.checkConnection);
-// // router.post('/', eventController.createNewEvent);
+router.get('/', rootController.greetMessage);
+router.get('/checkdb', rootController.checkDbConnection);
 
-// module.exports = router;
+// GET
+// =====================================================================
+router.get('/locations', rootController.getLocations);
+router.get('/clients', rootController.getClients);
+router.get('/users', rootController.getManagers);
+router.get('/status', rootController.getStatus);
+router.get('/phase', rootController.getPhases);
+router.get('/warehouses', rootController.getWarehouses);
+
+// CREATE
+// =====================================================================
+router.post('/locations', rootController.newCity);
+
+// UPDATE
+// =====================================================================
+
+// DELETE
+// =====================================================================
+
+
+module.exports = router;

@@ -8,6 +8,27 @@ const jwt = require('jsonwebtoken');
 const accessTokenSecret = 'greatSecretForTokenAccessWith#-~';
 const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
+
+exports.authenticateJWT = (req, res) => {
+    const authHeader = req.headers.authorization;
+    let status;
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+
+        jwt.verify(token, accessTokenSecret, (err, user) => {
+            if (err) {
+                status = 403;
+            } else {
+                status = 200;
+                req.user = user;
+            }
+        });
+    } else {
+        status = 401;
+    }
+    return status;
+};
+
 exports.validateUser = async (req, res) => {
     console.log("validateUser");
 
