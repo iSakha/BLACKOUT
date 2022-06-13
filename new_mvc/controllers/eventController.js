@@ -15,21 +15,19 @@ const authenticateJWT = (req, res) => {
         jwt.verify(token, accessTokenSecret, (err, user) => {
             if (err) {
                 status = 403;
-                // return res.sendStatus(403);
             } else {
                 status = 200;
                 req.user = user;
             }
-
-            // next();
         });
     } else {
         status = 401;
-        // res.sendStatus(401);
     }
     return status;
 };
 
+// Events queries
+// =====================================================================
 exports.getAllLatest = async (req, res) => {
     try {
         console.log("getAllEvents");
@@ -233,66 +231,107 @@ exports.updateEvent = async (req, res) => {
 
 }
 
+
+// Extra queries
+// =====================================================================
+
+// GET
+// =====================================================================
 exports.getLocations = async (req, res) => {
+
     try {
-        const [locations] = await Event.getLocations();
-        console.log(locations);
-        res.status(200).json(locations);
+        console.log("getLocations");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [locations] = await Event.getLocations();
+            console.log(locations);
+            res.status(200).json(locations);
+        } else {
+            res.sendStatus(status);
+        }
+
     } catch (error) {
         if (!error.statusCode) {
-            // error.statusCode = 500;
-            res.status(500).json(error);
+            error.statusCode = 500;
         }
     }
 }
 
 exports.getClients = async (req, res) => {
     try {
-        const [clients] = await Event.getClients();
-        console.log(clients);
-        res.status(200).json(clients);
+        console.log("getClients");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [clients] = await Event.getClients();
+            console.log(clients);
+            res.status(200).json(clients);
+        } else {
+            res.sendStatus(status);
+        }
+
     } catch (error) {
         if (!error.statusCode) {
-            // error.statusCode = 500;
-            res.status(500).json(error);
+            error.statusCode = 500;
         }
     }
 }
 
 exports.getManagers = async (req, res) => {
+
     try {
-        const [users] = await Event.getUsers();
-        console.log(users);
-        res.status(200).json(users);
+        console.log("getManagers");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [users] = await Event.getUsers();
+            console.log(users);
+            res.status(200).json(users);
+        } else {
+            res.sendStatus(status);
+        }
+
     } catch (error) {
         if (!error.statusCode) {
-            // error.statusCode = 500;
-            res.status(500).json(error);
+            error.statusCode = 500;
         }
     }
+
 }
 
 exports.getStatus = async (req, res) => {
+
     try {
-        const [status] = await Event.getStatus();
-        console.log(status);
-        res.status(200).json(status);
+        console.log("getStatus");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [status] = await Event.getStatus();
+            console.log(status);
+            res.status(200).json(status);
+        } else {
+            res.sendStatus(status);
+        }
+
     } catch (error) {
         if (!error.statusCode) {
-            // error.statusCode = 500;
-            res.status(500).json(error);
+            error.statusCode = 500;
         }
     }
+
 }
 
 exports.getPhases = async (req, res) => {
+
     try {
         console.log("getPhases");
         let status = await authenticateJWT(req, res);
         console.log("statusCode:", status);
         if (status === 200) {
             const [phase] = await Event.getPhases();
-            res.json(phase);
+            console.log(status);
+            res.status(200).json(phase);
         } else {
             res.sendStatus(status);
         }
@@ -306,13 +345,61 @@ exports.getPhases = async (req, res) => {
 
 exports.getSummary = async (req, res) => {
     try {
-        const [summary] = await Event.getSummary();
-        console.log(summary);
-        res.status(200).json(summary);
+        console.log("getSummary");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [summary] = await Event.getSummary();
+            console.log(summary);
+            res.status(200).json(summary);
+        } else {
+            res.sendStatus(status);
+        }
+
     } catch (error) {
         if (!error.statusCode) {
-            // error.statusCode = 500;
-            res.status(500).json(error);
+            error.statusCode = 500;
         }
     }
+
 }
+
+exports.getWarehouses = async (req, res) => {
+    try {
+        console.log("getWarehouses");
+        let status = await authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [summary] = await Event.getWarehouses();
+            console.log(summary);
+            res.status(200).json(summary);
+        } else {
+            res.sendStatus(status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+
+}
+
+// CREATE
+// =====================================================================
+exports.newCity = async (req, res) => {
+    console.log("--------------------------------------------")
+    console.log("New City req.body:", req.body);
+
+    let city = {};
+    city.title = req.body.city;
+
+    // await authenticateJWT(req, res);
+    console.log("New City:", city);
+
+}
+// UPDATE
+// =====================================================================
+
+// DELETE
+// =====================================================================

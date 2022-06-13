@@ -42,96 +42,6 @@ document.getElementById('date-event-start').addEventListener('change', () => {
 });
 
 
-// // Event object  
-// //====================================================================
-
-// document.getElementById('txt-event-title').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.title = e.target.value;
-//     } else {
-//         delete eventObj.title;
-//     };
-// });
-
-// document.getElementById('date-event-start').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.start = e.target.value;
-//     } else {
-//         delete eventObj.start;
-//     };
-// });
-
-// document.getElementById('date-event-end').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.end = e.target.value;
-//     } else {
-//         delete eventObj.end;
-//     };
-// });
-
-// document.getElementById('select-whouse').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.idWarehouse = e.target.value;
-//     } else {
-//         delete eventObj.idWarehouse;
-//     };
-// });
-
-// document.getElementById('txt-notes').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.notes = e.target.value;
-//     } else {
-//         delete eventObj.notes;
-//     };
-// });
-
-// document.getElementById('select-event-city').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.idEventCity = e.target.value;
-//     } else {
-//         delete eventObj.idEventCity;
-//     };
-// });
-
-// document.getElementById('select-event-place').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.idEventPlace = e.target.value;
-//     } else {
-//         delete eventObj.idEventPlace;
-//     };
-// });
-
-// document.getElementById('select-event-client').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.idClient = e.target.value;
-//     } else {
-//         delete eventObj.idClient;
-//     };
-// });
-
-// document.getElementById('select-manager-1').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.idManager_1 = e.target.value;
-//     } else {
-//         delete eventObj.idManager_1;
-//     };
-// });
-
-// document.getElementById('select-manager-2').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.idManager_2 = e.target.value;
-//     } else {
-//         delete eventObj.idManager_2;
-//     };
-// });
-
-// document.getElementById('select-status').addEventListener('change', (e) => {
-//     if (e.target.value) {
-//         eventObj.idStatus = e.target.value;
-//     } else {
-//         delete eventObj.idStatus;
-//     };
-// });
 
 document.getElementById('btn-event-details').addEventListener('click', () => {
     document.getElementsByClassName('phase-div')[0].classList.remove('d-none');
@@ -266,14 +176,15 @@ function getListWarehouses() {
     console.log(" ");
     console.log('==========================================');
     console.log('Get list of warehouses');
-    console.log('GET http://127.0.0.1:3070/warehouses');
+    console.log('GET http://127.0.0.1:3070/events/warehouses');
 
     let selectWhouse = document.getElementById('select-whouse');
 
-    fetch(URL + '/warehouses', {
+    fetch(URL + '/events/warehouses', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
         }
     })
         .then(res => res.json())
@@ -302,6 +213,7 @@ function getListLocations() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
         }
     })
         .then(res => res.json())
@@ -335,6 +247,7 @@ function getListClients() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
         }
     })
         .then(res => res.json())
@@ -363,6 +276,7 @@ function getListManagers() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
         }
     })
         .then(res => res.json())
@@ -379,6 +293,8 @@ function getListManagers() {
         })
 }
 
+//  GetCurrentUser function 
+//=====================================================================
 function getCurrentUser(oUsers) {
 
     console.log("oUsers:", oUsers);
@@ -406,6 +322,7 @@ function getListStatus() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
         }
     })
         .then(res => res.json())
@@ -705,127 +622,9 @@ function updateToken() {
 
     return p;
 
-
-
-}
-
-//  FETCH functions 
-//=====================================================================
-//=====================================================================
-function fetchAllEvents(token) {
-    let events;
-    fetch(URL + '/events', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token
-        }
-    })
-        .then(res => res.json())
-        .then(data => {
-            events = data
-            console.log("events:", data)
-            createEventTable(events);
-            document.getElementById('event-tbl-div').classList.remove('d-none');
-            document.getElementById('summary-div').classList.remove('d-none');
-        })
-        .then(getSummary)
-        .catch(error => {
-            // enter your logic for when there is an error (ex. error toast)
-            console.log("error:", error);
-        })
-    return events;
 }
 
 
-function fetchOneEvent(token, idEvent) {
-    let event;
-    fetch(URL + '/events/id/' + idEvent, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token
-        }
-    })
-        .then(res => res.json())
-        .then(data => {
-            event = data
-            console.log("get one event:", data)
-            fillEventForm(event)
-        })
-        // .then()
-        .catch(error => {
-            // enter your logic for when there is an error (ex. error toast)
-            console.log("error:", error);
-        })
-    return event;
-}
-
-
-
-function fetchNewEvent(token, eventObj) {
-    console.log("fetchNewEvent eventObj:", eventObj);
-    fetch(URL + '/events', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + accessToken
-
-        },
-        body: JSON.stringify(eventObj)
-    })
-        .then(res => res.json())
-        .then(data => {
-            console.log("data:", data);
-        })
-        .catch(error => {
-            // enter your logic for when there is an error (ex. error toast)
-            console.log(error)
-        })
-}
-
-function fetchUpdateEvent(token, eventObj) {
-    fetch(URL + '/events/id/' + eventObj.idEvent, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + accessToken
-
-        },
-        body: JSON.stringify(eventObj)
-    })
-        .then(res => res.json())
-        .then(data => {
-            console.log("data:", data);
-        })
-        .catch(error => {
-            // enter your logic for when there is an error (ex. error toast)
-            console.log(error)
-        })
-}
-
-function fetchPhases(token) {
-    let selectPhase = document.getElementById('select-phase');
-    let phases = {};
-    fetch(URL + '/events/phase', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token
-        }
-    })
-        .then(res => res.json())
-        .then(data => {
-            phases = data
-            // console.log("phases:", phases);
-            loadSelectSource(phases, selectPhase)
-        })
-        .catch(error => {
-            // enter your logic for when there is an error (ex. error toast)
-            console.log("error:", error);
-        })
-    return phases;
-}
 
 //  CRUD functions 
 //=====================================================================
@@ -925,6 +724,8 @@ async function createEvent() {
 
 }
 
+//  UPDATE Event function
+//=====================================================================
 async function updateEvent() {
 
     let eventObj = {};
@@ -1100,7 +901,8 @@ async function getSummary() {
     fetch(URL + '/events/summary', {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
         }
     })
         .then(res => res.json())
@@ -1136,4 +938,119 @@ function setPhase() {
     console.log("oPhase:", oPhase);
 
     return oPhase;
+}
+
+//  FETCH functions 
+//=====================================================================
+//=====================================================================
+function fetchAllEvents(token) {
+    let events;
+    fetch(URL + '/events', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            events = data
+            console.log("events:", data)
+            createEventTable(events);
+            document.getElementById('event-tbl-div').classList.remove('d-none');
+            document.getElementById('summary-div').classList.remove('d-none');
+        })
+        .then(getSummary)
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log("error:", error);
+        })
+    return events;
+}
+
+function fetchOneEvent(token, idEvent) {
+    let event;
+    fetch(URL + '/events/id/' + idEvent, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            event = data
+            console.log("get one event:", data)
+            fillEventForm(event)
+        })
+        // .then()
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log("error:", error);
+        })
+    return event;
+}
+
+function fetchNewEvent(token, eventObj) {
+    console.log("fetchNewEvent eventObj:", eventObj);
+    fetch(URL + '/events', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
+
+        },
+        body: JSON.stringify(eventObj)
+    })
+        .then(res => res.json())
+        .then(data => {
+            console.log("data:", data);
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+function fetchUpdateEvent(token, eventObj) {
+    fetch(URL + '/events/id/' + eventObj.idEvent, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + accessToken
+
+        },
+        body: JSON.stringify(eventObj)
+    })
+        .then(res => res.json())
+        .then(data => {
+            console.log("data:", data);
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log(error)
+        })
+}
+
+function fetchPhases(token) {
+    let selectPhase = document.getElementById('select-phase');
+    let phases = {};
+    fetch(URL + '/events/phase', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            phases = data
+            // console.log("phases:", phases);
+            loadSelectSource(phases, selectPhase)
+        })
+        .catch(error => {
+            // enter your logic for when there is an error (ex. error toast)
+            console.log("error:", error);
+        })
+    return phases;
 }

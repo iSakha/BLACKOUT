@@ -28,13 +28,13 @@ module.exports = class Event {
         this.is_deleted = null;
 
         // this.event_phase = [{}];
-
-
     }
 
-    static getAllLatest() {       
+    // Events queries
+    // =====================================================================
+    static getAllLatest() {
         try {
-           return db.execute('SELECT * FROM `v_events_latest_state`'); 
+            return db.execute('SELECT * FROM `v_events_latest_state`');
         } catch (error) {
             return error;
         }
@@ -48,9 +48,9 @@ module.exports = class Event {
     //     }
     // }
 
-    static getAll() {       
+    static getAll() {
         try {
-           return db.execute('SELECT * FROM `v_events`'); 
+            return db.execute('SELECT * FROM `v_events`');
         } catch (error) {
             return error;
         }
@@ -58,24 +58,24 @@ module.exports = class Event {
 
     static getOne(idEvent) {
         try {
-           return db.execute('SELECT * FROM `v_events_latest_state` WHERE `idEvent`=?', [idEvent]); 
+            return db.execute('SELECT * FROM `v_events_latest_state` WHERE `idEvent`=?', [idEvent]);
         } catch (error) {
             return error;
-        }        
+        }
     }
 
     static getOneHistory(idEvent) {
         try {
-           return db.execute('SELECT * FROM `v_events` WHERE `idEvent`=?', [idEvent]); 
+            return db.execute('SELECT * FROM `v_events` WHERE `idEvent`=?', [idEvent]);
         } catch (error) {
             return error;
-        }        
-    }    
+        }
+    }
 
     static createEvent(eventObj) {
         console.log("eventObj:", eventObj);
         try {
-            return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, start, end, idManager_1, idManager_2, idEventCity, idEventPlace, idClient, idCreatedBy, createdAt, notes, idStatus, idPhase, phaseTimeStart, phaseTimeEnd, idUpdatedBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.start, eventObj.end, eventObj.idManager_1, eventObj.idManager_2, eventObj.idEventCity, eventObj.idEventPlace, eventObj.idClient, eventObj.idCreatedBy, eventObj.createdAt, eventObj.notes, eventObj.idStatus, eventObj.idPhase, eventObj.phaseTimeStart, eventObj.phaseTimeEnd, eventObj.idUpdatedBy]);
+            return db.execute('INSERT INTO `t_events` (idEvent, idWarehouse, title, start, end, idManager_1, idManager_2, idEventCity, idEventPlace, idClient, idCreatedBy, createdAt, notes, idStatus, idPhase, phaseTimeStart, phaseTimeEnd, idUpdatedBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.start, eventObj.end, eventObj.idManager_1, eventObj.idManager_2, eventObj.idEventCity, eventObj.idEventPlace, eventObj.idClient, eventObj.idCreatedBy, eventObj.createdAt, eventObj.notes, eventObj.idStatus, eventObj.idPhase, eventObj.phaseTimeStart, eventObj.phaseTimeEnd, eventObj.idUpdatedBy]);
         } catch (error) {
             return error;
         }
@@ -90,28 +90,53 @@ module.exports = class Event {
         }
     }
 
-    static getLocations(){
+
+    // Extra queries
+    // =====================================================================
+
+    // GET
+    // =====================================================================
+
+    static getLocations() {
         return db.execute('SELECT * FROM `v_location`');
     }
 
-    static getClients(){
+    static getClients() {
         return db.execute('SELECT * FROM `t_clients`');
     }
 
-    static getUsers(){
+    static getUsers() {
         return db.execute('SELECT * FROM `v_users`');
     }
 
-    static getStatus(){
+    static getStatus() {
         return db.execute('SELECT * FROM `t_status`');
     }
 
-    static getSummary(){
+    static getSummary() {
         return db.execute('SELECT * FROM `v_summary_final`');
     }
 
-    static getPhases(){
+    static getPhases() {
         return db.execute('SELECT * FROM `t_phase`');
     }
+
+    static getWarehouses() {
+        return db.execute('SELECT * FROM `t_warehouses`');
+    }
+
+
+
+// CREATE
+// =====================================================================
+static newCity() {
+    return db.execute('INSERT * INTO `t_event_city` (city) VALUES(?)', [city]);
+}
+
+// UPDATE
+// =====================================================================
+
+// DELETE
+// =====================================================================
 
 }

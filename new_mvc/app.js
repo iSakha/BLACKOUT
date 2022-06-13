@@ -1,7 +1,6 @@
 "use strict";
 
 const express = require("express");
-const mysql = require("mysql2");
 const app = express();
 const cors = require("cors");
 
@@ -14,9 +13,6 @@ const PORT = 3070;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-let warehousesObj = {};
-readWarehouses();
 
 app.use('/events', eventRouter);
 app.use('/login', authRouter);
@@ -35,31 +31,6 @@ app.get('/checkDBconn', (req, res) => {
     
   });
 
-  app.route('/warehouses').get((request, response) => {
-    response.json(warehousesObj);
-});
-
-
-
-//          F U N C T I O N S
-// --------------------------------------------------------------------
-// --------------------------------------------------------------------
-
-
-//        readWarehouses function
-// --------------------------------------------------------------------
-function readWarehouses() {
-
-  pool.query('SELECT * FROM t_warehouses', (err, result) => {
-      if (err) {
-          console.log('Error while fetching events', err);
-      } else {
-          console.log('Warehouses fetched successfully');
-          warehousesObj = result;
-          console.log(warehousesObj);
-      }
-  })
-}
 
 //          S E R V E R
 // --------------------------------------------------------------------
