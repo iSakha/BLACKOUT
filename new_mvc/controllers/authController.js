@@ -69,7 +69,7 @@ exports.validateUser = async (req, res) => {
         if (!error.statusCode) {
             console.log("error:", error);
             error.statusCode = 500;
-            res.status(500).json(error);
+            res.status(500).json("error:",error);
         }
     }
 }

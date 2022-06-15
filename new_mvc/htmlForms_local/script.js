@@ -1,8 +1,8 @@
 const HOST = 'http://127.0.0.1';
 // const HOST = 'http://82.209.203.205';
 const PORT = 3070;
-// const URL = HOST + ':' + PORT;
-const URL = "http://back2.aesthetic.by";
+const URL = HOST + ':' + PORT;
+// const URL = "http://back2.aesthetic.by";
 
 let eventLocations = {};
 let selectedEventId;
@@ -732,11 +732,11 @@ async function updateEvent() {
 
     let eventObj = {};
 
-    let oPhase = setPhase();
+    // let oPhase = setPhase();
 
-    if(oPhase.idPhase > 1) {
-        eventObj.phase = oPhase;
-    }else eventObj.phase = null;
+    // if (oPhase.idPhase > 1) {
+    //     eventObj.phase = oPhase;
+    // } else eventObj.phase = null;
 
     if (document.getElementById('txt-event-id').value != "") {
         eventObj.idEvent = document.getElementById('txt-event-id').value;
@@ -752,9 +752,12 @@ async function updateEvent() {
 
     eventObj.createdBy = document.getElementById('txt-event-user').value;
     let idCreatedBy = oUsers.find(e => e.fullName === eventObj.createdBy);
+
+    console.log("idCreatedBy:", idCreatedBy);
+
     eventObj.idCreatedBy = idCreatedBy.id;
 
-    console.log("idCreatedBy:", eventObj.idCreatedBy)
+    console.log("idCreatedBy:", eventObj.idCreatedBy);
 
     eventObj.idUpdatedBy = idUser;
 
@@ -797,10 +800,7 @@ async function updateEvent() {
         eventObj.idStatus = parseInt(document.getElementById('select-status').value);
     } else eventObj.idStatus = null;
 
-    eventObj.idPhase = null;
-    eventObj.phaseTimeStart = null;
-    eventObj.phaseTimeEnd = null;
-    eventObj.filledUp = null;
+    eventObj.phase = oPhasesArr;
 
     console.log("updateEvent eventObj:", eventObj);
 
@@ -865,6 +865,9 @@ async function getAllEvents() {
 //=====================================================================
 async function getOne(idEvent) {
     console.log("idEvent:", idEvent);
+
+    oPhasesArr = [];
+
     let valid = await checkExpirationToken();
 
     switch (valid) {
