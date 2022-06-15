@@ -23,7 +23,8 @@ exports.getAllLatest = async (req, res) => {
                 let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
                 console.log("foundPhase:", i, foundPhase);
                 if (foundPhase.length > 0) {
-                    allEvents[i].phase = foundPhase
+                    allEvents[i].phase = foundPhase;
+                    console.log("event+phase:", allEvents[i]);
                 } else allEvents[i].phase = null;
 
             }
@@ -124,6 +125,8 @@ exports.createNewEvent = async (req, res) => {
 
                 });
 
+                delete myEvent.phase;
+
                 console.log("req.body.phase:", req.body.phase);
                 console.log("--------------------------------------------");
                 console.log("req.body.phase.length:", req.body.phase.length);
@@ -142,6 +145,24 @@ exports.createNewEvent = async (req, res) => {
                         await Event.createEvent(myEvent);
 
                     }
+
+                    for (let i = 1; i < req.body.phase.length; i++) {
+                        myEvent.idPhase = req.body.phase[i].idPhase;
+                        myEvent.phaseTimeStart = req.body.phase[i].startPhase;
+                        myEvent.phaseTimeEnd = req.body.phase[i].endPhase;
+
+                        let oPhase = {};
+                        oPhase.idEvent = myEvent.idEvent;
+                        oPhase.idPhase = myEvent.idPhase;
+                        oPhase.startPhase = myEvent.phaseTimeStart;
+                        oPhase.endPhase = myEvent.phaseTimeEnd;
+
+                        await Phase.writeEventPhase(oPhase);
+                        console.log("oPhase:", oPhase);
+
+                    }
+
+
 
                     let msg = {};
                     msg.result = `Мероприятие успешно создано. idEvent = ${myEvent.idEvent}`

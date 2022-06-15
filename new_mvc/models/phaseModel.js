@@ -9,6 +9,14 @@ module.exports = class Phase {
         this.endPhase = oPhase.endPhase;
     }
 
+    static writeEventPhase(oPhase) {
+        try {
+            return db.execute('INSERT INTO `t_event_details` (idEvent, idPhase, startPhase, endPhase) VALUES(?, ?, ?, ?)', [oPhase.idEvent, oPhase.idPhase, oPhase.startPhase, oPhase.endPhase]);
+        } catch (error) {
+            return error;
+        }
+    }
+
     static getAllPhase() {       
         try {
            return db.execute('SELECT * FROM `v_event_details`'); 
