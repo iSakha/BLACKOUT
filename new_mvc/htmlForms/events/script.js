@@ -11,7 +11,7 @@ let accessToken;
 let refreshToken;
 
 let oUsers = {};
-let oPhasesArr = [{}];
+let oPhasesArr = [];
 
 let idUser;
 

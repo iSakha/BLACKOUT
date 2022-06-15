@@ -137,7 +137,7 @@ exports.createNewEvent = async (req, res) => {
 
                 if (req.body.phase.length > 1) {
 
-                    for (let i = 1; i < req.body.phase.length; i++) {
+                    for (let i = 0; i < req.body.phase.length; i++) {
                         myEvent.idPhase = req.body.phase[i].idPhase;
                         myEvent.phaseTimeStart = req.body.phase[i].startPhase;
                         myEvent.phaseTimeEnd = req.body.phase[i].endPhase;
@@ -146,7 +146,7 @@ exports.createNewEvent = async (req, res) => {
 
                     }
 
-                    for (let i = 1; i < req.body.phase.length; i++) {
+                    for (let i = 0; i < req.body.phase.length; i++) {
                         myEvent.idPhase = req.body.phase[i].idPhase;
                         myEvent.phaseTimeStart = req.body.phase[i].startPhase;
                         myEvent.phaseTimeEnd = req.body.phase[i].endPhase;
