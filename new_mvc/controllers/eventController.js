@@ -7,13 +7,13 @@ const auth = require('../controllers/authController')
 
 // Events queries
 // =====================================================================
-exports.getAllLatest = async (req, res) => {
+exports.getAll = async (req, res) => {
     try {
         console.log("getAllEvents");
         let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status);
         if (status === 200) {
-            const [allEvents] = await Event.getAllLatest();
+            const [allEvents] = await Event.getAll();
             console.log("allEvents:", allEvents);
             const [phases] = await Phase.getAllPhase();
             console.log("phases:", phases);
@@ -41,13 +41,13 @@ exports.getAllLatest = async (req, res) => {
     }
 }
 
-exports.getAll = async (req, res) => {
+exports.getAllHistory = async (req, res) => {
     try {
         console.log("getAllEvents");
         let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status);
         if (status === 200) {
-            const [allEvents] = await Event.getAll();
+            const [allEvents] = await Event.getAllHistory();
             res.json(allEvents);
         } else {
             res.sendStatus(status);
@@ -67,7 +67,19 @@ exports.getOne = async (req, res) => {
         console.log("statusCode:", status);
         if (status === 200) {
             const [event] = await Event.getOne(req.params.id);
+            console.log("event:", event);
+            const [phases] = await Phase.getOnePhase(req.params.id);
+            console.log("phases:", phases);
+
+            // let foundPhase = phases.filter(e => e.idEvent === event.idEvent);
+            // console.log("foundPhase:", i, foundPhase);
+            if (phases.length > 0) {
+                event.phase = phases;
+                console.log("event+phase:", event);
+            } else event.phase = null;
+
             res.json(event);
+
         } else {
             res.sendStatus(status);
         }
@@ -134,8 +146,9 @@ exports.createNewEvent = async (req, res) => {
 
                 myEvent.createdAt = utils.currentDateTime();
                 myEvent.idEvent = utils.createEventId();
+                myEvent.unixTime = Date.now();
 
-                if (req.body.phase.length > 1) {
+                if (req.body.phase.length > 0) {
 
                     for (let i = 0; i < req.body.phase.length; i++) {
                         myEvent.idPhase = req.body.phase[i].idPhase;
@@ -274,174 +287,3 @@ exports.getSummary = async (req, res) => {
     }
 
 }
-// Extra queries
-// =====================================================================
-
-// // GET
-// // =====================================================================
-// exports.getLocations = async (req, res) => {
-
-//     try {
-//         console.log("getLocations");
-//         let status = await authenticateJWT(req, res);
-//         console.log("statusCode:", status);
-//         if (status === 200) {
-//             const [locations] = await Event.getLocations();
-//             console.log(locations);
-//             res.status(200).json(locations);
-//         } else {
-//             res.sendStatus(status);
-//         }
-
-//     } catch (error) {
-//         if (!error.statusCode) {
-//             error.statusCode = 500;
-//         }
-//     }
-// }
-
-// exports.getClients = async (req, res) => {
-//     try {
-//         console.log("getClients");
-//         let status = await authenticateJWT(req, res);
-//         console.log("statusCode:", status);
-//         if (status === 200) {
-//             const [clients] = await Event.getClients();
-//             console.log(clients);
-//             res.status(200).json(clients);
-//         } else {
-//             res.sendStatus(status);
-//         }
-
-//     } catch (error) {
-//         if (!error.statusCode) {
-//             error.statusCode = 500;
-//         }
-//     }
-// }
-
-// exports.getManagers = async (req, res) => {
-
-//     try {
-//         console.log("getManagers");
-//         let status = await authenticateJWT(req, res);
-//         console.log("statusCode:", status);
-//         if (status === 200) {
-//             const [users] = await Event.getUsers();
-//             console.log(users);
-//             res.status(200).json(users);
-//         } else {
-//             res.sendStatus(status);
-//         }
-
-//     } catch (error) {
-//         if (!error.statusCode) {
-//             error.statusCode = 500;
-//         }
-//     }
-
-// }
-
-// exports.getStatus = async (req, res) => {
-
-//     try {
-//         console.log("getStatus");
-//         let status = await authenticateJWT(req, res);
-//         console.log("statusCode:", status);
-//         if (status === 200) {
-//             const [status] = await Event.getStatus();
-//             console.log(status);
-//             res.status(200).json(status);
-//         } else {
-//             res.sendStatus(status);
-//         }
-
-//     } catch (error) {
-//         if (!error.statusCode) {
-//             error.statusCode = 500;
-//         }
-//     }
-
-// }
-
-// exports.getPhases = async (req, res) => {
-
-//     try {
-//         console.log("getPhases");
-//         let status = await authenticateJWT(req, res);
-//         console.log("statusCode:", status);
-//         if (status === 200) {
-//             const [phase] = await Event.getPhases();
-//             console.log(status);
-//             res.status(200).json(phase);
-//         } else {
-//             res.sendStatus(status);
-//         }
-
-//     } catch (error) {
-//         if (!error.statusCode) {
-//             error.statusCode = 500;
-//         }
-//     }
-// }
-
-// exports.getSummary = async (req, res) => {
-//     try {
-//         console.log("getSummary");
-//         let status = await authenticateJWT(req, res);
-//         console.log("statusCode:", status);
-//         if (status === 200) {
-//             const [summary] = await Event.getSummary();
-//             console.log(summary);
-//             res.status(200).json(summary);
-//         } else {
-//             res.sendStatus(status);
-//         }
-
-//     } catch (error) {
-//         if (!error.statusCode) {
-//             error.statusCode = 500;
-//         }
-//     }
-
-// }
-
-// exports.getWarehouses = async (req, res) => {
-//     try {
-//         console.log("getWarehouses");
-//         let status = await authenticateJWT(req, res);
-//         console.log("statusCode:", status);
-//         if (status === 200) {
-//             const [summary] = await Event.getWarehouses();
-//             console.log(summary);
-//             res.status(200).json(summary);
-//         } else {
-//             res.sendStatus(status);
-//         }
-
-//     } catch (error) {
-//         if (!error.statusCode) {
-//             error.statusCode = 500;
-//         }
-//     }
-
-// }
-
-// // CREATE
-// // =====================================================================
-// exports.newCity = async (req, res) => {
-//     console.log("--------------------------------------------")
-//     console.log("New City req.body:", req.body);
-
-//     let city = {};
-//     city.title = req.body.city;
-
-//     // await authenticateJWT(req, res);
-//     console.log("New City:", city);
-
-// }
-// // UPDATE
-// // =====================================================================
-
-// // DELETE
-// // =====================================================================

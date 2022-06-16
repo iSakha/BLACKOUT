@@ -373,7 +373,7 @@ function loadSelectSource(data, select) {
     console.log("phases:", data);
     select.innerHTML = "";
     let opt;
-    if ((select.id == 'select-whouse') || (select.id == 'select-event-city') || (select.id == 'select-event-place')) {
+    if ((select.id == 'select-event-city') || (select.id == 'select-event-place')) {
         opt = document.createElement('option');
         opt.innerHTML = "";
         select.appendChild(opt);

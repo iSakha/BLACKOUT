@@ -32,7 +32,7 @@ module.exports = class Event {
 
     // Events queries
     // =====================================================================
-    static getAllLatest() {
+    static getAll() {
         try {
             return db.execute('SELECT * FROM `v_events_latest_state`');
         } catch (error) {
@@ -40,15 +40,8 @@ module.exports = class Event {
         }
     }
 
-    // static getAllLatest() {       
-    //     try {
-    //        return db.execute('SELECT * FROM `v_event_full`'); 
-    //     } catch (error) {
-    //         return error;
-    //     }
-    // }
 
-    static getAll() {
+    static getAllHistory() {
         try {
             return db.execute('SELECT * FROM `v_events`');
         } catch (error) {
