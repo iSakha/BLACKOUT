@@ -1,0 +1,48 @@
+h1{
+    margin-left: 20px;
+}
+#select-time-start-h, #select-time-start-m, #select-time-end-h, #select-time-end-m{
+    text-align: center;
+    font-weight: bold;
+}
+
+#phase-time-start-h, #phase-time-start-m, #phase-time-end-h, #phase-time-end-m{
+    text-align: center;
+    font-weight: bold;
+}
+
+.warehouse{
+    
+    padding: 10px;
+    font-weight: bold ;
+    width: 160px;
+}
+
+#warehouse-minsk{
+    background-color:#00AB55;
+}
+#warehouse-moscow{
+    background-color:#FF4842;
+}
+#warehouse-kazan{
+    background-color:#FFC107;
+}
+#warehouse-piter{
+    background-color:#1890FF;
+}
+
+.e-whouses-1, .e-users-1, .e-clients-1{
+    width: 40%;
+}
+.e-whouses-2, .e-users-2, .e-clients-2{
+    width: 60%;
+}
+
+.phase-div{
+    background-color: rgb(208, 225, 240);
+    padding-bottom: 30px;
+}
+
+.required{
+    border: red 1px solid;
+}

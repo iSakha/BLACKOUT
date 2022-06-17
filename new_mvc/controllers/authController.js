@@ -52,11 +52,23 @@ exports.validateUser = async (req, res) => {
                 user.username = row[0].login,
                     user.password = row[0].crypto,
                     user.role = row[0].role
+
+                console.log("row[0]:", row[0]);
                 console.log("user:", user);
                 const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '20m' });
                 const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
 
+                let usr = {};
+                usr.login = row[0].login,
+                usr.firstName = row[0].firstName,
+                usr.lastName = row[0].lastName,
+                usr.fullName = row[0].fullName,
+                usr.avatar = row[0].avatar,
+                usr.role = row[0].role,
+                usr.id = row[0].id
+
                 res.status(200).json({
+                    usr,
                     accessToken,
                     refreshToken
                 });
