@@ -725,8 +725,10 @@ async function createEvent() {
         "idEvent": "16553164869",
         "title": "Би-2",
         "timeEvent": {
-            "start": "2022-06-14T21:00:00.000Z",
-            "end": "2022-06-14T21:00:00.000Z"
+            "start": "2022-06-14T21:00:00",
+            "end": "2022-06-14T21:00:00"
+            // "start": "2022-06-14T21:00:00.000Z",
+            // "end": "2022-06-14T21:00:00.000Z"
         },
         "warehouse": {
             "idWarehouse": 2,
@@ -737,24 +739,24 @@ async function createEvent() {
             "nameCreator": "Виталий Кондратенко"
         },
         "client": {
-            "idClient": 1,
+            "idClient": 3,
             "clientName": "Агентство",
             "clientContact": "+375259999999, Василий Пупкин"
         },
         "status": {
-            "idStatus": 1,
+            "idStatus": 2,
             "statusName": "Подтвержден"
         },
         "location": {
-            "idEventCity": 1,
+            "idEventCity": 2,
             "nameEventCity": "Минск",
-            "idEventPlace": 1,
+            "idEventPlace": 2,
             "nameEventPlace": "Минск-Арена"
         },
         "manager": {
-            "idManager_1": 1,
+            "idManager_1": 3,
             "nameManager_1": "Виталий Кондратенко",
-            "idManager_2": 1,
+            "idManager_2": 4,
             "nameManager_2": "Виталий Кондратенко"
         },
         "notes": "Тест заметки",
@@ -762,20 +764,26 @@ async function createEvent() {
             {
                 "idPhase": 2,
                 "phase": "Транспорт туда",
-                "startPhase": "2022-06-14T21:00:00.000Z",
-                "endPhase": "2022-06-14T21:00:00.000Z"
+                "startPhase": "2022-06-14T21:00:00",
+                "endPhase": "2022-06-14T21:00:00"
+                // "startPhase": "2022-06-14T21:00:00.000Z",
+                // "endPhase": "2022-06-14T21:00:00.000Z"
             },
             {
                 "idPhase": 3,
                 "phase": "Работа",
-                "startPhase": "2022-06-14T21:00:00.000Z",
-                "endPhase": "2022-06-14T21:00:00.000Z"
+                "startPhase": "2022-06-14T21:00:00",
+                "endPhase": "2022-06-14T21:00:00"
+                // "startPhase": "2022-06-14T21:00:00.000Z",
+                // "endPhase": "2022-06-14T21:00:00.000Z"
             },
             {
                 "idPhase": 4,
                 "phase": "Транспорт обратно",
-                "startPhase": "2022-06-14T21:00:00.000Z",
-                "endPhase": "2022-06-14T21:00:00.000Z"
+                "startPhase": "2022-06-14T21:00:00",
+                "endPhase": "2022-06-14T21:00:00"
+                // "startPhase": "2022-06-14T21:00:00.000Z",
+                // "endPhase": "2022-06-14T21:00:00.000Z"
             }
         ]
     }

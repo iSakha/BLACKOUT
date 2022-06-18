@@ -9,9 +9,10 @@ module.exports = class Phase {
         this.endPhase = oPhase.endPhase;
     }
 
-    static writeEventPhase(oPhase) {
+    static writeEventPhase(eventPhase) {
+        console.log("writeEventPhase:", eventPhase);
         try {
-            return db.execute('INSERT INTO `t_event_details` (idEvent, idPhase, startPhase, endPhase) VALUES(?, ?, ?, ?)', [oPhase.idEvent, oPhase.idPhase, oPhase.startPhase, oPhase.endPhase]);
+            return db.query('INSERT INTO `t_event_details` (idEvent, idPhase, startPhase, endPhase) VALUES ?', [eventPhase]);
         } catch (error) {
             return error;
         }

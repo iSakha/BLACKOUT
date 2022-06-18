@@ -118,117 +118,46 @@ exports.createNewEvent = async (req, res) => {
 
     let obj = utils.convertObjToRow(req.body);
     let msg = obj[0];
-    let eventRow= obj[1];
+    let eventRow = obj[1];
     let eventPhase = obj[2];
 
-    console.log("obj:",obj);
-    console.log("eventRow:",eventRow);
-    console.log("msg:",msg);
-    console.log("eventPhase:",eventPhase);
+    console.log("obj:", obj);
+    console.log("eventRow:", eventRow);
+    console.log("msg:", msg);
+    console.log("eventPhase:", eventPhase);
 
-    if(msg !==null)  {res.status(400).json(msg)}
-    else res.status(200).json({ msg: "OK" });
-    
+    if (msg === null) {
 
-    // if (utils.validateInputData(req.body)) {
+        let status = await auth.authenticateJWT(req, res);
 
-    //     try {
-    //         console.log("--------------------------------------------")
-    //         // console.log("createNewEvent req.body:", req.body);
+        if (status === 200) {
 
-    //         let status = await auth.authenticateJWT(req, res);
+            console.log("authentication successfull!");
 
-    //         if (status === 200) {
-    //             let myEvent = new Event(req.body);
-    //             console.log("--------------------------------------------")
-    //             console.log("createNewEvent myEvent:", myEvent);
+            try {
+                const [newEvent] = await Event.createEvent(eventRow);
+                console.log("result newEvent:", newEvent);
+            } catch (error) {
+                console.log("error:", error);
+                res.sendStatus(500).json({ msg: "We have problems with writing event data to database" });
+            }
 
-    //             Object.keys(req.body).forEach((key) => {
+            try {
+                const [newPhase] = await Phase.writeEventPhase(eventPhase);
+                console.log("result eventPhase:", newPhase);
+            } catch (error) {
+                console.log("error:", error);
+                res.sendStatus(500).json({ msg: "We have problems with writing phase data to database" });
+            }
 
-    //                 if (req.body[key] != null) {
-    //                     myEvent[key] = req.body[key];
-    //                 }
+             res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` })
 
-
-    //             });
-
-    //             delete myEvent.phase;
-
-    //             console.log("req.body.phase:", req.body.phase);
-    //             console.log("--------------------------------------------");
-    //             console.log("req.body.phase.length:", req.body.phase.length);
-    //             console.log("--------------------------------------------");
-
-    //             myEvent.createdAt = utils.currentDateTime();
-    //             myEvent.idEvent = utils.createEventId();
-    //             myEvent.unixTime = Date.now();
-
-    //             if (req.body.phase.length > 0) {
-
-    //                 for (let i = 0; i < req.body.phase.length; i++) {
-    //                     myEvent.idPhase = req.body.phase[i].idPhase;
-    //                     myEvent.phaseTimeStart = req.body.phase[i].startPhase;
-    //                     myEvent.phaseTimeEnd = req.body.phase[i].endPhase;
-
-    //                     await Event.createEvent(myEvent);
-
-    //                 }
-
-    //                 for (let i = 0; i < req.body.phase.length; i++) {
-    //                     myEvent.idPhase = req.body.phase[i].idPhase;
-    //                     myEvent.phaseTimeStart = req.body.phase[i].startPhase;
-    //                     myEvent.phaseTimeEnd = req.body.phase[i].endPhase;
-
-    //                     let oPhase = {};
-    //                     oPhase.idEvent = myEvent.idEvent;
-    //                     oPhase.idPhase = myEvent.idPhase;
-    //                     oPhase.startPhase = myEvent.phaseTimeStart;
-    //                     oPhase.endPhase = myEvent.phaseTimeEnd;
-
-    //                     await Phase.writeEventPhase(oPhase);
-    //                     console.log("oPhase:", oPhase);
-
-    //                 }
-
-
-
-    //                 let msg = {};
-    //                 msg.result = `Мероприятие успешно создано. idEvent = ${myEvent.idEvent}`
-    //                 res.status(200).json(msg);
-
-    //             } else {
-
-
-    //                 console.log("--------------------------------------------")
-    //                 console.log("createNewEvent myEvent:", myEvent);
-
-    //                 const [newEvent] = await Event.createEvent(myEvent);
-    //                 // res.status(200).json({ "message": "created" });
-    //                 let msg = {};
-    //                 msg.result = `Мероприятие успешно создано. idEvent = ${myEvent.idEvent}`
-    //                 res.status(200).json(msg);
-    //                 // res.status(200).json(newEvent);
-    //             }
-
-
-    //         } else {
-    //             res.sendStatus(status);
-    //         }
-
-
-
-
-    //     } catch (error) {
-    //         if (!error.statusCode) {
-    //             console.log("error:", error);
-    //             error.statusCode = 500;
-    //             res.status(500).json(error);
-    //         }
-    //     }
-
-    // } else res.status(400).json(req.body);
-    // } else res.status(400).json("Не указаны обязательные поля", req.body);
-    
+        } else {
+            res.sendStatus(status).json({ msg: "We have problems with JWT authentication" });
+        }
+       
+    }
+    else res.status(400).json(msg);
 
 }
 
