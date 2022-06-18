@@ -1,0 +1,56 @@
+{
+    "idEvent": "16553164869",
+    "title": "Би-2",
+    "timeEvent": {
+        "start": "2022-06-14T21:00:00.000Z",
+        "end": "2022-06-14T21:00:00.000Z"
+    },
+    "warehouse": {
+        "idWarehouse": 2,
+        "warehouseName": "Москва"
+    },
+    "creator": {
+        "idCreator": 2,
+        "nameCreator": "Виталий Кондратенко"
+    },
+    "client": {
+        "idClient": 1,
+        "clientName": "Агентство",
+        "clientContact": "+375259999999, Василий Пупкин"
+    },
+    "status": {
+        "idStatus": 1,
+        "statusName": "Подтвержден"
+    },
+    "location": {
+        "idEventCity": 1,
+        "nameEventCity": "Минск",
+        "idEventPlace": 1,
+        "nameEventPlace": "Минск-Арена"
+    },
+    "manager": {
+        "idManager": 1,
+        "nameManager": "Виталий Кондратенко"
+    },
+    "notes": "Тест заметки",
+    "phase": [
+        {
+            "idPhase": 2,
+            "phase": "Транспорт туда",
+            "startPhase": "2022-06-14T21:00:00.000Z",
+            "endPhase": "2022-06-14T21:00:00.000Z"
+        },
+        {
+            "idPhase": 3,
+            "phase": "Работа",
+            "startPhase": "2022-06-14T21:00:00.000Z",
+            "endPhase": "2022-06-14T21:00:00.000Z"
+        },
+        {
+            "idPhase": 4,
+            "phase": "Транспорт обратно",
+            "startPhase": "2022-06-14T21:00:00.000Z",
+            "endPhase": "2022-06-14T21:00:00.000Z"
+        }
+    ]
+}

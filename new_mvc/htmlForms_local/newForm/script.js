@@ -639,34 +639,34 @@ async function createEvent() {
 
     let eventObj = {};
 
-    let warehouse = {};
-    warehouse.id = 2;
-    warehouse.title = "Minsk";
+    // let warehouse = {};
+    // warehouse.id = 2;
+    // warehouse.title = "Minsk";
 
-    let creator = {};
-    let currentUserFullName = "John Doe"
-    let currentUserId = 3;
-    creator.createdBy = currentUserFullName;
-    creator.idCreatedBy = currentUserId;
+    // let creator = {};
+    // let currentUserFullName = "John Doe"
+    // let currentUserId = 3;
+    // creator.createdBy = currentUserFullName;
+    // creator.idCreatedBy = currentUserId;
 
-    let updater = {};
-    currentUserFullName = "Admin admin"
-    currentUserId = 4;
-    updater.createdBy = currentUserFullName;
-    updater.idCreatedBy = currentUserId;
+    // let updater = {};
+    // currentUserFullName = "Admin admin"
+    // currentUserId = 4;
+    // updater.createdBy = currentUserFullName;
+    // updater.idCreatedBy = currentUserId;
 
-    eventObj.warehouse = warehouse;
-    eventObj.creator = creator;
-    eventObj.updater = updater;
+    // eventObj.warehouse = warehouse;
+    // eventObj.creator = creator;
+    // eventObj.updater = updater;
 
 
-    if (document.getElementById('txt-event-id').value != "") {
-        eventObj.idEvent = document.getElementById('txt-event-id').value;
-    } else eventObj.idEvent = null;
+    // if (document.getElementById('txt-event-id').value != "") {
+    //     eventObj.idEvent = document.getElementById('txt-event-id').value;
+    // } else eventObj.idEvent = null;
 
-    if (document.getElementById('txt-event-title').value != "") {
-        eventObj.title = document.getElementById('txt-event-title').value;
-    } else eventObj.title = null;
+    // if (document.getElementById('txt-event-title').value != "") {
+    //     eventObj.title = document.getElementById('txt-event-title').value;
+    // } else eventObj.title = null;
 
     // if (document.getElementById('select-whouse').value > 1) {
     //     eventObj.idWarehouse = parseInt(document.getElementById('select-whouse').value);
@@ -675,16 +675,16 @@ async function createEvent() {
     // eventObj.idCreatedBy = idUser;
     // eventObj.idUpdatedBy = idUser;
 
-    let startDate = document.getElementById('date-event-start').value;
-    let endDate = document.getElementById('date-event-end').value;
+    // let startDate = document.getElementById('date-event-start').value;
+    // let endDate = document.getElementById('date-event-end').value;
 
-    let hourStart = document.getElementById('txt-time-start-h').value;
-    let hourEnd = document.getElementById('txt-time-end-h').value;
-    let minStart = document.getElementById('txt-time-start-m').value;
-    let minEnd = document.getElementById('txt-time-end-m').value;
+    // let hourStart = document.getElementById('txt-time-start-h').value;
+    // let hourEnd = document.getElementById('txt-time-end-h').value;
+    // let minStart = document.getElementById('txt-time-start-m').value;
+    // let minEnd = document.getElementById('txt-time-end-m').value;
 
-    eventObj.start = startDate + "T" + hourStart + ":" + minStart + ":00";
-    eventObj.end = endDate + "T" + hourEnd + ":" + minEnd + ":00";
+    // eventObj.start = startDate + "T" + hourStart + ":" + minStart + ":00";
+    // eventObj.end = endDate + "T" + hourEnd + ":" + minEnd + ":00";
 
     // if (document.getElementById('txt-notes').value != "") {
     //     eventObj.notes = document.getElementById('txt-notes').value;
@@ -719,7 +719,66 @@ async function createEvent() {
 
     eventObj.phase = oPhasesArr;
 
-    console.log("createEvent eventObj:", eventObj);
+    // console.log("createEvent eventObj:", eventObj);
+
+    eventObj = {
+        "idEvent": "16553164869",
+        "title": "Би-2",
+        "timeEvent": {
+            "start": "2022-06-14T21:00:00.000Z",
+            "end": "2022-06-14T21:00:00.000Z"
+        },
+        "warehouse": {
+            "idWarehouse": 2,
+            "warehouseName": "Москва"
+        },
+        "creator": {
+            "idCreator": 2,
+            "nameCreator": "Виталий Кондратенко"
+        },
+        "client": {
+            "idClient": 1,
+            "clientName": "Агентство",
+            "clientContact": "+375259999999, Василий Пупкин"
+        },
+        "status": {
+            "idStatus": 1,
+            "statusName": "Подтвержден"
+        },
+        "location": {
+            "idEventCity": 1,
+            "nameEventCity": "Минск",
+            "idEventPlace": 1,
+            "nameEventPlace": "Минск-Арена"
+        },
+        "manager": {
+            "idManager_1": 1,
+            "nameManager_1": "Виталий Кондратенко",
+            "idManager_2": 1,
+            "nameManager_2": "Виталий Кондратенко"
+        },
+        "notes": "Тест заметки",
+        "phase": [
+            {
+                "idPhase": 2,
+                "phase": "Транспорт туда",
+                "startPhase": "2022-06-14T21:00:00.000Z",
+                "endPhase": "2022-06-14T21:00:00.000Z"
+            },
+            {
+                "idPhase": 3,
+                "phase": "Работа",
+                "startPhase": "2022-06-14T21:00:00.000Z",
+                "endPhase": "2022-06-14T21:00:00.000Z"
+            },
+            {
+                "idPhase": 4,
+                "phase": "Транспорт обратно",
+                "startPhase": "2022-06-14T21:00:00.000Z",
+                "endPhase": "2022-06-14T21:00:00.000Z"
+            }
+        ]
+    }
 
     let valid = await checkExpirationToken();
     switch (valid) {

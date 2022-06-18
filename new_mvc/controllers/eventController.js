@@ -116,6 +116,20 @@ exports.createNewEvent = async (req, res) => {
     console.log("createNewEvent req.body:", req.body);
 
 
+    let obj = utils.convertObjToRow(req.body);
+    let msg = obj[0];
+    let eventRow= obj[1];
+    let eventPhase = obj[2];
+
+    console.log("obj:",obj);
+    console.log("eventRow:",eventRow);
+    console.log("msg:",msg);
+    console.log("eventPhase:",eventPhase);
+
+    if(msg !==null)  {res.status(400).json(msg)}
+    else res.status(200).json({ msg: "OK" });
+    
+
     // if (utils.validateInputData(req.body)) {
 
     //     try {
@@ -214,7 +228,7 @@ exports.createNewEvent = async (req, res) => {
 
     // } else res.status(400).json(req.body);
     // } else res.status(400).json("Не указаны обязательные поля", req.body);
-    res.status(200).json({ msg: "OK" });
+    
 
 }
 

@@ -47,15 +47,96 @@ function createEventId() {
 }
 
 function validateInputData(data) {
-    console.log("validate data.title:" ,data.title);
-    console.log("validate data.idWarehouse:" ,data.idWarehouse);
-    if((data.title !=null) && (data.idWarehouse !=null)) {
+    console.log("validate data.title:", data.title);
+    console.log("validate data.idWarehouse:", data.idWarehouse);
+    if ((data.title != null) && (data.idWarehouse != null)) {
         return true;
-    }else return false;
+    } else return false;
+}
+
+function convertObjToRow(reqbody) {
+
+    let eventRow = [];
+    let phaseRow = null;
+    let oEvent = {};
+    let oPhase = {};
+
+    oEvent.idEvent = createEventId();
+    eventRow.push(oEvent.idEvent);
+
+    let msg = null;
+
+    if (reqbody.warehouse.idWarehouse != null) {oEvent.idWarehouse = reqbody.warehouse.idWarehouse}
+    else  msg = "Не указано поле idWarehouse";
+    eventRow.push(oEvent.idWarehouse);
+    
+    if (reqbody.title != null) {oEvent.title = reqbody.title}
+    else  msg = "Не указано поле название проекта";
+    eventRow.push(oEvent.title);
+
+    if (reqbody.timeEvent.start != null) {oEvent.start = reqbody.timeEvent.start}
+    else msg = "Не указано поле даты начала проекта";
+    eventRow.push(oEvent.start);
+
+    if (reqbody.timeEvent.end != null) {oEvent.end = reqbody.timeEvent.end}
+    eventRow.push(oEvent.end);
+
+    if (reqbody.creator.idCreator != null) {oEvent.idCreatedBy = reqbody.creator.idCreator}
+    else msg = "Не указано поле создателя проекта";
+    eventRow.push(oEvent.idCreatedBy);
+
+    if (reqbody.client.idClient != null) {oEvent.idClient = reqbody.client.idClient}
+    eventRow.push(oEvent.idClient);
+
+    if (reqbody.status.idStatus != null) {oEvent.idStatus = reqbody.status.idStatus}
+    eventRow.push(oEvent.idStatus);
+
+    if (reqbody.location.idEventCity != null) {oEvent.idEventCity = reqbody.location.idEventCity}
+    eventRow.push(oEvent.idEventCity);
+
+    if (reqbody.location.idEventPlace != null) {oEvent.idEventPlace = reqbody.location.idEventPlace}
+    eventRow.push(oEvent.idEventPlace);
+
+    if (reqbody.manager.idManager_1 != null) {oEvent.idManager_1 = reqbody.manager.idManager_1}
+    eventRow.push(oEvent.idManager_1);
+
+    if (reqbody.manager.idManager_2 != null) {oEvent.idManager_2 = reqbody.manager.idManager_2}
+    eventRow.push(oEvent.idManager_2);
+
+    if (reqbody.notes != null) {oEvent.notes = reqbody.notes}
+    eventRow.push(oEvent.notes);
+
+    if(reqbody.phase != null) {
+        phaseRow = [];
+
+        for (let i = 0; i < reqbody.phase.length; i++) {
+            // console.log("reqbody.phase:",reqbody.phase[i]);
+            let arr = [];
+            oPhase.idEvent = oEvent.idEvent;
+            arr.push(oPhase.idEvent);
+
+            oPhase.idPhase = reqbody.phase[i].idPhase;
+            arr.push(oPhase.idPhase);
+
+            oPhase.startPhase = reqbody.phase[i].startPhase;
+            arr.push(oPhase.startPhase);
+
+            oPhase.endPhase= reqbody.phase[i].endPhase;
+            arr.push(oPhase.endPhase);
+
+            phaseRow.push(arr);
+            
+        }
+
+    }
+
+    return [msg,eventRow,phaseRow];
+
 }
 
 module.exports = {
     currentDateTime: currentDateTime,
     createEventId: createEventId,
-    validateInputData: validateInputData
+    validateInputData: validateInputData,
+    convertObjToRow: convertObjToRow
 };
