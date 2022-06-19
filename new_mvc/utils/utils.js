@@ -46,14 +46,6 @@ function createEventId() {
     return id;
 }
 
-function validateInputData(data) {
-    console.log("validate data.title:", data.title);
-    console.log("validate data.idWarehouse:", data.idWarehouse);
-    if ((data.title != null) && (data.idWarehouse != null)) {
-        return true;
-    } else return false;
-}
-
 function convertObjToRow(reqbody) {
 
     let eventRow = [];
@@ -141,9 +133,60 @@ function convertObjToRow(reqbody) {
 
 }
 
+function convertRowToObj(row) {
+
+    console.log("convert row:", row);
+
+    let obj = {};
+
+    obj.idEvent = row.idEvent;
+
+    obj.warehouse = {
+        idWarehouse: row.idWarehouse,
+        warehouseName: row.warehouse
+    }
+
+    obj.title = row.title;
+
+    obj.creator = {
+        idCreator: row.idCreatedBy,
+        nameCreator: row.createdBy
+    }
+
+    obj.client = {
+        idClient: row.idClient,
+        clientName: row.client
+    }
+
+    obj.status = {
+        idStatus: row.idStatus,
+        statusName: row.status
+    }
+
+    obj.location = {
+        idEventCity: row.idEventCity,
+        nameEventCity: row.eventCity,
+        idEventPlace: row.idEventPlace,
+        nameEventPlace: row.eventPlace
+    }
+
+    obj.manager = {
+        idManager_1: row.idManager_1,
+        nameManager_1: row.manager_1,
+        idManager_2: row.idManager_2,
+        nameManager_2: row.manager_2
+    }
+
+    obj.notes = row.notes;
+
+    console.log("convert obj:", obj);
+
+    return obj
+}
+
 module.exports = {
     currentDateTime: currentDateTime,
     createEventId: createEventId,
-    validateInputData: validateInputData,
+    convertRowToObj: convertRowToObj,
     convertObjToRow: convertObjToRow
 };

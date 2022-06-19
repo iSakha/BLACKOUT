@@ -7,39 +7,157 @@ const auth = require('../controllers/authController')
 
 // Events queries
 // =====================================================================
-exports.getAll = async (req, res) => {
-    try {
-        console.log("getAllEvents");
+
+exports.createNewEvent = async (req, res) => {
+
+    console.log("createNewEvent req.body:", req.body);
+
+
+    let obj = utils.convertObjToRow(req.body);
+    let msg = obj[0];
+    let eventRow = obj[1];
+    let eventPhase = obj[2];
+
+    console.log("obj:", obj);
+    console.log("eventRow:", eventRow);
+    console.log("msg:", msg);
+    console.log("eventPhase:", eventPhase);
+
+    if (msg === null) {
+
         let status = await auth.authenticateJWT(req, res);
-        console.log("statusCode:", status);
+
         if (status === 200) {
-            const [allEvents] = await Event.getAll();
-            console.log("allEvents:", allEvents);
-            const [phases] = await Phase.getAllPhase();
-            console.log("phases:", phases);
 
-            for (let i = 0; i < allEvents.length; i++) {
+            console.log("authentication successfull!");
 
-                let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
-                console.log("foundPhase:", i, foundPhase);
-                if (foundPhase.length > 0) {
-                    allEvents[i].phase = foundPhase;
-                    console.log("event+phase:", allEvents[i]);
-                } else allEvents[i].phase = null;
-
+            try {
+                const [newEvent] = await Event.createEvent(eventRow);
+                console.log("result newEvent:", newEvent);
+            } catch (error) {
+                console.log("error:", error);
+                res.status(500).json({ msg: "We have problems with writing event data to database" });
             }
 
-            res.json(allEvents);
+            try {
+                const [newPhase] = await Phase.writeEventPhase(eventPhase);
+                console.log("result eventPhase:", newPhase);
+            } catch (error) {
+                console.log("error:", error);
+                res.status(500).json({ msg: "We have problems with writing phase data to database" });
+            }
+
+            res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` })
+
         } else {
-            res.sendStatus(status);
+            res.status(status).json({ msg: "We have problems with JWT authentication" });
         }
 
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
     }
+    else res.status(400).json(msg);
+
 }
+
+// =====================================================================
+
+exports.getAll = async (req, res) => {
+
+    console.log("getAllEvents");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+    let allEventsArr = [];
+    let allEvents;
+    let phases;
+
+    if (status === 200) {
+
+        try {
+
+            [allEvents] = await Event.getAll();
+            console.log("allEvents:", allEvents);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting event data from database" });
+        }
+
+
+        try {
+            [phases] = await Phase.getAllPhase();
+            console.log("phases:", phases);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting phase data from database" });
+        }
+
+        for (let i = 0; i < allEvents.length; i++) {
+
+            let eventObj = utils.convertRowToObj(allEvents[i]);
+
+            let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
+            console.log("foundPhase:", i, foundPhase);
+
+            if (foundPhase.length > 0) {
+                eventObj.phase = foundPhase;
+            } else eventObj.phase = null;
+
+            allEventsArr.push(eventObj);
+        }
+
+        console.log("allEventsArr:", allEventsArr);
+
+        res.status(200).json(allEventsArr);
+
+    } else {
+        res.status(status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+// exports.getAll = async (req, res) => {
+
+//     try {
+//         console.log("getAllEvents");
+//         let status = await auth.authenticateJWT(req, res);
+//         console.log("statusCode:", status);
+//         if (status === 200) {
+//             const [allEvents] = await Event.getAll();
+//             console.log("allEvents:", allEvents);
+//             const [phases] = await Phase.getAllPhase();
+//             console.log("phases:", phases);
+
+//             for (let i = 0; i < allEvents.length; i++) {
+
+//                 let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
+//                 console.log("foundPhase:", i, foundPhase);
+//                 if (foundPhase.length > 0) {
+//                     allEvents[i].phase = foundPhase;
+//                     console.log("event+phase:", allEvents[i]);
+//                 } else allEvents[i].phase = null;
+
+//             }
+
+//             res.json(allEvents);
+//         } else {
+//             res.sendStatus(status);
+//         }
+
+//     } catch (error) {
+//         if (!error.statusCode) {
+//             error.statusCode = 500;
+//         }
+//     }
+// }
 
 exports.getAllHistory = async (req, res) => {
     try {
@@ -111,55 +229,7 @@ exports.getOneHistory = async (req, res) => {
 }
 
 
-exports.createNewEvent = async (req, res) => {
 
-    console.log("createNewEvent req.body:", req.body);
-
-
-    let obj = utils.convertObjToRow(req.body);
-    let msg = obj[0];
-    let eventRow = obj[1];
-    let eventPhase = obj[2];
-
-    console.log("obj:", obj);
-    console.log("eventRow:", eventRow);
-    console.log("msg:", msg);
-    console.log("eventPhase:", eventPhase);
-
-    if (msg === null) {
-
-        let status = await auth.authenticateJWT(req, res);
-
-        if (status === 200) {
-
-            console.log("authentication successfull!");
-
-            try {
-                const [newEvent] = await Event.createEvent(eventRow);
-                console.log("result newEvent:", newEvent);
-            } catch (error) {
-                console.log("error:", error);
-                res.sendStatus(500).json({ msg: "We have problems with writing event data to database" });
-            }
-
-            try {
-                const [newPhase] = await Phase.writeEventPhase(eventPhase);
-                console.log("result eventPhase:", newPhase);
-            } catch (error) {
-                console.log("error:", error);
-                res.sendStatus(500).json({ msg: "We have problems with writing phase data to database" });
-            }
-
-             res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` })
-
-        } else {
-            res.sendStatus(status).json({ msg: "We have problems with JWT authentication" });
-        }
-       
-    }
-    else res.status(400).json(msg);
-
-}
 
 exports.updateEvent = async (req, res) => {
 
