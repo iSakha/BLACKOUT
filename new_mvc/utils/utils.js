@@ -60,45 +60,102 @@ function convertObjToRow(reqbody) {
 
     let msg = null;
     // idWarehouse
-    if (reqbody.warehouse.idWarehouse != null) { oEvent.idWarehouse = reqbody.warehouse.idWarehouse }
-    else msg = "Не указано поле idWarehouse";
-    eventRow.push(oEvent.idWarehouse);
+    if (reqbody.warehouse !== null) {
+        if (reqbody.warehouse.idWarehouse != null) { oEvent.idWarehouse = reqbody.warehouse.idWarehouse }
+        else msg = "Не указано поле idWarehouse";
+        eventRow.push(oEvent.idWarehouse);
+    } else msg = "Не указано поле warehouse";
+
     // title
     if (reqbody.title != null) { oEvent.title = reqbody.title }
     else msg = "Не указано поле название проекта";
     eventRow.push(oEvent.title);
-    // start
-    if (reqbody.timeEvent.start != null) { oEvent.start = reqbody.timeEvent.start }
-    else msg = "Не указано поле даты начала проекта";
-    eventRow.push(oEvent.start);
-    // end
-    if (reqbody.timeEvent.end != null) { oEvent.end = reqbody.timeEvent.end }
-    eventRow.push(oEvent.end);
-    // idManager_1
-    if (reqbody.manager.idManager_1 != null) { oEvent.idManager_1 = reqbody.manager.idManager_1 }
-    eventRow.push(oEvent.idManager_1);
-    // idManager_2
-    if (reqbody.manager.idManager_2 != null) { oEvent.idManager_2 = reqbody.manager.idManager_2 }
-    eventRow.push(oEvent.idManager_2);
-    // idEventCity
-    if (reqbody.location.idEventCity != null) { oEvent.idEventCity = reqbody.location.idEventCity }
-    eventRow.push(oEvent.idEventCity);
-    // idEventPlace
-    if (reqbody.location.idEventPlace != null) { oEvent.idEventPlace = reqbody.location.idEventPlace }
-    eventRow.push(oEvent.idEventPlace);
-    // idClient
-    if (reqbody.client.idClient != null) { oEvent.idClient = reqbody.client.idClient }
-    eventRow.push(oEvent.idClient);
-    // idCreatedBy
-    if (reqbody.creator.idCreator != null) { oEvent.idCreatedBy = reqbody.creator.idCreator }
-    else msg = "Не указано поле создателя проекта";
-    eventRow.push(oEvent.idCreatedBy);
+
+    // timeEvent
+    if (reqbody.timeEvent !== null) {
+        // start
+        if (reqbody.timeEvent.start != null) { oEvent.start = reqbody.timeEvent.start }
+        else msg = "Не указано поле даты начала проекта";
+        eventRow.push(oEvent.start);
+        // end
+        if (reqbody.timeEvent.end != null) { oEvent.end = reqbody.timeEvent.end }
+        eventRow.push(oEvent.end);
+    } else msg = "Не указано поле даты начала проекта";
+
+    // manager
+    if (reqbody.manager !== null) {
+        // idManager_1
+        if (reqbody.manager.idManager_1 != null) {
+            oEvent.idManager_1 = reqbody.manager.idManager_1;
+        } else oEvent.idManager_1 = 1;
+        eventRow.push(oEvent.idManager_1);
+        // idManager_2
+        if (reqbody.manager.idManager_2 != null) {
+            oEvent.idManager_2 = reqbody.manager.idManager_2
+        } else oEvent.idManager_2 = 1;
+        eventRow.push(oEvent.idManager_2);
+    } else {
+        oEvent.idManager_1 = 1;
+        oEvent.idManager_2 = 1;
+        eventRow.push(oEvent.idManager_1);
+        eventRow.push(oEvent.idManager_2);
+    }
+
+    // location
+    if (reqbody.location !== null) {
+        // idEventCity
+        if (reqbody.location.idEventCity != null) {
+            oEvent.idEventCity = reqbody.location.idEventCity;
+        } else oEvent.idEventCity = 1;
+        eventRow.push(oEvent.idEventCity);
+        // idEventPlace
+        if (reqbody.location.idEventPlace != null) {
+            oEvent.idEventPlace = reqbody.location.idEventPlace;
+        } else oEvent.idEventPlace = 1;
+        eventRow.push(oEvent.idEventPlace);
+    } else {
+        oEvent.idEventCity = 1;
+        oEvent.idEventPlace = 1;
+        eventRow.push(oEvent.idEventCity);
+        eventRow.push(oEvent.idEventPlace);
+    }
+
+    // client
+    if (reqbody.client !== null) {
+        if (reqbody.client.idClient != null) {
+            oEvent.idClient = reqbody.client.idClient;
+        } else oEvent.idClient = 1;
+        eventRow.push(oEvent.idClient);
+    } else {
+        oEvent.idClient = null;
+        eventRow.push(oEvent.idClient);
+    }
+
+    // creator
+    if (reqbody.creator !== null) {
+        if (reqbody.creator.idCreator != null) { oEvent.idCreatedBy = reqbody.creator.idCreator }
+        else msg = "Не указано поле создателя проекта";
+        eventRow.push(oEvent.idCreatedBy);
+    } else msg = "Не указано поле создателя проекта";
+
     // notes
-    if (reqbody.notes != null) { oEvent.notes = reqbody.notes }
+    if (reqbody.notes != null) { 
+        oEvent.notes = reqbody.notes;
+     }else oEvent.notes = "";
     eventRow.push(oEvent.notes);
-    // idStatus
-    if (reqbody.status.idStatus != null) { oEvent.idStatus = reqbody.status.idStatus }
-    eventRow.push(oEvent.idStatus);
+
+
+    // status
+    if (reqbody.status !== null) {
+        if (reqbody.status.idStatus != null) {
+             oEvent.idStatus = reqbody.status.idStatus;
+             }else oEvent.idStatus = 1;
+        eventRow.push(oEvent.idStatus);
+    } else {
+        oEvent.idStatus = 1;
+        eventRow.push(oEvent.idStatus);
+    }
+
     // idUpdatedBy
     eventRow.push(oEvent.idCreatedBy);
 
@@ -127,6 +184,8 @@ function convertObjToRow(reqbody) {
 
         }
 
+    } else {
+        phaseRow = null;
     }
 
     return [msg, eventRow, phaseRow];

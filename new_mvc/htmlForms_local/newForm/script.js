@@ -723,7 +723,7 @@ async function createEvent() {
 
     eventObj = {
         "idEvent": "16553164869",
-        "title": "Би-2",
+        "title": "Би-2 with phases but no managers",
         "timeEvent": {
             "start": "2022-06-14T21:00:00",
             "end": "2022-06-14T21:00:00"
@@ -734,6 +734,8 @@ async function createEvent() {
             "idWarehouse": 2,
             "warehouseName": "Москва"
         },
+        // "warehouse": null,
+
         "creator": {
             "idCreator": 2,
             "nameCreator": "Виталий Кондратенко"
@@ -743,6 +745,7 @@ async function createEvent() {
             "clientName": "Агентство",
             "clientContact": "+375259999999, Василий Пупкин"
         },
+        // "client": null,
         "status": {
             "idStatus": 2,
             "statusName": "Подтвержден"
@@ -753,12 +756,13 @@ async function createEvent() {
             "idEventPlace": 2,
             "nameEventPlace": "Минск-Арена"
         },
-        "manager": {
-            "idManager_1": 3,
-            "nameManager_1": "Виталий Кондратенко",
-            "idManager_2": 4,
-            "nameManager_2": "Виталий Кондратенко"
-        },
+        // "manager": {
+        //     "idManager_1": 3,
+        //     "nameManager_1": "Виталий Кондратенко",
+        //     "idManager_2": 4,
+        //     "nameManager_2": "Виталий Кондратенко"
+        // },
+        "manager": null,
         "notes": "Тест заметки",
         "phase": [
             {
@@ -786,6 +790,7 @@ async function createEvent() {
                 // "endPhase": "2022-06-14T21:00:00.000Z"
             }
         ]
+        // "phase": null
     }
 
     let valid = await checkExpirationToken();

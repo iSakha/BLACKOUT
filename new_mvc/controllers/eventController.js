@@ -14,6 +14,7 @@ exports.createNewEvent = async (req, res) => {
 
 
     let obj = utils.convertObjToRow(req.body);
+
     let msg = obj[0];
     let eventRow = obj[1];
     let eventPhase = obj[2];
@@ -38,14 +39,16 @@ exports.createNewEvent = async (req, res) => {
                 console.log("error:", error);
                 res.status(500).json({ msg: "We have problems with writing event data to database" });
             }
-
-            try {
-                const [newPhase] = await Phase.writeEventPhase(eventPhase);
-                console.log("result eventPhase:", newPhase);
-            } catch (error) {
-                console.log("error:", error);
-                res.status(500).json({ msg: "We have problems with writing phase data to database" });
+            if (eventPhase !== null) {
+                try {
+                    const [newPhase] = await Phase.writeEventPhase(eventPhase);
+                    console.log("result eventPhase:", newPhase);
+                } catch (error) {
+                    console.log("error:", error);
+                    res.status(500).json({ msg: "We have problems with writing phase data to database" });
+                }
             }
+
 
             res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` })
 
@@ -93,7 +96,13 @@ exports.getAll = async (req, res) => {
 
         for (let i = 0; i < allEvents.length; i++) {
 
+            console.log("==================================================================");
+            console.log("allEvents.length:", allEvents.length);
+
+
             let eventObj = utils.convertRowToObj(allEvents[i]);
+
+            console.log("eventObj:", eventObj);
 
             let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
             console.log("foundPhase:", i, foundPhase);
@@ -104,7 +113,7 @@ exports.getAll = async (req, res) => {
 
             allEventsArr.push(eventObj);
         }
-
+        console.log("==================================================================");
         console.log("allEventsArr:", allEventsArr);
 
         res.status(200).json(allEventsArr);
