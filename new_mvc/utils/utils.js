@@ -46,7 +46,7 @@ function createEventId() {
     return id;
 }
 
-function convertObjToRow(reqbody) {
+function convertObjToRow(reqbody, mode) {
 
     let eventRow = [];
     let phaseRow = null;
@@ -55,8 +55,14 @@ function convertObjToRow(reqbody) {
 
 
     // idEvent
-    oEvent.idEvent = createEventId();
-    eventRow.push(oEvent.idEvent);
+    if (mode === "create") {
+        oEvent.idEvent = createEventId();
+        eventRow.push(oEvent.idEvent);
+    }else {
+        oEvent.idEvent = reqbody.idEvent;
+        eventRow.push(oEvent.idEvent);
+    }
+
 
     let msg = null;
     // idWarehouse
@@ -139,17 +145,17 @@ function convertObjToRow(reqbody) {
     } else msg = "Не указано поле создателя проекта";
 
     // notes
-    if (reqbody.notes != null) { 
+    if (reqbody.notes != null) {
         oEvent.notes = reqbody.notes;
-     }else oEvent.notes = "";
+    } else oEvent.notes = "";
     eventRow.push(oEvent.notes);
 
 
     // status
     if (reqbody.status !== null) {
         if (reqbody.status.idStatus != null) {
-             oEvent.idStatus = reqbody.status.idStatus;
-             }else oEvent.idStatus = 1;
+            oEvent.idStatus = reqbody.status.idStatus;
+        } else oEvent.idStatus = 1;
         eventRow.push(oEvent.idStatus);
     } else {
         oEvent.idStatus = 1;
@@ -157,7 +163,12 @@ function convertObjToRow(reqbody) {
     }
 
     // idUpdatedBy
-    eventRow.push(oEvent.idCreatedBy);
+    if (reqbody.currentUser !== null) {
+        if (reqbody.currentUser.idCurrentUser != null) { oEvent.idUpdatedBy = reqbody.currentUser.idCurrentUser }
+        else msg = "Не указано поле текщего пользоваткля";
+        eventRow.push(oEvent.idUpdatedBy);
+    } else msg = "Не указано поле текщего пользоваткля";
+
 
     // unixTime
     eventRow.push(Date.now());
@@ -210,6 +221,11 @@ function convertRowToObj(row) {
     obj.creator = {
         idCreator: row.idCreatedBy,
         nameCreator: row.createdBy
+    }
+
+    obj.currentUser = {
+        idcurrentUser: row.idUpdatedBy,
+        nameCurrentUser: row.updatedBy
     }
 
     obj.client = {

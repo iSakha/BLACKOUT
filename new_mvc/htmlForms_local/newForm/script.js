@@ -717,13 +717,13 @@ async function createEvent() {
     // console.log("createEvent eventObj:", eventObj);
 
 
-    eventObj.phase = oPhasesArr;
+    // eventObj.phase = oPhasesArr;
 
     // console.log("createEvent eventObj:", eventObj);
 
     eventObj = {
-        "idEvent": "16553164869",
-        "title": "Би-2 with phases but no managers",
+        "idEvent": "16556671623",
+        "title": "test calculation",
         "timeEvent": {
             "start": "2022-06-14T21:00:00",
             "end": "2022-06-14T21:00:00"
@@ -731,7 +731,7 @@ async function createEvent() {
             // "end": "2022-06-14T21:00:00.000Z"
         },
         "warehouse": {
-            "idWarehouse": 2,
+            "idWarehouse": 3,
             "warehouseName": "Москва"
         },
         // "warehouse": null,
@@ -739,6 +739,10 @@ async function createEvent() {
         "creator": {
             "idCreator": 2,
             "nameCreator": "Виталий Кондратенко"
+        },
+        "currentUser": {
+            "idCurrentUser": 2,
+            "nameCurrentUser": "Виталий Кондратенко"
         },
         "client": {
             "idClient": 3,
@@ -756,13 +760,13 @@ async function createEvent() {
             "idEventPlace": 2,
             "nameEventPlace": "Минск-Арена"
         },
-        // "manager": {
-        //     "idManager_1": 3,
-        //     "nameManager_1": "Виталий Кондратенко",
-        //     "idManager_2": 4,
-        //     "nameManager_2": "Виталий Кондратенко"
-        // },
-        "manager": null,
+        "manager": {
+            "idManager_1": 3,
+            "nameManager_1": "Виталий Кондратенко",
+            "idManager_2": 4,
+            "nameManager_2": "Виталий Кондратенко"
+        },
+        // "manager": null,
         "notes": "Тест заметки",
         "phase": [
             {
@@ -823,79 +827,153 @@ async function createEvent() {
 //=====================================================================
 async function updateEvent() {
 
-    let eventObj = {};
+    eventObj = {
+        "idEvent": "16556671623",
+        "title": "test update",
+        "timeEvent": {
+            "start": "2022-06-14T21:00:00",
+            "end": "2022-06-14T21:00:00"
+            // "start": "2022-06-14T21:00:00.000Z",
+            // "end": "2022-06-14T21:00:00.000Z"
+        },
+        "warehouse": {
+            "idWarehouse": 2,
+            "warehouseName": "Москва"
+        },
+        // "warehouse": null,
 
-    // let oPhase = setPhase();
+        "creator": {
+            "idCreator": 2,
+            "nameCreator": "Виталий Кондратенко"
+        },
+        "currentUser": {
+            "idCurrentUser": 2,
+            "nameCurrentUser": "Виталий Кондратенко"
+        },
+        "client": {
+            "idClient": 3,
+            "clientName": "Агентство",
+            "clientContact": "+375259999999, Василий Пупкин"
+        },
+        // "client": null,
+        "status": {
+            "idStatus": 2,
+            "statusName": "Подтвержден"
+        },
+        "location": {
+            "idEventCity": 2,
+            "nameEventCity": "Минск",
+            "idEventPlace": 2,
+            "nameEventPlace": "Минск-Арена"
+        },
+        "manager": {
+            "idManager_1": 3,
+            "nameManager_1": "Виталий Кондратенко",
+            "idManager_2": 4,
+            "nameManager_2": "Виталий Кондратенко"
+        },
+        // "manager": null,
+        "notes": "Тест заметки",
+        "phase": [
+            {
+                "idPhase": 2,
+                "phase": "Транспорт туда",
+                "startPhase": "2022-06-14T21:00:00",
+                "endPhase": "2022-06-14T21:00:00"
+                // "startPhase": "2022-06-14T21:00:00.000Z",
+                // "endPhase": "2022-06-14T21:00:00.000Z"
+            },
+            {
+                "idPhase": 3,
+                "phase": "Работа",
+                "startPhase": "2022-06-14T21:00:00",
+                "endPhase": "2022-06-14T21:00:00"
+                // "startPhase": "2022-06-14T21:00:00.000Z",
+                // "endPhase": "2022-06-14T21:00:00.000Z"
+            },
+            {
+                "idPhase": 4,
+                "phase": "Транспорт обратно",
+                "startPhase": "2022-06-14T21:00:00",
+                "endPhase": "2022-06-14T21:00:00"
+                // "startPhase": "2022-06-14T21:00:00.000Z",
+                // "endPhase": "2022-06-14T21:00:00.000Z"
+            }
+        ]
+        // "phase": null
+    }
 
-    // if (oPhase.idPhase > 1) {
-    //     eventObj.phase = oPhase;
-    // } else eventObj.phase = null;
+    // // let oPhase = setPhase();
 
-    if (document.getElementById('txt-event-id').value != "") {
-        eventObj.idEvent = document.getElementById('txt-event-id').value;
-    } else eventObj.idEvent = null;
+    // // if (oPhase.idPhase > 1) {
+    // //     eventObj.phase = oPhase;
+    // // } else eventObj.phase = null;
 
-    if (document.getElementById('txt-event-title').value != "") {
-        eventObj.title = document.getElementById('txt-event-title').value;
-    } else eventObj.title = null;
+    // if (document.getElementById('txt-event-id').value != "") {
+    //     eventObj.idEvent = document.getElementById('txt-event-id').value;
+    // } else eventObj.idEvent = null;
 
-    if (document.getElementById('select-whouse').value >= 1) {
-        eventObj.idWarehouse = parseInt(document.getElementById('select-whouse').value);
-    } else eventObj.idWarehouse = null;
+    // if (document.getElementById('txt-event-title').value != "") {
+    //     eventObj.title = document.getElementById('txt-event-title').value;
+    // } else eventObj.title = null;
 
-    eventObj.createdBy = document.getElementById('txt-event-user').value;
-    let idCreatedBy = oUsers.find(e => e.fullName === eventObj.createdBy);
+    // if (document.getElementById('select-whouse').value >= 1) {
+    //     eventObj.idWarehouse = parseInt(document.getElementById('select-whouse').value);
+    // } else eventObj.idWarehouse = null;
 
-    console.log("idCreatedBy:", idCreatedBy);
+    // eventObj.createdBy = document.getElementById('txt-event-user').value;
+    // let idCreatedBy = oUsers.find(e => e.fullName === eventObj.createdBy);
 
-    eventObj.idCreatedBy = idCreatedBy.id;
+    // console.log("idCreatedBy:", idCreatedBy);
 
-    console.log("idCreatedBy:", eventObj.idCreatedBy);
+    // eventObj.idCreatedBy = idCreatedBy.id;
 
-    eventObj.idUpdatedBy = idUser;
+    // console.log("idCreatedBy:", eventObj.idCreatedBy);
 
-    let startDate = document.getElementById('date-event-start').value;
-    let endDate = document.getElementById('date-event-end').value;
+    // eventObj.idUpdatedBy = idUser;
 
-    let hourStart = document.getElementById('txt-time-start-h').value;
-    let hourEnd = document.getElementById('txt-time-end-h').value;
-    let minStart = document.getElementById('txt-time-start-m').value;
-    let minEnd = document.getElementById('txt-time-end-m').value;
+    // let startDate = document.getElementById('date-event-start').value;
+    // let endDate = document.getElementById('date-event-end').value;
 
-    eventObj.start = startDate + "T" + hourStart + ":" + minStart + ":00";
-    eventObj.end = endDate + "T" + hourEnd + ":" + minEnd + ":00";
+    // let hourStart = document.getElementById('txt-time-start-h').value;
+    // let hourEnd = document.getElementById('txt-time-end-h').value;
+    // let minStart = document.getElementById('txt-time-start-m').value;
+    // let minEnd = document.getElementById('txt-time-end-m').value;
 
-    if (document.getElementById('txt-notes').value != "") {
-        eventObj.notes = document.getElementById('txt-notes').value;
-    } else eventObj.notes = null;
+    // eventObj.start = startDate + "T" + hourStart + ":" + minStart + ":00";
+    // eventObj.end = endDate + "T" + hourEnd + ":" + minEnd + ":00";
 
-    if (document.getElementById('select-manager-1').value >= 1) {
-        eventObj.idManager_1 = parseInt(document.getElementById('select-manager-1').value);
-    } else eventObj.idManager_1 = null;
+    // if (document.getElementById('txt-notes').value != "") {
+    //     eventObj.notes = document.getElementById('txt-notes').value;
+    // } else eventObj.notes = null;
 
-    if (document.getElementById('select-manager-2').value >= 1) {
-        eventObj.idManager_2 = parseInt(document.getElementById('select-manager-2').value);
-    } else eventObj.idManager_2 = null;
+    // if (document.getElementById('select-manager-1').value >= 1) {
+    //     eventObj.idManager_1 = parseInt(document.getElementById('select-manager-1').value);
+    // } else eventObj.idManager_1 = null;
 
-    if (document.getElementById('select-event-city').value >= 1) {
-        eventObj.idEventCity = parseInt(document.getElementById('select-event-city').value);
-    } else eventObj.idEventCity = null;
+    // if (document.getElementById('select-manager-2').value >= 1) {
+    //     eventObj.idManager_2 = parseInt(document.getElementById('select-manager-2').value);
+    // } else eventObj.idManager_2 = null;
 
-    if (document.getElementById('select-event-place').value >= 1) {
-        eventObj.idEventPlace = parseInt(document.getElementById('select-event-place').value);
-    } else eventObj.idEventPlace = null;
+    // if (document.getElementById('select-event-city').value >= 1) {
+    //     eventObj.idEventCity = parseInt(document.getElementById('select-event-city').value);
+    // } else eventObj.idEventCity = null;
 
-    if (document.getElementById('select-event-client').value >= 1) {
-        eventObj.idClient = parseInt(document.getElementById('select-event-client').value);
-    } else eventObj.idClient = null;
+    // if (document.getElementById('select-event-place').value >= 1) {
+    //     eventObj.idEventPlace = parseInt(document.getElementById('select-event-place').value);
+    // } else eventObj.idEventPlace = null;
 
-    if (document.getElementById('select-status').value >= 1) {
-        eventObj.idStatus = parseInt(document.getElementById('select-status').value);
-    } else eventObj.idStatus = null;
+    // if (document.getElementById('select-event-client').value >= 1) {
+    //     eventObj.idClient = parseInt(document.getElementById('select-event-client').value);
+    // } else eventObj.idClient = null;
 
-    eventObj.phase = oPhasesArr;
+    // if (document.getElementById('select-status').value >= 1) {
+    //     eventObj.idStatus = parseInt(document.getElementById('select-status').value);
+    // } else eventObj.idStatus = null;
 
-    console.log("updateEvent eventObj:", eventObj);
+    // eventObj.phase = oPhasesArr;
+
+    // console.log("updateEvent eventObj:", eventObj);
 
     let valid = await checkExpirationToken();
     switch (valid) {
