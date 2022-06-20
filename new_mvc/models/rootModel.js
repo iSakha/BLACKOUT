@@ -15,11 +15,15 @@ module.exports = class Root {
     }
 
     static getUsers() {
-        return db.execute('SELECT * FROM `v_users`');
+        return db.execute('SELECT `id`, `login`, `firstName`, `lastName`, `fullName`, `avatar`, `role` FROM `v_users`');
     }
 
     static getStatus() {
         return db.execute('SELECT * FROM `t_status`');
+    }
+
+    static addStatus() {
+        return db.execute('INSERT INTO `t_status`(status) VALUES("new status")');
     }
 
     static getPhases() {

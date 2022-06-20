@@ -12,6 +12,7 @@ router.get('/locations', rootController.getLocations);
 router.get('/clients', rootController.getClients);
 router.get('/users', rootController.getManagers);
 router.get('/status', rootController.getStatus);
+router.post('/status', rootController.addStatus);
 router.get('/phase', rootController.getPhases);
 router.get('/warehouses', rootController.getWarehouses);
 

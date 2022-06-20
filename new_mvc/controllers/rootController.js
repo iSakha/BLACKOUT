@@ -111,6 +111,28 @@ exports.getStatus = async (req, res) => {
 
 }
 
+exports.addStatus = async (req, res) => {
+
+    try {
+        console.log("getStatus");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status);
+        if (status === 200) {
+            const [status] = await Root.addStatus();
+            console.log(status);
+            res.status(200).json(status);
+        } else {
+            res.sendStatus(status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+
+}
+
 exports.getPhases = async (req, res) => {
 
     try {
