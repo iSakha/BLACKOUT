@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CRUD events</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>CRUD events local server</h1>
+
+  <div class="container d-flex flex-row justify-content-around" id="div-login">
+    <div class="d-flex flex-column">
+      <div id="login-input">
+        <label for="txt-login" class="form-label">Login</label>
+        <input type="text" class="form-control" id="txt-login">
+      </div>
+      <div id="pass-input">
+        <label for="txt-pass" class="form-label">Password</label>
+        <input type="password" class="form-control" id="txt-pass">
+      </div>
+    </div>
+    <div class="d-flex flex-column justify-content-around">
+      <div id="login-name">
+        <label id="lbl-user">USER:</label>
+      </div>
+      <div id="login-submit">
+        <button class="btn btn-secondary" id="btn-login">Submit</button>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <hr>
+  <div class="container d-flex align-items-left flex-column">
+    <div class="row g-3 align-items-center">
+      <div class="col-4">
+        <label for="txt-event-id" class="form-label">ID проекта</label>
+        <input type="text" class="form-control" id="txt-event-id" disabled>
+      </div>
+      <div class="col-4">
+        <label for="txt-event-title" class="form-label">Название проекта</label>
+        <input type="text" class="form-control required" id="txt-event-title">
+      </div>
+      <div class="col-4">
+        <label for="txt-event-user" class="form-label">Кто создал</label>
+        <input type="text" class="form-control" id="txt-event-user" disabled>
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center">
+      <div class="col-4">
+        <label for="date-event-start" class="form-label">Дата начала</label>
+        <input type="date" class="form-control required" id="date-event-start">
+      </div>
+      <div class="col-4">
+        <label for="date-event-end" class="form-label">Дата окончания</label>
+        <input type="date" class="form-control" id="date-event-end">
+      </div>
+      <div class="col-4">
+        <label for="select-whouse" class="form-label">Склад отгрузки</label>
+        <select class="form-select required" id="select-whouse">
+          <option selected></option>
+        </select>
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center">
+      <div class="col-2">
+        <label for="txt-time-start-h" class="form-label">Время начала (часы)</label>
+        <input type="text" class="form-control" id="txt-time-start-h" value="00">
+      </div>
+      <div class="col-2">
+        <label for="txt-time-start-m" class="form-label">Время начала (минуты)</label>
+        <input type="text" class="form-control" id="txt-time-start-m" value="00">
+      </div>
+      <div class="col-2">
+        <label for="txt-time-end-h" class="form-label">Время окончания (часы)</label>
+        <input type="text" class="form-control" id="txt-time-end-h" value="00">
+      </div>
+      <div class="col-2">
+        <label for="txt-time-end-m" class="form-label">Время окончания (минуты)</label>
+        <input type="text" class="form-control" id="txt-time-end-m" value="00">
+      </div>
+      <div class="col-4">
+        <label for="txt-notes" class="form-label">Примечания</label>
+        <input type="text" class="form-control" id="txt-notes">
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center">
+      <div class="col-4">
+        <label for="select-event-city" class="form-label">Город проведения</label>
+        <select class="form-select" id="select-event-city">
+          <option selected></option>
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="select-event-place" class="form-label">Площадка</label>
+        <select class="form-select" id="select-event-place">
+          <option selected></option>
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="select-event-client" class="form-label">Заказчик</label>
+        <select class="form-select" id="select-event-client">
+        </select>
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center">
+      <div class="col-4">
+        <label for="select-manager-1" class="form-label">Руководитель проекта</label>
+        <select class="form-select" id="select-manager-1">
+          <option selected></option>
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="select-manager-2" class="form-label">Менеджер проекта</label>
+        <select class="form-select" id="select-manager-2">
+          <option selected></option>
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="select-status" class="form-label">Выбрать статус</label>
+        <select class="form-select" id="select-status">
+        </select>
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center phase-div d-none">
+      <h5>Фазы мероприятия</h5>
+      <div class="col-4">
+        <label for="date-phase-start" class="form-label">Дата начала фазы</label>
+        <input type="date" class="form-control" id="date-phase-start">
+      </div>
+      <div class="col-2">
+        <label for="phase-time-start-h" class="form-label">Время начала фазы (часы)</label>
+        <input type="text" class="form-control" id="phase-time-start-h" value="00">
+      </div>
+      <div class="col-2">
+        <label for="phase-time-start-m" class="form-label">Время начала (минуты)</label>
+        <input type="text" class="form-control" id="phase-time-start-m" value="00">
+      </div>
+      <div class="col-4">
+        <label for="select-phase" class="form-label">Фаза</label>
+        <select class="form-select" id="select-phase">
+        </select>
+      </div>
+    </div>
+    <br>
+    <div class="row g-3 align-items-center phase-div d-none">
+      <div class="col-4">
+        <label for="date-phase-end" class="form-label">Дата окончания фазы</label>
+        <input type="date" class="form-control" id="date-phase-end">
+      </div>
+      <div class="col-2">
+        <label for="phase-time-end-h" class="form-label">Окончание фазы (часы)</label>
+        <input type="text" class="form-control" id="phase-time-end-h" value="00">
+      </div>
+      <div class="col-2">
+        <label for="phase-time-end-m" class="form-label">Окончание фазы (минуты)</label>
+        <input type="text" class="form-control" id="phase-time-end-m" value="00">
+      </div>
+      <div class="col-2">
+        <label for="btn-set-phase" class="form-label"> <h6>Запись фазы в базу</h6></label>
+        <button id="btn-set-phase" type="button" class="btn btn-outline-success">Set phase</button>
+      </div>
+      <div class="form-check col-2">
+        <input class="form-check-input" type="checkbox" value="" id="check-filled-up">
+        <label class="form-check-label" for="check-filled-up">
+          Полностью заполнено
+        </label>
+      </div>
+    </div>
+    <br>
+    <div class="d-flex flex-row justify-content-around">
+      <div class="">
+        <button id="btn-event-create" type="button" class="btn btn-success">Create event</button>
+      </div>
+      <div class="">
+        <button id="btn-event-read" type="button" class="btn btn-primary">Get all events</button>
+      </div>
+      <div class="">
+        <button id="btn-event-update" type="button" class="btn btn-warning">Update event</button>
+      </div>
+      <div class="">
+        <button id="btn-event-delete" type="button" class="btn btn-danger">Delete event</button>
+      </div>
+      <div class="">
+        <button id="btn-event-details" type="button" class="btn btn-outline-dark">Event details</button>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="d-flex flex-row justify-content-around d-none" id="summary-div">
+      <div id="warehouse-minsk" class="d-flex flex-column warehouse">
+        <label for="">
+          <h4>Минск</h3>
+        </label>
+        <label id="sum-total-minsk">Всего:</label>
+        <label id="sum-current-minsk">На сегодня:</label>
+        <label id="sum-future-minsk">Будет:</label>
+      </div>
+      <div id="warehouse-moscow" class="d-flex flex-column warehouse">
+        <label for="">
+          <h4>Москва</h4>
+        </label>
+        <label id="sum-total-moscow">Всего:</label>
+        <label id="sum-current-moscow">На сегодня:</label>
+        <label id="sum-future-moscow">Будет:</label>
+      </div>
+      <div id="warehouse-kazan" class="d-flex flex-column warehouse">
+        <label for="">
+          <h4>Казань</h4>
+        </label>
+        <label id="sum-total-kazan">Всего:</label>
+        <label id="sum-current-kazan">На сегодня:</label>
+        <label id="sum-future-kazan">Будет:</label>
+      </div>
+      <div id="warehouse-piter" class="d-flex flex-column warehouse">
+        <label for="">
+          <h4>Питер</h4>
+        </label>
+        <label id="sum-total-piter">Всего:</label>
+        <label id="sum-current-piter">На сегодня:</label>
+        <label id="sum-future-piter">Будет:</label>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="d-none" id="event-tbl-div">
+      <table class="table" id="tbl-events">
+        <thead>
+          <tr>
+            <th scope="col">idEvent</th>
+            <th scope="col">title</th>
+            <th scope="col">warehouse</th>
+            <th scope="col">start</th>
+            <th scope="col">end</th>
+            <th scope="col">eventCity</th>
+            <th scope="col">eventPlace</th>
+            <th scope="col">client</th>
+            <th scope="col">manager_1</th>
+            <th scope="col">manager_2</th>
+            <th scope="col">status</th>
+            <th scope="col">notes</th>
+          </tr>
+        </thead>
+        <tbody id="tbl-body-events"></tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+  <script src="script.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
