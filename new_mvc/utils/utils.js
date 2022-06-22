@@ -53,6 +53,8 @@ function convertObjToRow(reqbody, mode) {
     let oEvent = {};
     let oPhase = {};
 
+    console.log("reqbody:",reqbody);
+
 
     // idEvent
     if (mode === "create") {

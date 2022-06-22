@@ -1,25 +1,33 @@
 const dtb = require('../config/database');
 const db = dtb.promise();
 
-
 module.exports = class Event {
 
     constructor(oEvent) {
 
-        this.id = oEvent.id;
+        this.idEvent = oEvent.idEvent;
+        this.idWarehouse = oEvent.idWarehouse;
         this.title = oEvent.title;
-        this.time = oEvent.time;
-        this.warehouse = oEvent.warehouse;
-        this.creator = { id: 1 };
-        this.client = { id: 1 };
-        this.status = { id: 1 };
-        this.location = {
-            city: { id: 1 },
-            place: { id: 1 }
-        }
-        this.manager = { id: 1 };
-        this.phase = null;
-        this.notes = "test notes";
+        this.start = oEvent.start;
+        this.end = oEvent.end;
+        this.idManager_1 = 1;
+        this.idManager_2 = 1;
+        this.idEventCity = 1;
+        this.idEventPlace = 1;
+        this.idClient = 1;
+        this.idCreatedBy = 1;
+        this.createdAt = null;
+        this.notes = null;
+        this.idStatus = 1;
+        this.idPhase = 1;
+        this.phaseTimeStart = null;
+        this.phaseTimeEnd = null;
+        this.idUpdatedBy = 1;
+        this.updatedAt = null;
+        this.filledUp = 0;
+        this.is_deleted = null;
+
+        // this.event_phase = [{}];
     }
 
     // Events queries

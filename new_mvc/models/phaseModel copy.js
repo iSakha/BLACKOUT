@@ -4,10 +4,9 @@ const db = dtb.promise();
 module.exports = class Phase {
     constructor(oPhase) {
         this.idEvent = oPhase.idEvent;
-        this.id = oPhase.idPhase;
-        this.phase = oPhase.phase;
-        this.start = oPhase.startPhase;
-        this.end = oPhase.endPhase;
+        this.idPhase = oPhase.idPhase;
+        this.startPhase = oPhase.startPhase;
+        this.endPhase = oPhase.endPhase;
     }
 
     static writeEventPhase(eventPhase) {
