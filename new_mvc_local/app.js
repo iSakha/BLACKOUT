@@ -8,8 +8,8 @@ const eventRouter = require("./routes/eventRouter");
 const authRouter = require("./routes/authRouter");
 const rootRouter = require("./routes/rootRouter");
 
-// const PORT = 3070;
-const PORT = process.env.PORT || 80;
+const PORT = 3070;
+// const PORT = process.env.PORT || 80;
 
 app.use(cors());
 app.use(express.json());
