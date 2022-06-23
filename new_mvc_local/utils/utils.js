@@ -60,7 +60,7 @@ function convertObjToRow(reqbody, mode, idUser) {
     console.log("title:", reqbody.title);
     console.log("time.start:", reqbody.time.start);
     console.log("time.end:", reqbody.time.end);
-    console.log("warehouse.id:", reqbody.warehouse.id);
+    // console.log("warehouse.id:", reqbody.warehouse.id);
 
     let oEvent = new Event();
 
@@ -74,10 +74,10 @@ function convertObjToRow(reqbody, mode, idUser) {
     }
 
     // idWarehouse
-    if (reqbody.warehouse.id != null) { oEvent.warehouse.id = reqbody.warehouse.id }
-    else msg = "Не выбран склад отгрузки";
-    eventRow.push(oEvent.warehouse.id);
-
+    if (reqbody.warehouse != null) {
+        oEvent.warehouse.id = reqbody.warehouse.id;
+        eventRow.push(oEvent.warehouse.id);
+    } else msg = "Не выбран склад отгрузки";
 
     // title
     if (reqbody.title != null) { oEvent.title = reqbody.title }
@@ -86,50 +86,59 @@ function convertObjToRow(reqbody, mode, idUser) {
 
     // timeEvent
     // start
-    if (reqbody.time.start != null) { oEvent.time.start = reqbody.time.start.slice(0, 16) }
+    if (reqbody.time.start != undefined) { oEvent.time.start = reqbody.time.start.slice(0, 16) }
     else msg = "Не указана дата начала проекта";
     eventRow.push(oEvent.time.start);
     // end
-    if (reqbody.time.end != null) { oEvent.time.end = reqbody.time.end.slice(0, 16) }
+    if (reqbody.time.end != undefined) { oEvent.time.end = reqbody.time.end.slice(0, 16) }
     else msg = "Не указано дата окончания проекта";
     eventRow.push(oEvent.time.end);
 
     // manager
-    if (reqbody.manager.id !== null) { oEvent.manager.id = reqbody.manager.id }
+    if (reqbody.manager !== undefined) { oEvent.manager.id = reqbody.manager.id }
     eventRow.push(oEvent.manager.id);
 
-    // creator
-    if (reqbody.creator.id !== null) { oEvent.creator.id = reqbody.creator.id }
-    eventRow.push(oEvent.creator.id);
     // location
     // idEventCity
-    if (reqbody.location.city.id != null) {
-        oEvent.location.city.id = reqbody.location.city.id;
+    if (reqbody.location != undefined) {
+        if (reqbody.location.city != undefined) {
+            oEvent.location.city.id = reqbody.location.city.id;
+        } else { eventRow.push(oEvent.location.city.id); }
+        eventRow.push(oEvent.location.city.id);
+        // idEventPlace
+        if (reqbody.location.place != undefined) {
+            oEvent.location.place.id = reqbody.location.place.id;
+        } else { eventRow.push(oEvent.location.place.id); }
+        eventRow.push(oEvent.location.place.id);
+    } else {
+        eventRow.push(oEvent.location.city.id);
+        eventRow.push(oEvent.location.place.id);
     }
-    eventRow.push(oEvent.location.city.id);
-    // idEventPlace
-    if (reqbody.location.place.id != null) {
-        oEvent.location.place.id = reqbody.location.place.id;
-    }
-    eventRow.push(oEvent.location.place.id);
+
 
     // client
-    if (reqbody.client.id != null) {
+    if (reqbody.client != undefined) {
         oEvent.client.id = reqbody.client.id;
     }
     eventRow.push(oEvent.client.id);
+
+    // creator
+    if (reqbody.creator !== undefined) { oEvent.creator.id = reqbody.creator.id }
+    eventRow.push(oEvent.creator.id);
+
+
     // notes
-    if (reqbody.notes != null) {
+    if (reqbody.notes != undefined) {
         oEvent.notes = reqbody.notes;
     }
     eventRow.push(oEvent.notes);
 
 
-    // // status
-        if (reqbody.status.id != null) {
-            oEvent.status.id = reqbody.status.id;            
-        }
-        eventRow.push(oEvent.status.id);
+    // status
+    if (reqbody.status != undefined) {
+        oEvent.status.id = reqbody.status.id;
+    }
+    eventRow.push(oEvent.status.id);
 
 
     // idUpdatedBy
@@ -141,31 +150,31 @@ function convertObjToRow(reqbody, mode, idUser) {
 
     console.log("oEvent:", oEvent);
 
-    // if (reqbody.phase != null) {
-    //     phaseRow = [];
+    if (reqbody.phase != null) {
+        phaseRow = [];
 
-    //     for (let i = 0; i < reqbody.phase.length; i++) {
-    //         // console.log("reqbody.phase:",reqbody.phase[i]);
-    //         let arr = [];
-    //         oPhase.idEvent = oEvent.idEvent;
-    //         arr.push(oPhase.idEvent);
+        for (let i = 0; i < reqbody.phase.length; i++) {
+            // console.log("reqbody.phase:",reqbody.phase[i]);
+            let arr = [];
+            oPhase.idEvent = oEvent.id;
+            arr.push(oPhase.idEvent);
 
-    //         oPhase.idPhase = reqbody.phase[i].idPhase;
-    //         arr.push(oPhase.idPhase);
+            oPhase.idPhase = reqbody.phase[i].id;
+            arr.push(oPhase.idPhase);
 
-    //         oPhase.startPhase = reqbody.phase[i].startPhase;
-    //         arr.push(oPhase.startPhase);
+            oPhase.startPhase = reqbody.phase[i].start.slice(0, 16);
+            arr.push(oPhase.startPhase);
 
-    //         oPhase.endPhase = reqbody.phase[i].endPhase;
-    //         arr.push(oPhase.endPhase);
+            oPhase.endPhase = reqbody.phase[i].end.slice(0, 16);
+            arr.push(oPhase.endPhase);
 
-    //         phaseRow.push(arr);
+            phaseRow.push(arr);
 
-    //     }
+        }
 
-    // } else {
-    //     phaseRow = null;
-    // }
+    } else {
+        phaseRow = null;
+    }
 
     console.log("eventRow:", eventRow);
 
@@ -179,47 +188,52 @@ function convertRowToObj(row) {
 
     let obj = {};
 
-    obj.idEvent = row.idEvent;
+    obj.id = row.idEvent;
 
     obj.warehouse = {
-        idWarehouse: row.idWarehouse,
-        warehouseName: row.warehouse
+        id: row.idWarehouse,
+        name: row.warehouse
     }
 
     obj.title = row.title;
 
     obj.creator = {
-        idCreator: row.idCreatedBy,
-        nameCreator: row.createdBy
+        id: row.idCreatedBy,
+        name: row.createdBy
     }
 
-    obj.currentUser = {
-        idcurrentUser: row.idUpdatedBy,
-        nameCurrentUser: row.updatedBy
-    }
+    // obj.currentUser = {
+    //     idcurrentUser: row.idUpdatedBy,
+    //     nameCurrentUser: row.updatedBy
+    // }
 
     obj.client = {
-        idClient: row.idClient,
-        clientName: row.client
+        id: row.idClient,
+        name: row.client
     }
 
     obj.status = {
-        idStatus: row.idStatus,
-        statusName: row.status
+        id: row.idStatus,
+        name: row.status
     }
+
+
+    let city = {};
+    let place = {};
+    city.id = row.idEventCity;
+    city.name = row.eventCity;
+    place.id = row.idEventPlace;
+    place.name = row.eventPlace
 
     obj.location = {
-        idEventCity: row.idEventCity,
-        nameEventCity: row.eventCity,
-        idEventPlace: row.idEventPlace,
-        nameEventPlace: row.eventPlace
+        city,
+        place
     }
 
+
     obj.manager = {
-        idManager_1: row.idManager_1,
-        nameManager_1: row.manager_1,
-        idManager_2: row.idManager_2,
-        nameManager_2: row.manager_2
+        id: row.idManager_1,
+        name: row.manager_1,
     }
 
     obj.notes = row.notes;

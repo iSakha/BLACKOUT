@@ -69,7 +69,7 @@ exports.getAll = async (req, res) => {
     let allEvents;
     let phases;
 
-    if (status === 200) {
+    if (status.status === 200) {
 
         try {
 
