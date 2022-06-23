@@ -4,12 +4,12 @@ const db = dtb.promise();
 
 module.exports = class Event {
 
-    constructor(oEvent) {
+    constructor() {
 
-        this.id = oEvent.id;
-        this.title = oEvent.title;
-        this.time = oEvent.time;
-        this.warehouse = oEvent.warehouse;
+        this.id = null;
+        this.title = null;
+        this.time = { start: null };
+        this.warehouse = { id: null };
         this.creator = { id: 1 };
         this.client = { id: 1 };
         this.status = { id: 1 };
@@ -19,7 +19,7 @@ module.exports = class Event {
         }
         this.manager = { id: 1 };
         this.phase = null;
-        this.notes = "test notes";
+        this.notes = "";
     }
 
     // Events queries
@@ -60,7 +60,7 @@ module.exports = class Event {
     static createEvent(eventRow) {
         console.log("createEvent_mod eventRow:", eventRow);
         try {
-            return db.execute('INSERT INTO `t_events` (idEvent, idWarehouse, title, start, end, idManager_1, idManager_2, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idUpdatedBy, unixTime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', eventRow);
+            return db.execute('INSERT INTO `t_events` (idEvent, idWarehouse, title, start, end, idManager_1, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idUpdatedBy, unixTime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', eventRow);
         } catch (error) {
             return error;
         }

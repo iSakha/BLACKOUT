@@ -1,3 +1,5 @@
+const Event = require('../models/eventModel');
+
 function currentDateTime() {
 
     let oDate = new Date();
@@ -46,134 +48,107 @@ function createEventId() {
     return id;
 }
 
-function convertObjToRow(reqbody, mode) {
+function convertObjToRow(reqbody, mode, idUser) {
 
+    console.log("convertObjToRow reqbody:", reqbody);
+
+    let msg = null;
     let eventRow = [];
     let phaseRow = null;
-    let oEvent = {};
     let oPhase = {};
 
-    console.log("reqbody:",reqbody);
+    console.log("title:", reqbody.title);
+    console.log("time.start:", reqbody.time.start);
+    console.log("time.end:", reqbody.time.end);
+    // console.log("warehouse.id:", reqbody.warehouse.id);
 
+    let oEvent = new Event();
 
     // idEvent
     if (mode === "create") {
-        oEvent.idEvent = createEventId();
-        eventRow.push(oEvent.idEvent);
-    }else {
-        oEvent.idEvent = reqbody.idEvent;
-        eventRow.push(oEvent.idEvent);
+        oEvent.id = createEventId();
+        eventRow.push(oEvent.id);
+    } else {
+        oEvent.id = reqbody.id;
+        eventRow.push(oEvent.id);
     }
 
-
-    let msg = null;
     // idWarehouse
-    if (reqbody.warehouse !== null) {
-        if (reqbody.warehouse.idWarehouse != null) { oEvent.idWarehouse = reqbody.warehouse.idWarehouse }
-        else msg = "Не указано поле idWarehouse";
-        eventRow.push(oEvent.idWarehouse);
-    } else msg = "Не указано поле warehouse";
+    if (reqbody.warehouse != null) {
+        oEvent.warehouse.id = reqbody.warehouse.id;
+        eventRow.push(oEvent.warehouse.id);
+    } else msg = "Не выбран склад отгрузки";
 
     // title
     if (reqbody.title != null) { oEvent.title = reqbody.title }
-    else msg = "Не указано поле название проекта";
+    else msg = "Не указано название проекта";
     eventRow.push(oEvent.title);
 
     // timeEvent
-    if (reqbody.timeEvent !== null) {
-        // start
-        if (reqbody.timeEvent.start != null) { oEvent.start = reqbody.timeEvent.start }
-        else msg = "Не указано поле даты начала проекта";
-        eventRow.push(oEvent.start);
-        // end
-        if (reqbody.timeEvent.end != null) { oEvent.end = reqbody.timeEvent.end }
-        eventRow.push(oEvent.end);
-    } else msg = "Не указано поле даты начала проекта";
+    // start
+    if (reqbody.time.start != undefined) { oEvent.time.start = reqbody.time.start.slice(0, 16) }
+    else msg = "Не указана дата начала проекта";
+    eventRow.push(oEvent.time.start);
+    // end
+    if (reqbody.time.end != undefined) { oEvent.time.end = reqbody.time.end.slice(0, 16) }
+    else msg = "Не указано дата окончания проекта";
+    eventRow.push(oEvent.time.end);
 
     // manager
-    if (reqbody.manager !== null) {
-        // idManager_1
-        if (reqbody.manager.idManager_1 != null) {
-            oEvent.idManager_1 = reqbody.manager.idManager_1;
-        } else oEvent.idManager_1 = 1;
-        eventRow.push(oEvent.idManager_1);
-        // idManager_2
-        if (reqbody.manager.idManager_2 != null) {
-            oEvent.idManager_2 = reqbody.manager.idManager_2
-        } else oEvent.idManager_2 = 1;
-        eventRow.push(oEvent.idManager_2);
-    } else {
-        oEvent.idManager_1 = 1;
-        oEvent.idManager_2 = 1;
-        eventRow.push(oEvent.idManager_1);
-        eventRow.push(oEvent.idManager_2);
-    }
+    if (reqbody.manager !== undefined) { oEvent.manager.id = reqbody.manager.id }
+    eventRow.push(oEvent.manager.id);
 
     // location
-    if (reqbody.location !== null) {
-        // idEventCity
-        if (reqbody.location.idEventCity != null) {
-            oEvent.idEventCity = reqbody.location.idEventCity;
-        } else oEvent.idEventCity = 1;
-        eventRow.push(oEvent.idEventCity);
+    // idEventCity
+    if (reqbody.location != undefined) {
+        if (reqbody.location.city != undefined) {
+            oEvent.location.city.id = reqbody.location.city.id;
+        } else { eventRow.push(oEvent.location.city.id); }
+        eventRow.push(oEvent.location.city.id);
         // idEventPlace
-        if (reqbody.location.idEventPlace != null) {
-            oEvent.idEventPlace = reqbody.location.idEventPlace;
-        } else oEvent.idEventPlace = 1;
-        eventRow.push(oEvent.idEventPlace);
+        if (reqbody.location.place != undefined) {
+            oEvent.location.place.id = reqbody.location.place.id;
+        } else { eventRow.push(oEvent.location.place.id); }
+        eventRow.push(oEvent.location.place.id);
     } else {
-        oEvent.idEventCity = 1;
-        oEvent.idEventPlace = 1;
-        eventRow.push(oEvent.idEventCity);
-        eventRow.push(oEvent.idEventPlace);
+        eventRow.push(oEvent.location.city.id);
+        eventRow.push(oEvent.location.place.id);
     }
+
 
     // client
-    if (reqbody.client !== null) {
-        if (reqbody.client.idClient != null) {
-            oEvent.idClient = reqbody.client.idClient;
-        } else oEvent.idClient = 1;
-        eventRow.push(oEvent.idClient);
-    } else {
-        oEvent.idClient = null;
-        eventRow.push(oEvent.idClient);
+    if (reqbody.client != undefined) {
+        oEvent.client.id = reqbody.client.id;
     }
+    eventRow.push(oEvent.client.id);
 
     // creator
-    if (reqbody.creator !== null) {
-        if (reqbody.creator.idCreator != null) { oEvent.idCreatedBy = reqbody.creator.idCreator }
-        else msg = "Не указано поле создателя проекта";
-        eventRow.push(oEvent.idCreatedBy);
-    } else msg = "Не указано поле создателя проекта";
+    if (reqbody.creator !== undefined) { oEvent.creator.id = reqbody.creator.id }
+    eventRow.push(oEvent.creator.id);
+
 
     // notes
-    if (reqbody.notes != null) {
+    if (reqbody.notes != undefined) {
         oEvent.notes = reqbody.notes;
-    } else oEvent.notes = "";
+    }
     eventRow.push(oEvent.notes);
 
 
     // status
-    if (reqbody.status !== null) {
-        if (reqbody.status.idStatus != null) {
-            oEvent.idStatus = reqbody.status.idStatus;
-        } else oEvent.idStatus = 1;
-        eventRow.push(oEvent.idStatus);
-    } else {
-        oEvent.idStatus = 1;
-        eventRow.push(oEvent.idStatus);
+    if (reqbody.status != undefined) {
+        oEvent.status.id = reqbody.status.id;
     }
+    eventRow.push(oEvent.status.id);
+
 
     // idUpdatedBy
-    if (reqbody.currentUser !== null) {
-        if (reqbody.currentUser.idCurrentUser != null) { oEvent.idUpdatedBy = reqbody.currentUser.idCurrentUser }
-        else msg = "Не указано поле текщего пользоваткля";
-        eventRow.push(oEvent.idUpdatedBy);
-    } else msg = "Не указано поле текщего пользоваткля";
-
+    oEvent.idUpdatedBy = idUser;
+    eventRow.push(oEvent.idUpdatedBy);
 
     // unixTime
     eventRow.push(Date.now());
+
+    console.log("oEvent:", oEvent);
 
     if (reqbody.phase != null) {
         phaseRow = [];
@@ -181,16 +156,16 @@ function convertObjToRow(reqbody, mode) {
         for (let i = 0; i < reqbody.phase.length; i++) {
             // console.log("reqbody.phase:",reqbody.phase[i]);
             let arr = [];
-            oPhase.idEvent = oEvent.idEvent;
+            oPhase.idEvent = oEvent.id;
             arr.push(oPhase.idEvent);
 
-            oPhase.idPhase = reqbody.phase[i].idPhase;
+            oPhase.idPhase = reqbody.phase[i].id;
             arr.push(oPhase.idPhase);
 
-            oPhase.startPhase = reqbody.phase[i].startPhase;
+            oPhase.startPhase = reqbody.phase[i].start.slice(0, 16);
             arr.push(oPhase.startPhase);
 
-            oPhase.endPhase = reqbody.phase[i].endPhase;
+            oPhase.endPhase = reqbody.phase[i].end.slice(0, 16);
             arr.push(oPhase.endPhase);
 
             phaseRow.push(arr);
@@ -201,57 +176,64 @@ function convertObjToRow(reqbody, mode) {
         phaseRow = null;
     }
 
+    console.log("eventRow:", eventRow);
+
     return [msg, eventRow, phaseRow];
 
-}
 
+}
 function convertRowToObj(row) {
 
     console.log("convert row:", row);
 
     let obj = {};
 
-    obj.idEvent = row.idEvent;
+    obj.id = row.idEvent;
 
     obj.warehouse = {
-        idWarehouse: row.idWarehouse,
-        warehouseName: row.warehouse
+        id: row.idWarehouse,
+        name: row.warehouse
     }
 
     obj.title = row.title;
 
     obj.creator = {
-        idCreator: row.idCreatedBy,
-        nameCreator: row.createdBy
+        id: row.idCreatedBy,
+        name: row.createdBy
     }
 
-    obj.currentUser = {
-        idcurrentUser: row.idUpdatedBy,
-        nameCurrentUser: row.updatedBy
-    }
+    // obj.currentUser = {
+    //     idcurrentUser: row.idUpdatedBy,
+    //     nameCurrentUser: row.updatedBy
+    // }
 
     obj.client = {
-        idClient: row.idClient,
-        clientName: row.client
+        id: row.idClient,
+        name: row.client
     }
 
     obj.status = {
-        idStatus: row.idStatus,
-        statusName: row.status
+        id: row.idStatus,
+        name: row.status
     }
+
+
+    let city = {};
+    let place = {};
+    city.id = row.idEventCity;
+    city.name = row.eventCity;
+    place.id = row.idEventPlace;
+    place.name = row.eventPlace
 
     obj.location = {
-        idEventCity: row.idEventCity,
-        nameEventCity: row.eventCity,
-        idEventPlace: row.idEventPlace,
-        nameEventPlace: row.eventPlace
+        city,
+        place
     }
 
+
     obj.manager = {
-        idManager_1: row.idManager_1,
-        nameManager_1: row.manager_1,
-        idManager_2: row.idManager_2,
-        nameManager_2: row.manager_2
+        id: row.idManager_1,
+        name: row.manager_1,
     }
 
     obj.notes = row.notes;
