@@ -12,25 +12,26 @@ exports.createNewEvent = async (req, res) => {
 
     console.log("createNewEvent req.body:", req.body);
 
+    let status = await auth.authenticateJWT(req, res);
+    let userId = status.id;
 
-    let obj = utils.convertObjToRow(req.body, "create");
+    if (status.status === 200) {
 
-    let msg = obj[0];
-    let eventRow = obj[1];
-    let eventPhase = obj[2];
+        console.log("authentication successfull!");
 
-    console.log("obj:", obj);
-    console.log("eventRow:", eventRow);
-    console.log("msg:", msg);
-    console.log("eventPhase:", eventPhase);
 
-    if (msg === null) {
+        let obj = utils.convertObjToRow(req.body, "create", userId);
 
-        let status = await auth.authenticateJWT(req, res);
+        let msg = obj[0];
+        let eventRow = obj[1];
+        let eventPhase = obj[2];
 
-        if (status === 200) {
+        console.log("obj:", obj);
+        console.log("eventRow:", eventRow);
+        console.log("msg:", msg);
+        console.log("eventPhase:", eventPhase);
 
-            console.log("authentication successfull!");
+        if (msg === null) {
 
             try {
                 const [newEvent] = await Event.createEvent(eventRow);
@@ -49,16 +50,13 @@ exports.createNewEvent = async (req, res) => {
                 }
             }
 
+            res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` });
 
-            res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` })
+        }else res.status(400).json(msg);
 
-        } else {
-            res.status(status).json({ msg: "We have problems with JWT authentication" });
-        }
-
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-    else res.status(400).json(msg);
-
 }
 
 exports.getAll = async (req, res) => {

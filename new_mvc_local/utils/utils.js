@@ -48,7 +48,9 @@ function createEventId() {
     return id;
 }
 
-function convertObjToRow(reqbody, mode) {
+function convertObjToRow(reqbody, mode, idUser) {
+
+    console.log("convertObjToRow reqbody:", reqbody);
 
     let msg = null;
     let eventRow = [];
@@ -61,9 +63,6 @@ function convertObjToRow(reqbody, mode) {
     console.log("warehouse.id:", reqbody.warehouse.id);
 
     let oEvent = new Event();
-
-    console.log("oEvent:", oEvent);
-
 
     // idEvent
     if (mode === "create") {
@@ -99,7 +98,9 @@ function convertObjToRow(reqbody, mode) {
     if (reqbody.manager.id !== null) { oEvent.manager.id = reqbody.manager.id }
     eventRow.push(oEvent.manager.id);
 
-
+    // creator
+    if (reqbody.creator.id !== null) { oEvent.creator.id = reqbody.creator.id }
+    eventRow.push(oEvent.creator.id);
     // location
     // idEventCity
     if (reqbody.location.city.id != null) {
@@ -113,11 +114,10 @@ function convertObjToRow(reqbody, mode) {
     eventRow.push(oEvent.location.place.id);
 
     // client
-
     if (reqbody.client.id != null) {
         oEvent.client.id = reqbody.client.id;
-        eventRow.push(oEvent.client.id);
     }
+    eventRow.push(oEvent.client.id);
     // notes
     if (reqbody.notes != null) {
         oEvent.notes = reqbody.notes;
@@ -126,26 +126,20 @@ function convertObjToRow(reqbody, mode) {
 
 
     // // status
-    // if (reqbody.status !== null) {
-    //     if (reqbody.status.idStatus != null) {
-    //         oEvent.idStatus = reqbody.status.idStatus;
-    //     } else oEvent.idStatus = 1;
-    //     eventRow.push(oEvent.idStatus);
-    // } else {
-    //     oEvent.idStatus = 1;
-    //     eventRow.push(oEvent.idStatus);
-    // }
-
-    // // idUpdatedBy
-    // if (reqbody.currentUser !== null) {
-    //     if (reqbody.currentUser.idCurrentUser != null) { oEvent.idUpdatedBy = reqbody.currentUser.idCurrentUser }
-    //     else msg = "Не указано поле текщего пользоваткля";
-    //     eventRow.push(oEvent.idUpdatedBy);
-    // } else msg = "Не указано поле текщего пользоваткля";
+        if (reqbody.status.id != null) {
+            oEvent.status.id = reqbody.status.id;            
+        }
+        eventRow.push(oEvent.status.id);
 
 
-    // // unixTime
-    // eventRow.push(Date.now());
+    // idUpdatedBy
+    oEvent.idUpdatedBy = idUser;
+    eventRow.push(oEvent.idUpdatedBy);
+
+    // unixTime
+    eventRow.push(Date.now());
+
+    console.log("oEvent:", oEvent);
 
     // if (reqbody.phase != null) {
     //     phaseRow = [];
