@@ -133,28 +133,6 @@ exports.getStatus = async (req, res) => {
 
 }
 
-exports.addStatus = async (req, res) => {
-
-    try {
-        console.log("getStatus");
-        let status = await auth.authenticateJWT(req, res);
-        console.log("statusCode:", status.status);
-        if (status.status === 200) {
-            const [stats] = await Root.addStatus();
-            console.log(stats);
-            res.status(200).json(stats);
-        } else {
-            res.sendStatus(status.status);
-        }
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-
-}
-
 exports.getPhases = async (req, res) => {
 
     try {
@@ -209,9 +187,81 @@ exports.newCity = async (req, res) => {
     // console.log("New City:", city);
 
 }
+
+exports.addStatus = async (req, res) => {
+
+    try {
+        console.log("getStatus");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [stats] = await Root.addStatus();
+            console.log(stats);
+            res.status(200).json(stats);
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+
+}
+
+exports.addClient = async (req, res) => {
+
+    let clientRow = [req.body.client, req.body.clientDescription, req.body.comments];
+
+    try {
+        console.log("addClient");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [stats] = await Root.addClient(clientRow);
+            console.log(stats);
+            res.status(200).json(stats);
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+
+}
+
+
 // UPDATE
 // =====================================================================
+exports.updateClient = async (req, res) => {
 
+    let clientRow = [req.body.client, req.body.clientDescription, req.body.comments, req.params.id];
+
+    try {
+        console.log("addClient");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [stats] = await Root.addClient(clientRow);
+            console.log(stats);
+            res.status(200).json(stats);
+        } else {
+            res.sendStatus(status.status);
+        }
+
+        // res.status(200).json({msg: "ok"});
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+
+}
 // DELETE
 // =====================================================================
 

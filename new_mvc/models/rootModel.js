@@ -14,6 +14,14 @@ module.exports = class Root {
         return db.execute('SELECT * FROM `t_clients`');
     }
 
+    static addClient(clientRow) {
+        return db.execute('INSERT INTO `t_clients` (client, clientDescription, comments) VALUES(?, ?, ?)', clientRow);
+    }
+
+    static updateClient(clientRow) {
+        return db.execute('UPDATE `t_clients` (client, clientDescription, comments)  SET VALUES(?, ?, ?) WHERE id=?', clientRow);
+    }
+
     static getUsers() {
         return db.execute('SELECT `id`, `login`, `firstName`, `lastName`, `fullName`, `avatar`, `role` FROM `v_users`');
     }

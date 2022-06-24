@@ -13,6 +13,7 @@ exports.createNewEvent = async (req, res) => {
     console.log("createNewEvent req.body:", req.body);
 
     let status = await auth.authenticateJWT(req, res);
+    console.log("status:", status);
     let userId = status.id;
 
     if (status.status === 200) {
@@ -170,6 +171,52 @@ exports.updateEvent = async (req, res) => {
 
     }
     else res.status(400).json(msg);
+}
+
+exports.deleteEvent = async (req, res) => {
+
+    console.log("delete Event");
+    console.log("req.param.id:", req.param.id);
+    // let obj = utils.convertObjToRow(req.body,"update");
+
+    // let msg = obj[0];
+    // let eventRow = obj[1];
+    // let eventPhase = obj[2];
+
+    // console.log("obj:", obj);
+    // console.log("eventRow:", eventRow);
+    // console.log("msg:", msg);
+    // console.log("eventPhase:", eventPhase);
+
+        let status = await auth.authenticateJWT(req, res);
+
+        if (status.status === 200) {
+
+            console.log("authentication successfull!");
+
+            // try {
+            //     const [event] = await Event.deleteEvent(req.param.id);
+            //     console.log("result newEvent:", event);
+            // } catch (error) {
+            //     console.log("error:", error);
+            //     res.status(500).json({ msg: "We have problems with writing event data to database" });
+            // }
+            // if (eventPhase !== null) {
+            //     try {
+            //         const [newPhase] = await Phase.writeEventPhase(eventPhase);
+            //         console.log("result eventPhase:", newPhase);
+            //     } catch (error) {
+            //         console.log("error:", error);
+            //         res.status(500).json({ msg: "We have problems with writing phase data to database" });
+            //     }
+            // }
+
+
+            res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` })
+
+        } else {
+            res.status(status).json({ msg: "We have problems with JWT authentication" });
+        }
 }
 // =====================================================================
 

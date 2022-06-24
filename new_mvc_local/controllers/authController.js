@@ -11,6 +11,7 @@ const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
 exports.authenticateJWT = (req, res) => {
     const authHeader = req.headers.authorization;
+    console.log("authHeader:", authHeader);
     let status;
     let id;
     if (authHeader) {
@@ -105,8 +106,8 @@ exports.updateToken = async (req, res) => {
             return res.sendStatus(403);
         }
 
-        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '20m' });
-        const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
+        const accessToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, accessTokenSecret, { expiresIn: '20m' });
+        const refreshToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, refreshTokenSecret);
 
         console.log("updated accessToken:", accessToken);
         console.log("updated refreshToken:", refreshToken);

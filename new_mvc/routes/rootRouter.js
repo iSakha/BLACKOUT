@@ -20,9 +20,10 @@ router.get('/warehouses', rootController.getWarehouses);
 // CREATE
 // =====================================================================
 router.post('/locations', rootController.newCity);
-
+router.post('/clients', rootController.addClient);
 // UPDATE
 // =====================================================================
+router.put('/clients/id/:id', rootController.updateClient);
 
 // DELETE
 // =====================================================================

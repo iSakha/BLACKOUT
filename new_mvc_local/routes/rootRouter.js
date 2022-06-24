@@ -13,7 +13,7 @@ router.get('/clients', rootController.getClients);
 router.get('/users', rootController.getUsers);
 router.get('/user', rootController.getUser);
 router.get('/status', rootController.getStatus);
-router.post('/status', rootController.addStatus);
+// router.post('/status', rootController.addStatus);
 router.get('/phase', rootController.getPhases);
 router.get('/warehouses', rootController.getWarehouses);
 

@@ -66,6 +66,15 @@ module.exports = class Event {
         }
     }
 
+    static deleteEvent(id) {
+        console.log("createEvent_mod id:", id);
+        // try {
+        //     return db.execute('DELETE * FROM `t_events` WHERE `idEvent`=?', eventRow);
+        // } catch (error) {
+        //     return error;
+        // }
+    }
+
     // static createEvent(eventRow) {
     //     console.log("createEvent_mod eventRow:", eventRow);
     //     try {
