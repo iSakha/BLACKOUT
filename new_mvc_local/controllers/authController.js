@@ -78,9 +78,9 @@ exports.validateUser = async (req, res) => {
                     refreshToken
                 });
             } else {
-                res.status(200).json({ "result": "Wrong password or login" });
+                res.status(401).json({ "result": "Wrong password or login" });
             }
-        } else res.status(200).json({ "result": "Wrong password or login" });
+        } else res.status(401).json({ "result": "Wrong password or login" });
 
     } catch (error) {
         if (!error.statusCode) {

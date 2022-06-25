@@ -48,7 +48,7 @@ function createEventId() {
     return id;
 }
 
-function convertObjToRow(reqbody, mode, idUser) {
+function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
     console.log("convertObjToRow reqbody:", reqbody);
 
@@ -67,9 +67,11 @@ function convertObjToRow(reqbody, mode, idUser) {
     // idEvent
     if (mode === "create") {
         oEvent.id = createEventId();
+        console.log("oEvent.id:", oEvent.id);
         eventRow.push(oEvent.id);
     } else {
-        oEvent.id = reqbody.id;
+        oEvent.id = idEvent;
+        console.log("oEvent.id_else:", oEvent.id);
         eventRow.push(oEvent.id);
     }
 
@@ -156,8 +158,6 @@ function convertObjToRow(reqbody, mode, idUser) {
         for (let i = 0; i < reqbody.phase.length; i++) {
             // console.log("reqbody.phase:",reqbody.phase[i]);
             let arr = [];
-            oPhase.idEvent = oEvent.id;
-            arr.push(oPhase.idEvent);
 
             oPhase.idPhase = reqbody.phase[i].id;
             arr.push(oPhase.idPhase);
@@ -167,6 +167,9 @@ function convertObjToRow(reqbody, mode, idUser) {
 
             oPhase.endPhase = reqbody.phase[i].end.slice(0, 16);
             arr.push(oPhase.endPhase);
+
+            oPhase.idEvent = oEvent.id;
+            arr.push(oPhase.idEvent);
 
             phaseRow.push(arr);
 
@@ -189,6 +192,11 @@ function convertRowToObj(row) {
     let obj = {};
 
     obj.id = row.idEvent;
+
+    obj.time = {
+        start: row.start,
+        end: row.end
+    }
 
     obj.warehouse = {
         id: row.idWarehouse,

@@ -2,7 +2,8 @@ const HOST = 'http://127.0.0.1';
 // const HOST = 'http://82.209.203.205';
 const PORT = 3070;
 // const URL = HOST + ':' + PORT;
-const URL = "http://back2.aesthetic.by";
+const URL = "https://gentle-spire-49802.herokuapp.com";
+// const URL = "http://back2.aesthetic.by";
 
 let eventLocations = {};
 let selectedEventId;
@@ -105,7 +106,8 @@ function init() {
 function loginUser() {
     console.log('==========================================');
     console.log('Login user');
-    console.log('POST http://127.0.0.1:3070/login');
+    console.log('POST https://gentle-spire-49802.herokuapp.com/login');
+    // console.log('POST http://127.0.0.1:3070/login');
     let login = document.getElementById('txt-login').value;
     let pass = document.getElementById('txt-pass').value;
 
@@ -151,7 +153,7 @@ function checkConnectionToMySQL() {
 
     console.log('==========================================');
     console.log('Check connection to MySQL database');
-    console.log('GET http://127.0.0.1:3070/checkdb');
+    console.log('GET https://gentle-spire-49802.herokuapp.com/checkdb');
 
     fetch(URL + '/checkdb', {
         method: 'GET',
@@ -178,7 +180,8 @@ function getListWarehouses() {
     console.log(" ");
     console.log('==========================================');
     console.log('Get list of warehouses');
-    console.log('GET http://127.0.0.1:3070/warehouses');
+    console.log('GET https://gentle-spire-49802.herokuapp.com/warehouses');
+    // console.log('GET http://127.0.0.1:3070/warehouses');
 
     let selectWhouse = document.getElementById('select-whouse');
 
@@ -206,7 +209,7 @@ function getListLocations() {
     console.log(" ");
     console.log('==========================================');
     console.log('Get list of locations');
-    console.log('GET http://127.0.0.1:3070/locations');
+    console.log('GET https://gentle-spire-49802.herokuapp.com/locations');
 
 
     let selectCity = document.getElementById('select-event-city');
@@ -240,7 +243,7 @@ function getListClients() {
     console.log(" ");
     console.log('==========================================');
     console.log('Get list of clients');
-    console.log('GET http://127.0.0.1:3070/clients');
+    console.log('GET https://gentle-spire-49802.herokuapp.com/clients');
 
 
     let selectClient = document.getElementById('select-event-client');
@@ -269,7 +272,7 @@ function getListManagers() {
     console.log(" ");
     console.log('==========================================');
     console.log('Get list of users');
-    console.log('GET http://127.0.0.1:3070/users');
+    console.log('GET https://gentle-spire-49802.herokuapp.com/users');
 
 
     let selectManager_1 = document.getElementById('select-manager-1');
@@ -315,7 +318,7 @@ function getListStatus() {
     console.log(" ");
     console.log('==========================================');
     console.log('Get list of status');
-    console.log('GET http://127.0.0.1:3070/status');
+    console.log('GET https://gentle-spire-49802.herokuapp.com/status');
 
 
     let selectStatus = document.getElementById('select-status');
@@ -348,7 +351,8 @@ async function getListPhases() {
             console.log(" ");
             console.log('==========================================');
             console.log('Get list of phases');
-            console.log('GET http://127.0.0.1:3070/phase');
+            console.log('GET https://gentle-spire-49802.herokuapp.com/phase');
+            // console.log('GET http://127.0.0.1:3070/phase');
 
             console.log("accessToken:", accessToken);
 

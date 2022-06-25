@@ -7,11 +7,11 @@ const router = express.Router();
 // =====================================================================
 router.get('/', eventController.getAll);
 router.get('/history', eventController.getAllHistory);
-router.get('/id/:id', eventController.getOne);
-router.get('/history/id/:id', eventController.getOneHistory);
+router.get('/:id', eventController.getOne);
+router.get('/history/:id', eventController.getOneHistory);
 router.post('/', eventController.createNewEvent);
-router.delete('/id/:id', eventController.deleteEvent);
-router.put('/id/:id', eventController.updateEvent);
+// router.delete('/:id', eventController.deleteEvent);
+router.put('/:id', eventController.updateEvent);
 router.get('/summary', eventController.getSummary);
 
 module.exports = router;
