@@ -6,10 +6,14 @@ const router = express.Router();
 router.get('/', rootController.greetMessage);
 router.get('/checkdb', rootController.checkDbConnection);
 
-// GET
+// CLIENTS
 // =====================================================================
-router.get('/locations', rootController.getLocations);
 router.get('/clients', rootController.getClients);
+router.get('/clients/:id', rootController.getOneClient);
+
+
+router.get('/locations', rootController.getLocations);
+
 router.get('/users', rootController.getUsers);
 router.get('/user', rootController.getUser);
 router.get('/status', rootController.getStatus);
@@ -23,7 +27,7 @@ router.post('/locations', rootController.newCity);
 router.post('/clients', rootController.addClient);
 // UPDATE
 // =====================================================================
-router.put('/clients/id/:id', rootController.updateClient);
+router.put('/clients/:id', rootController.updateClient);
 
 // DELETE
 // =====================================================================

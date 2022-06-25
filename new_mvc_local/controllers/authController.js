@@ -60,7 +60,7 @@ exports.validateUser = async (req, res) => {
 
                 console.log("row[0]:", row[0]);
                 console.log("user:", user);
-                const accessToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, accessTokenSecret, { expiresIn: '20m' });
+                const accessToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, accessTokenSecret, { expiresIn: '120m' });
                 const refreshToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, refreshTokenSecret);
 
                 let usr = {};
@@ -106,7 +106,7 @@ exports.updateToken = async (req, res) => {
             return res.sendStatus(403);
         }
 
-        const accessToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, accessTokenSecret, { expiresIn: '20m' });
+        const accessToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, accessTokenSecret, { expiresIn: '120m' });
         const refreshToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, refreshTokenSecret);
 
         console.log("updated accessToken:", accessToken);

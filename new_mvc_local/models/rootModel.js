@@ -3,23 +3,70 @@ const db = dtb.promise();
 
 module.exports = class Root {
 
-    // GET
+    // CLIENTS
     // =====================================================================
+
+    static getClients() {
+        try {
+            return db.execute('SELECT * FROM `t_clients`');
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static getOneClient(id) {
+        try {
+            return db.query('SELECT * FROM `t_clients` WHERE `id`=?', [id]);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static addClient(clientRow) {
+        try {
+            return db.execute('INSERT INTO `t_clients` (client, clientDescription, comments) VALUES(?, ?, ?)', clientRow);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static updateClient(clientRow) {
+        try {
+            return db.execute('UPDATE `t_clients` SET client=?, clientDescription=?, comments=? WHERE id=?', clientRow);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static deleteClient(id) {
+        try {
+            return db.query('DELETE FROM `t_clients` WHERE `id`=?', [id]);
+        } catch (error) {
+            return error;
+        }
+    }
+
+
+
+
+
 
     static getLocations() {
         return db.execute('SELECT * FROM `v_location`');
     }
 
-    static getClients() {
-        return db.execute('SELECT * FROM `t_clients`');
-    }
+
+
+
+
+
 
     static getUsers() {
         return db.execute('SELECT `id`, `login`, `firstName`, `lastName`, `fullName`, `avatar`, `role` FROM `v_users`');
     }
 
     static getUser(userID) {
-        return db.execute('SELECT `id`, `login`, `firstName`, `lastName`, `fullName`, `avatar`, `role` FROM `v_users` WHERE `id` = ?',[userID]);
+        return db.execute('SELECT `id`, `login`, `firstName`, `lastName`, `fullName`, `avatar`, `role` FROM `v_users` WHERE `id` = ?', [userID]);
     }
 
     static getStatus() {
@@ -40,17 +87,17 @@ module.exports = class Root {
 
 
 
-// CREATE
-// =====================================================================
-static newCity() {
-    return db.execute('INSERT * INTO `t_event_city` (city) VALUES(?)', [city]);
-}
+    // CREATE
+    // =====================================================================
+    static newCity() {
+        return db.execute('INSERT * INTO `t_event_city` (city) VALUES(?)', [city]);
+    }
 
-// UPDATE
-// =====================================================================
+    // UPDATE
+    // =====================================================================
 
-// DELETE
-// =====================================================================
+    // DELETE
+    // =====================================================================
 
 
 }

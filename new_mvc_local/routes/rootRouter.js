@@ -6,14 +6,22 @@ const router = express.Router();
 router.get('/', rootController.greetMessage);
 router.get('/checkdb', rootController.checkDbConnection);
 
-// GET
+// CLIENTS
 // =====================================================================
-router.get('/locations', rootController.getLocations);
 router.get('/clients', rootController.getClients);
+router.get('/clients/:id', rootController.getOneClient);
+router.post('/clients', rootController.addClient);
+router.put('/clients/:id', rootController.updateClient);
+router.delete('/clients/:id', rootController.deleteClient);
+
+
+
+router.get('/locations', rootController.getLocations);
+
 router.get('/users', rootController.getUsers);
 router.get('/user', rootController.getUser);
 router.get('/status', rootController.getStatus);
-// router.post('/status', rootController.addStatus);
+router.post('/status', rootController.addStatus);
 router.get('/phase', rootController.getPhases);
 router.get('/warehouses', rootController.getWarehouses);
 
@@ -23,6 +31,7 @@ router.post('/locations', rootController.newCity);
 
 // UPDATE
 // =====================================================================
+
 
 // DELETE
 // =====================================================================

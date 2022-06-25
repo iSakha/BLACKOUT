@@ -4,7 +4,7 @@ const auth = require('../controllers/authController');
 
 exports.greetMessage = (req, res) => {
     try {
-        let msg = {msg : "Server is running"} ;
+        let msg = { msg: "Server is running" };
         res.status(200).json(msg);
     } catch (error) {
         console.log("error:", error);
@@ -14,17 +14,17 @@ exports.greetMessage = (req, res) => {
 exports.checkDbConnection = (req, res) => {
     pool.getConnection((err, connection) => {
         if (!err) {
-          // console.log('connect!')
-          connection.release();
-          res.json({message:'Successfully connected to MySQL database!'});
+            // console.log('connect!')
+            connection.release();
+            res.json({ message: 'Successfully connected to MySQL database!' });
         } else {
-          console.log('err:', err);
-          res.send({message:'We\'ve got a problem!'});
+            console.log('err:', err);
+            res.send({ message: 'We\'ve got a problem!' });
         }
-      })
+    })
 }
 
-// GET
+// LOCATIONS
 // =====================================================================
 exports.getLocations = async (req, res) => {
 
@@ -47,6 +47,8 @@ exports.getLocations = async (req, res) => {
     }
 }
 
+// CLIENTS
+// =====================================================================
 exports.getClients = async (req, res) => {
     try {
         console.log("getClients");
@@ -56,6 +58,26 @@ exports.getClients = async (req, res) => {
             const [clients] = await Root.getClients();
             console.log(clients);
             res.status(200).json(clients);
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+}
+
+exports.getOneClient = async (req, res) => {
+    try {
+        console.log("getClients");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [client] = await Root.getOneClient(req.params.id);
+            console.log(clients);
+            res.status(200).json(client);
         } else {
             res.sendStatus(status.status);
         }
@@ -240,13 +262,13 @@ exports.addClient = async (req, res) => {
 exports.updateClient = async (req, res) => {
 
     let clientRow = [req.body.client, req.body.clientDescription, req.body.comments, req.params.id];
-
+    console.log("clientRow:", clientRow);
     try {
-        console.log("addClient");
+        console.log("updateClient");
         let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status.status);
         if (status.status === 200) {
-            const [stats] = await Root.addClient(clientRow);
+            const [stats] = await Root.updateClient(clientRow);
             console.log(stats);
             res.status(200).json(stats);
         } else {
