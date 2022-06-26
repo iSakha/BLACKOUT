@@ -10,6 +10,10 @@ router.get('/checkdb', rootController.checkDbConnection);
 // =====================================================================
 router.get('/clients', rootController.getClients);
 router.get('/clients/:id', rootController.getOneClient);
+router.post('/clients', rootController.addClient);
+router.put('/clients/:id', rootController.updateClient);
+router.delete('/clients/:id', rootController.deleteClient);
+
 
 
 router.get('/locations', rootController.getLocations);
@@ -24,10 +28,10 @@ router.get('/warehouses', rootController.getWarehouses);
 // CREATE
 // =====================================================================
 router.post('/locations', rootController.newCity);
-router.post('/clients', rootController.addClient);
+
 // UPDATE
 // =====================================================================
-router.put('/clients/:id', rootController.updateClient);
+
 
 // DELETE
 // =====================================================================

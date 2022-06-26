@@ -71,12 +71,30 @@ exports.getClients = async (req, res) => {
 
 exports.getOneClient = async (req, res) => {
     try {
-        console.log("getClients");
+        console.log("getOneClient_contr");
         let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status.status);
         if (status.status === 200) {
             const [client] = await Root.getOneClient(req.params.id);
-            console.log(clients);
+            res.status(200).json(client);
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+}
+
+exports.deleteClient = async (req, res) => {
+    try {
+        console.log("deleteClient_contr");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [client] = await Root.deleteClient(req.params.id);
             res.status(200).json(client);
         } else {
             res.sendStatus(status.status);

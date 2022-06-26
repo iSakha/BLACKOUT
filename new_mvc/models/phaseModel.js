@@ -3,25 +3,37 @@ const db = dtb.promise();
 
 module.exports = class Phase {
     constructor(oPhase) {
+
         this.idEvent = oPhase.idEvent;
-        this.id = oPhase.idPhase;
+        this.id = oPhase.id;
         this.phase = oPhase.phase;
-        this.start = oPhase.startPhase;
-        this.end = oPhase.endPhase;
+        this.start = oPhase.start;
+        this.end = oPhase.end;
+        this.unixTime = oPhase.unixTime;
     }
 
     static writeEventPhase(eventPhase) {
         console.log("writeEventPhase:", eventPhase);
         try {
-            return db.query('INSERT INTO `t_event_details` (idEvent, idPhase, startPhase, endPhase) VALUES ?', [eventPhase]);
+            return db.query('INSERT INTO `t_event_details` (idPhase, startPhase, endPhase, unixTime, idEvent) VALUES ?', [eventPhase]);
         } catch (error) {
             return error;
         }
     }
 
-    static getAllPhase() {       
+    static updateEventPhase(eventPhase) {
+        console.log("updateEventPhase:", eventPhase);
         try {
-           return db.execute('SELECT * FROM `v_event_details`'); 
+            return db.query('INSERT INTO `t_event_details` (idPhase, startPhase, endPhase, unixTime, idEvent) VALUES ?', [eventPhase]);
+            
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static getAllPhase() {
+        try {
+            return db.execute('SELECT idEvent, id, phase, start, end FROM `v_event_phase_latest_state`');
         } catch (error) {
             return error;
         }
@@ -29,10 +41,10 @@ module.exports = class Phase {
 
     static getOnePhase(idEvent) {
         try {
-           return db.execute('SELECT * FROM `v_event_details` WHERE `idEvent`=?', [idEvent]); 
+            return db.execute('SELECT * FROM `v_event_details` WHERE `idEvent`=?', [idEvent]);
         } catch (error) {
             return error;
-        }        
+        }
     }
 
     static createPhase(oPhase) {

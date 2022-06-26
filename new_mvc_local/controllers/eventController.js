@@ -160,17 +160,13 @@ exports.updateEvent = async (req, res) => {
             }
             if (eventPhase !== null) {
                 try {
-                    for (let i = 0; i< eventPhase.length; i++) {
-                        const [newPhase] = await Phase.updateEventPhase(eventPhase[i]);
+                    const [newPhase] = await Phase.updateEventPhase(eventPhase);
                     console.log("result eventPhase:", newPhase);
-                    }
-                    
                 } catch (error) {
                     console.log("error:", error);
                     res.status(500).json({ msg: "We have problems with writing phase data to database" });
                 }
             }
-
             // res.status(200).json({ msg: `Мероприятие успешно обновлено.` });
             res.status(200).json({ msg: `Мероприятие успешно обновлено. idEvent = ${eventRow[0]}` });
 

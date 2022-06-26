@@ -62,6 +62,9 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
     console.log("time.end:", reqbody.time.end);
     // console.log("warehouse.id:", reqbody.warehouse.id);
 
+    // CREATE EVENT
+    // ===========================================================
+
     let oEvent = new Event();
 
     // idEvent
@@ -117,7 +120,6 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
         eventRow.push(oEvent.location.place.id);
     }
 
-
     // client
     if (reqbody.client != undefined) {
         oEvent.client.id = reqbody.client.id;
@@ -148,9 +150,13 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
     eventRow.push(oEvent.idUpdatedBy);
 
     // unixTime
-    eventRow.push(Date.now());
+    oEvent.unixTime = Date.now();
+    eventRow.push(oEvent.unixTime);
 
     console.log("oEvent:", oEvent);
+
+    // CREATE PHASE
+    // ===========================================================
 
     if (reqbody.phase != null) {
         phaseRow = [];
@@ -159,17 +165,27 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
             // console.log("reqbody.phase:",reqbody.phase[i]);
             let arr = [];
 
+            // idPhase
             oPhase.idPhase = reqbody.phase[i].id;
             arr.push(oPhase.idPhase);
 
+            // startPhase
             oPhase.startPhase = reqbody.phase[i].start.slice(0, 16);
             arr.push(oPhase.startPhase);
 
+            // endPhase
             oPhase.endPhase = reqbody.phase[i].end.slice(0, 16);
             arr.push(oPhase.endPhase);
 
+            // unixTime
+            oPhase.unixTime = oEvent.unixTime;
+            arr.push(oPhase.unixTime);
+
+            // idEvent
             oPhase.idEvent = oEvent.id;
             arr.push(oPhase.idEvent);
+
+
 
             phaseRow.push(arr);
 
