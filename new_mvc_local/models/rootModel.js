@@ -49,13 +49,29 @@ module.exports = class Root {
 
 
 
-
+// LOCATIONS
+// =====================================================================
 
     static getLocations() {
         return db.execute('SELECT * FROM `v_location`');
     }
 
+    static getCities() {
+        return db.execute('SELECT * FROM `t_event_city`');
+    }
 
+    static getPlacesByCityId(id) {
+        return db.execute('SELECT * FROM `v_location` WHERE idCity=?', [id]);
+    }
+
+    static addCity(city) {
+        return db.execute('INSERT INTO `t_event_city` (`city`) VALUES (?)', [city]);
+    }
+
+    static addLocation(idCity, place) {
+        console.log("addLocation_mod:", idCity, place);
+        return db.execute('INSERT INTO `t_event_place` (`idEventCity`, `place`) VALUES (?, ?)', [idCity, place]);
+    }
 
 
 

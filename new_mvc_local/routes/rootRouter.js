@@ -15,8 +15,13 @@ router.put('/clients/:id', rootController.updateClient);
 router.delete('/clients/:id', rootController.deleteClient);
 
 
-
+// LOCATIONS
+// =====================================================================
 router.get('/locations', rootController.getLocations);
+router.get('/cities', rootController.getCities);
+router.get('/locations/:id', rootController.getPlacesByCityId);
+router.post('/cities', rootController.addCity);
+router.post('/locations', rootController.addLocation);
 
 router.get('/users', rootController.getUsers);
 router.get('/user', rootController.getUser);

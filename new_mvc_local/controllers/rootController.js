@@ -1,6 +1,7 @@
 const Root = require('../models/rootModel');
 const pool = require('../config/database');
 const auth = require('../controllers/authController');
+const utils = require('../utils/utils');
 
 exports.greetMessage = (req, res) => {
     try {
@@ -24,28 +25,7 @@ exports.checkDbConnection = (req, res) => {
     })
 }
 
-// LOCATIONS
-// =====================================================================
-exports.getLocations = async (req, res) => {
 
-    try {
-        console.log("getLocations");
-        let status = await auth.authenticateJWT(req, res);
-        console.log("statusCode:", status.status);
-        if (status.status === 200) {
-            const [locations] = await Root.getLocations();
-            console.log(locations);
-            res.status(200).json(locations);
-        } else {
-            res.sendStatus(status.status);
-        }
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-}
 
 // CLIENTS
 // =====================================================================
@@ -106,6 +86,147 @@ exports.deleteClient = async (req, res) => {
         }
     }
 }
+
+exports.addClient = async (req, res) => {
+
+    let clientRow = [req.body.client, req.body.clientDescription, req.body.comments];
+
+    try {
+        console.log("addClient");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [stats] = await Root.addClient(clientRow);
+            console.log(stats);
+            res.status(200).json(stats);
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+
+}
+
+// LOCATIONS
+// =====================================================================
+exports.getLocations = async (req, res) => {
+
+    try {
+        console.log("getLocations");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [locations] = await Root.getLocations();
+            console.log(locations);
+
+            let arrLocations = utils.convertLocationsToObj(locations);
+
+            res.status(200).json(arrLocations);
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+}
+
+exports.getCities = async (req, res) => {
+
+    try {
+        console.log("getCities");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [locations] = await Root.getCities();
+            console.log(locations);
+            res.status(200).json(locations);
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+}
+
+exports.getPlacesByCityId = async (req, res) => {
+
+    try {
+        console.log("getLocations");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [locations] = await Root.getPlacesByCityId(req.params.id);
+            console.log(locations);
+
+            let arrLocations = utils.convertLocationsToObj(locations);
+
+            res.status(200).json(arrLocations);
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+}
+
+exports.addCity = async (req, res) => {
+
+    try {
+        console.log("addCity");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [city] = await Root.addCity(req.body.city);
+            console.log(city);
+            res.status(200).json({ msg: `Город ${req.body.city} успешно добавлен.` });
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+
+}
+
+exports.addLocation = async (req, res) => {
+
+    try {
+        console.log("addLocation_contr");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [place] = await Root.addLocation(req.body.idCity, req.body.namePlace);
+            console.log(place);
+            res.status(200).json({ msg: ` Площадка ${req.body.namePlace} в городе ${req.body.nameCity} добавлена` });
+        } else {
+            res.sendStatus(status.status);
+        }
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+
+}
+
+
 
 exports.getUsers = async (req, res) => {
 
@@ -250,29 +371,7 @@ exports.addStatus = async (req, res) => {
 
 }
 
-exports.addClient = async (req, res) => {
 
-    let clientRow = [req.body.client, req.body.clientDescription, req.body.comments];
-
-    try {
-        console.log("addClient");
-        let status = await auth.authenticateJWT(req, res);
-        console.log("statusCode:", status.status);
-        if (status.status === 200) {
-            const [stats] = await Root.addClient(clientRow);
-            console.log(stats);
-            res.status(200).json(stats);
-        } else {
-            res.sendStatus(status.status);
-        }
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-
-}
 
 
 // UPDATE

@@ -267,9 +267,34 @@ function convertRowToObj(row) {
     return obj
 }
 
+function convertLocationsToObj(locations) {
+    console.log("convertLocationsToObj:", locations);
+
+
+    let arrLocations = [];
+
+    for (let i = 0; i < locations.length; i++) {
+        let oLocation = {};
+        let oCity = { id: 1, name: null };
+        let oPlace = { id: 1, name: null };
+
+        oCity.id = locations[i].idCity;
+        oCity.name = locations[i].city;
+        oPlace.id = locations[i].idPlace;
+        oPlace.name = locations[i].place;
+        oLocation.city = oCity;
+        oLocation.place = oPlace;
+
+        arrLocations.push(oLocation);
+    }
+
+    return arrLocations;
+}
+
 module.exports = {
     currentDateTime: currentDateTime,
     createEventId: createEventId,
     convertRowToObj: convertRowToObj,
-    convertObjToRow: convertObjToRow
+    convertObjToRow: convertObjToRow,
+    convertLocationsToObj: convertLocationsToObj
 };
