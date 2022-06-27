@@ -259,7 +259,7 @@ exports.getUser = async (req, res) => {
         if (status.status === 200) {
             const [users] = await Root.getUser(status.id);
             console.log(users);
-            res.status(200).json(users);
+            res.status(200).json(users[0]);
         } else {
             res.sendStatus(status.status);
         }
