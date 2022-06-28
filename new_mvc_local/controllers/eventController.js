@@ -115,7 +115,7 @@ exports.getAll = async (req, res) => {
         res.status(200).json(allEventsArr);
 
     } else {
-        res.status(status).json({ msg: "We have problems with JWT authentication" });
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
 
 
@@ -180,22 +180,22 @@ exports.updateEvent = async (req, res) => {
 
 
 exports.getAllHistory = async (req, res) => {
-    try {
-        console.log("getAllEvents");
-        let status = await auth.authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status === 200) {
-            const [allEvents] = await Event.getAllHistory();
-            res.json(allEvents);
-        } else {
-            res.sendStatus(status);
-        }
+    // try {
+    //     console.log("getAllEvents");
+    //     let status = await auth.authenticateJWT(req, res);
+    //     console.log("statusCode:", status);
+    //     if (status === 200) {
+    //         const [allEvents] = await Event.getAllHistory();
+    //         res.json(allEvents);
+    //     } else {
+    //         res.sendStatus(status);
+    //     }
 
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
+    // } catch (error) {
+    //     if (!error.statusCode) {
+    //         error.statusCode = 500;
+    //     }
+    // }
 }
 
 exports.getOne = async (req, res) => {
@@ -203,7 +203,7 @@ exports.getOne = async (req, res) => {
         console.log("getOne");
         let status = await auth.authenticateJWT(req, res);
         console.log("statusCode:", status);
-        if (status === 200) {
+        if (status.status === 200) {
             const [event] = await Event.getOne(req.params.id);
             console.log("event:", event);
             const [phases] = await Phase.getOnePhase(req.params.id);
@@ -219,7 +219,7 @@ exports.getOne = async (req, res) => {
             res.json(event);
 
         } else {
-            res.sendStatus(status);
+            res.sendStatus(status.status);
         }
 
     } catch (error) {
@@ -230,22 +230,22 @@ exports.getOne = async (req, res) => {
 }
 
 exports.getOneHistory = async (req, res) => {
-    try {
-        console.log("getOneHistory");
-        let status = await auth.authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status === 200) {
-            const [event] = await Event.getOneHistory(req.params.id);
-            res.json(event);
-        } else {
-            res.sendStatus(status);
-        }
+    // try {
+    //     console.log("getOneHistory");
+    //     let status = await auth.authenticateJWT(req, res);
+    //     console.log("statusCode:", status);
+    //     if (status === 200) {
+    //         const [event] = await Event.getOneHistory(req.params.id);
+    //         res.json(event);
+    //     } else {
+    //         res.sendStatus(status);
+    //     }
 
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
+    // } catch (error) {
+    //     if (!error.statusCode) {
+    //         error.statusCode = 500;
+    //     }
+    // }
 }
 
 

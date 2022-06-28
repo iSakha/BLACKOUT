@@ -13,7 +13,7 @@ exports.authenticateJWT = (req, res) => {
     const authHeader = req.headers.authorization;
     console.log("authHeader:", authHeader);
     let status;
-    let id;
+    let id = 1;
     if (authHeader) {
         const token = authHeader.split(' ')[1];
 
