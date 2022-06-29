@@ -237,7 +237,47 @@ exports.getUsers = async (req, res) => {
         if (status.status === 200) {
             const [users] = await Root.getUsers();
             console.log(users);
-            res.status(200).json(users);
+
+            let arrUser = [];
+
+            for (let i = 0; i < users.length; i++) {
+
+                let user = {};
+
+                user.id = users[i].id;
+                user.login = users[i].login;
+                let name = {};
+                name.firstName = users[i].firstName;
+                name.lastName = users[i].lastName;
+                name.patronymic = users[i].patrName;
+                name.fullName = users[i].fullName;
+                user.name = name;
+                name.avatar = users[i].avatar;
+                let role = {};
+                role.id = users[i].idRole;
+                role.name = users[i].role;
+                user.role = role;
+                let contacts = {};
+                contacts.phone1 = users[i].phone1;
+                contacts.phone2 = users[i].phone2;
+                contacts.email = users[i].email;
+                user.contacts = contacts;
+                let warehouse = {};
+                warehouse.id = users[i].idWarehouse;
+                warehouse.name = users[i].warehouse;
+                user.warehouse = warehouse;
+                let department = {};
+                department.id = users[i].idDepartment;
+                department.name = users[i].department;
+                user.department = department;
+
+                arrUser.push(user);
+
+                console.log("arrUser:", arrUser);
+            }
+
+
+            res.status(200).json(arrUser);
         } else {
             res.sendStatus(status.status);
         }
@@ -259,7 +299,37 @@ exports.getUser = async (req, res) => {
         if (status.status === 200) {
             const [users] = await Root.getUser(status.id);
             console.log(users);
-            res.status(200).json(users[0]);
+
+            let user = {};
+
+            user.id = users[0].id;
+            user.login = users[0].login;
+            let name = {};
+            name.firstName = users[0].firstName;
+            name.lastName = users[0].lastName;
+            name.patronymic = users[0].patrName;
+            name.fullName = users[0].fullName;
+            user.name = name;
+            name.avatar = users[0].avatar;
+            let role = {};
+            role.id = users[0].idRole;
+            role.name = users[0].role;
+            user.role = role;
+            let contacts = {};
+            contacts.phone1 = users[0].phone1;
+            contacts.phone2 = users[0].phone2;
+            contacts.email = users[0].email;
+            user.contacts = contacts;
+            let warehouse = {};
+            warehouse.id = users[0].idWarehouse;
+            warehouse.name = users[0].warehouse;
+            user.warehouse = warehouse;
+            let department = {};
+            department.id = users[0].idDepartment;
+            department.name = users[0].department;
+            user.department = department;
+
+            res.status(200).json(user);
         } else {
             res.sendStatus(status.status);
         }

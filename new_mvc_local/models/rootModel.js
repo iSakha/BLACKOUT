@@ -78,12 +78,20 @@ module.exports = class Root {
 
 
     static getUsers() {
-        return db.execute('SELECT `id`, `login`, `firstName`, `lastName`, `fullName`, `avatar`, `role` FROM `v_users`');
+        return db.execute('SELECT * FROM `v_users_new`');
     }
 
+    // static getUsers() {
+    //     return db.execute('SELECT `id`, `login`, `firstName`, `lastName`, `fullName`, `avatar`, `role` FROM `v_users`');
+    // }
+
     static getUser(userID) {
-        return db.execute('SELECT `id`, `login`, `firstName`, `lastName`, `fullName`, `avatar`, `role` FROM `v_users` WHERE `id` = ?', [userID]);
+        return db.execute('SELECT * FROM `v_users_new` WHERE `id` = ?', [userID]);
     }
+
+    // static getUser(userID) {
+    //     return db.execute('SELECT `id`, `login`, `firstName`, `lastName`, `fullName`, `avatar`, `role` FROM `v_users` WHERE `id` = ?', [userID]);
+    // }
 
     static getStatus() {
         return db.execute('SELECT * FROM `t_status`');

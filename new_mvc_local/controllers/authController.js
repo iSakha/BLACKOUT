@@ -51,6 +51,7 @@ exports.validateUser = async (req, res) => {
 
 
             if (bcrypt.hashSync(passwordEnteredByUser, salt) === row[0].crypto) {
+                
                 let user = {};
 
                 user.id = row[0].id;
