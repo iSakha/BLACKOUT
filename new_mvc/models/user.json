@@ -1,0 +1,28 @@
+{
+    "id": 2,
+    "login": "gaptar",
+    "name": {
+        "firstName": "Гаптар",
+        "lastName": "Алексей",
+        "patronymic": "Вячеславович",
+        "fullName": "Гаптар Алексей Вячеславович"
+    },
+    "avatar": null,
+    "role": {
+        "id": 2,
+        "name": "Руководитель"
+    },
+    "contacts": {
+        "phone1": "+7(915)057-27-41",
+        "phone2": "+7(915)057-27-43",
+        "email": "ag@blackoutstudio.ru"
+    },
+    "warehouse": {
+        "id": 3,
+        "name": "Москва"
+    },
+    "department": {
+        "id": 2,
+        "name": "Офис"
+    }
+}

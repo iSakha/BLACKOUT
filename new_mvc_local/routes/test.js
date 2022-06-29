@@ -10,7 +10,7 @@ var bcrypt = require('bcrypt');
 
 // пароль пользователя
 
-var passwordFromUser = "test_guest";
+var passwordFromUser = "test_gaptar";
 
  
 

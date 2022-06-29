@@ -11,9 +11,8 @@ const refreshTokenSecret = 'someRandomNewStringForRefreshTokenWithout~#-';
 
 exports.authenticateJWT = (req, res) => {
     const authHeader = req.headers.authorization;
-    console.log("authHeader:", authHeader);
     let status;
-    let id = 1;
+    let id;
     if (authHeader) {
         const token = authHeader.split(' ')[1];
 
@@ -53,27 +52,55 @@ exports.validateUser = async (req, res) => {
 
             if (bcrypt.hashSync(passwordEnteredByUser, salt) === row[0].crypto) {
                 let user = {};
-                user.username = row[0].login,
-                    user.password = row[0].crypto,
-                    user.role = row[0].role,
-                    user.id = row[0].id
+
+                user.id = row[0].id;
+                user.login = row[0].login;
+                let name = {};
+                name.firstName = row[0].firstName;
+                name.lastName = row[0].lastName;
+                name.patronymic = row[0].patrName;
+                name.fullName = row[0].fullName;
+                user.name = name;
+                name.avatar = row[0].avatar;
+                let role = {};
+                role.id = row[0].idRole;
+                role.name = row[0].role;
+                user.role = role;
+                let contacts = {};
+                contacts.phone1 = row[0].phone1;
+                contacts.phone2 = row[0].phone2;
+                contacts.email = row[0].email;
+                user.contacts = contacts;
+                let warehouse = {};
+                warehouse.id = row[0].idWarehouse;
+                warehouse.name = row[0].warehouse;
+                user.warehouse = warehouse;
+                let department = {};
+                department.id = row[0].idDepartment;
+                department.name = row[0].department;
+                user.department = department;
+
+                // user.username = row[0].login,
+                //     user.password = row[0].crypto,
+                //     user.role = row[0].role,
+                //     user.id = row[0].id
 
                 console.log("row[0]:", row[0]);
                 console.log("user:", user);
                 const accessToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, accessTokenSecret, { expiresIn: '120m' });
                 const refreshToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, refreshTokenSecret);
 
-                let usr = {};
-                usr.login = row[0].login,
-                    usr.firstName = row[0].firstName,
-                    usr.lastName = row[0].lastName,
-                    usr.fullName = row[0].fullName,
-                    usr.avatar = row[0].avatar,
-                    usr.role = row[0].role,
-                    usr.id = row[0].id
+                // let usr = {};
+                // usr.login = row[0].login,
+                //     usr.firstName = row[0].firstName,
+                //     usr.lastName = row[0].lastName,
+                //     usr.fullName = row[0].fullName,
+                //     usr.avatar = row[0].avatar,
+                //     usr.role = row[0].role,
+                //     usr.id = row[0].id
 
                 res.status(200).json({
-                    usr,
+                    user,
                     accessToken,
                     refreshToken
                 });
@@ -106,8 +133,8 @@ exports.updateToken = async (req, res) => {
             return res.sendStatus(403);
         }
 
-        const accessToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, accessTokenSecret, { expiresIn: '120m' });
-        const refreshToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, refreshTokenSecret);
+        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret, { expiresIn: '120m' });
+        const refreshToken = jwt.sign({ username: user.username, role: user.role }, refreshTokenSecret);
 
         console.log("updated accessToken:", accessToken);
         console.log("updated refreshToken:", refreshToken);
