@@ -37,6 +37,7 @@ exports.getClients = async (req, res) => {
         if (status.status === 200) {
             const [clients] = await Root.getClients();
             console.log(clients);
+            clients.shift();
             res.status(200).json(clients);
         } else {
             res.sendStatus(status.status);
@@ -111,6 +112,32 @@ exports.addClient = async (req, res) => {
 
 }
 
+exports.updateClient = async (req, res) => {
+
+    let clientRow = [req.body.client, req.body.clientDescription, req.body.comments, req.params.id];
+    console.log("clientRow:", clientRow);
+    try {
+        console.log("updateClient");
+        let status = await auth.authenticateJWT(req, res);
+        console.log("statusCode:", status.status);
+        if (status.status === 200) {
+            const [stats] = await Root.updateClient(clientRow);
+            console.log(stats);
+            res.status(200).json({msg:`Заказчик id${req.params.id} успешно обновлен`});
+        } else {
+            res.sendStatus(status.status);
+        }
+
+        // res.status(200).json({msg: "ok"});
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+    }
+
+}
+
 // LOCATIONS
 // =====================================================================
 exports.getLocations = async (req, res) => {
@@ -146,6 +173,7 @@ exports.getCities = async (req, res) => {
         if (status.status === 200) {
             const [locations] = await Root.getCities();
             console.log(locations);
+            locations.shift();
             res.status(200).json(locations);
         } else {
             res.sendStatus(status.status);
@@ -227,7 +255,8 @@ exports.addLocation = async (req, res) => {
 }
 
 
-
+// USERS
+// =====================================================================
 exports.getUsers = async (req, res) => {
 
     try {
@@ -237,7 +266,7 @@ exports.getUsers = async (req, res) => {
         if (status.status === 200) {
             const [users] = await Root.getUsers();
             console.log(users);
-
+            users.shift();
             let arrUser = [];
 
             for (let i = 0; i < users.length; i++) {
@@ -342,6 +371,8 @@ exports.getUser = async (req, res) => {
 
 }
 
+// =====================================================================
+
 exports.getStatus = async (req, res) => {
 
     try {
@@ -351,6 +382,7 @@ exports.getStatus = async (req, res) => {
         if (status.status === 200) {
             const [stats] = await Root.getStatus();
             console.log(stats);
+            stats.shift();
             res.status(200).json(stats);
         } else {
             res.sendStatus(status.status);
@@ -373,6 +405,7 @@ exports.getPhases = async (req, res) => {
         if (status.status === 200) {
             const [phase] = await Root.getPhases();
             console.log(status);
+            phase.shift();
             res.status(200).json(phase);
         } else {
             res.sendStatus(status.status);
@@ -392,6 +425,7 @@ exports.getWarehouses = async (req, res) => {
         console.log("statusCode:", status.status);
         if (status.status === 200) {
             const [whouses] = await Root.getWarehouses();
+            whouses.shift();
             res.status(200).json(whouses);
         } else {
             res.sendStatus(status.status);
@@ -442,35 +476,4 @@ exports.addStatus = async (req, res) => {
 }
 
 
-
-
-// UPDATE
-// =====================================================================
-exports.updateClient = async (req, res) => {
-
-    let clientRow = [req.body.client, req.body.clientDescription, req.body.comments, req.params.id];
-    console.log("clientRow:", clientRow);
-    try {
-        console.log("updateClient");
-        let status = await auth.authenticateJWT(req, res);
-        console.log("statusCode:", status.status);
-        if (status.status === 200) {
-            const [stats] = await Root.updateClient(clientRow);
-            console.log(stats);
-            res.status(200).json(stats);
-        } else {
-            res.sendStatus(status.status);
-        }
-
-        // res.status(200).json({msg: "ok"});
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-
-}
-// DELETE
-// =====================================================================
 

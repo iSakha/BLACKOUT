@@ -81,24 +81,11 @@ exports.validateUser = async (req, res) => {
                 department.name = row[0].department;
                 user.department = department;
 
-                // user.username = row[0].login,
-                //     user.password = row[0].crypto,
-                //     user.role = row[0].role,
-                //     user.id = row[0].id
-
                 console.log("row[0]:", row[0]);
                 console.log("user:", user);
                 const accessToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, accessTokenSecret, { expiresIn: '120m' });
                 const refreshToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, refreshTokenSecret);
 
-                // let usr = {};
-                // usr.login = row[0].login,
-                //     usr.firstName = row[0].firstName,
-                //     usr.lastName = row[0].lastName,
-                //     usr.fullName = row[0].fullName,
-                //     usr.avatar = row[0].avatar,
-                //     usr.role = row[0].role,
-                //     usr.id = row[0].id
 
                 res.status(200).json({
                     user,
@@ -114,7 +101,7 @@ exports.validateUser = async (req, res) => {
         if (!error.statusCode) {
             console.log("error:", error);
             error.statusCode = 500;
-            res.status(500).json("error:", error);
+            res.status(500).json({"error": error});
         }
     }
 }
