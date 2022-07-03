@@ -10,7 +10,7 @@ router.get('/history', eventController.getAllHistory);
 router.get('/:id', eventController.getOne);
 router.get('/history/:id', eventController.getOneHistory);
 router.post('/', eventController.createNewEvent);
-// router.delete('/:id', eventController.deleteEvent);
+router.delete('/:id', eventController.deleteEvent);
 router.put('/:id', eventController.updateEvent);
 router.get('/summary', eventController.getSummary);
 

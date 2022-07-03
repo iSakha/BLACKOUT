@@ -144,10 +144,6 @@ exports.updateEvent = async (req, res) => {
         console.log("msg:", msg);
         console.log("eventPhase:", eventPhase);
 
-        // if (eventPhase !== null) {
-        //     eventPhase.push(req.params.id);
-        // }
-
 
         if (msg === null) {
 
@@ -171,6 +167,49 @@ exports.updateEvent = async (req, res) => {
             res.status(200).json({ msg: `Мероприятие успешно обновлено. idEvent = ${eventRow[0]}` });
 
         } else res.status(400).json(msg);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}
+
+exports.deleteEvent = async (req, res) => {
+
+    console.log("delete Event req.body:", req.body);
+
+    let status = await auth.authenticateJWT(req, res);
+    let userId = status.id;
+
+    if (status.status === 200) {
+
+        console.log("authentication successfull!");
+
+
+        let obj = {}
+
+        obj.idEvent = req.params.id;
+        obj.idWarehouse = 1;
+        obj.title = "delete";
+        obj.idManager_1 = 1;
+        obj.idManager_2 = 1;
+        obj.idEventCity = 1;
+        obj.idEventPlace = 1;
+        obj.idClient = 1;
+        obj.idCreatedBy = 1;
+        obj.notes = "";
+        obj.idStatus = 1;
+        obj.idPhase = 1;
+        obj.idUpdatedBy = userId;
+        obj.is_deleted = 1;
+
+        try {
+            await Event.deleteEvent(obj);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with writing event data to database" });
+        }
+
+        res.status(200).json({ msg: `Мероприятие успешно удалено. idEvent = ${req.params.id}` });
 
     } else {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });
