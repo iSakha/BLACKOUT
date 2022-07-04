@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const Event = require('../models/eventModel');
 const Phase = require('../models/phaseModel');
 const utils = require('../utils/utils');
-const auth = require('../controllers/authController')
+const auth = require('../controllers/authController');
 
 
 // Events queries
