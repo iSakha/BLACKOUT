@@ -14,6 +14,14 @@ router.get('/cats', equipController.getCategories);
 // =====================================================================
 router.get('/deps/cats/:id', equipController.getCategoriesByDep);
 
+// Get equipment by department
+// =====================================================================
+router.get('/deps/:id', equipController.getEquipmentByDep);
+
+// Get equipment by department and category
+// =====================================================================
+router.get('/deps/:idDep/cats/:idCat', equipController.getEquipmentByDepCat);
+
 
 
 

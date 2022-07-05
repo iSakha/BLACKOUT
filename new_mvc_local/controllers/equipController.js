@@ -86,3 +86,59 @@ exports.getCategoriesByDep = async (req, res) => {
 
 
 }
+
+exports.getEquipmentByDep = async (req, res) => {
+
+    console.log("getEquipmentByDep");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+
+    if (status.status === 200) {
+
+        try {
+
+            [equip] = await Equipment.getEquipmentByDep(req.params.id);
+            console.log("equip:", equip);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting equipment by dep from database" });
+        }
+
+        res.status(200).json(equip);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
+
+exports.getEquipmentByDepCat = async (req, res) => {
+
+    console.log("getEquipmentByDepCat");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+
+    if (status.status === 200) {
+
+        try {
+
+            [equip] = await Equipment.getEquipmentByDepCat(req.params.idDep, req.params.idCat);
+            console.log("equip:", equip);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting equipment by dep and cat from database" });
+        }
+
+        res.status(200).json(equip);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
