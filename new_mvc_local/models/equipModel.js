@@ -51,5 +51,16 @@ module.exports = class Equipment {
         }
     }
 
+    static getFixtureByDepCatName(idDep, idCat, idName){
+        console.log("idDep:",idDep);
+        console.log("idCat:",idCat);
+        console.log("idName:",idName);
+        try {
+            return db.execute('SELECT * FROM `t_equipment` WHERE idDep=? AND idCat=? AND idName=?', [idDep, idCat, idName]);
+        } catch (error) {
+            return error;
+        }
+    }
+
 
 }
