@@ -78,7 +78,7 @@ module.exports = class Root {
 
 
     static getUsers() {
-        return db.execute('SELECT * FROM `v_users_new`');
+        return db.execute('SELECT * FROM `v_users`');
     }
 
     // static getUsers() {
@@ -86,7 +86,7 @@ module.exports = class Root {
     // }
 
     static getUser(userID) {
-        return db.execute('SELECT * FROM `v_users_new` WHERE `id` = ?', [userID]);
+        return db.execute('SELECT * FROM `v_users` WHERE `id` = ?', [userID]);
     }
 
     // static getUser(userID) {

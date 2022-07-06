@@ -4,7 +4,7 @@ const db = dtb.promise();
 
 
 function validateUser(usernameEnteredByUser) {
-    return db.execute('SELECT * FROM `v_users_new` WHERE login = ?',[usernameEnteredByUser]);
+    return db.execute('SELECT * FROM `v_users` WHERE login = ?',[usernameEnteredByUser]);
 }
 
 // function validateUser(usernameEnteredByUser) {
