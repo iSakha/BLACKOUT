@@ -170,3 +170,31 @@ exports.getFixtureByDepCatName = async (req, res) => {
 
 
 }
+
+exports.getFixtureByID = async (req, res) => {
+
+    console.log("getFixtureByDepCatName");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+
+    if (status.status === 200) {
+
+        try {
+
+            [fixture] = await Equipment.getFixtureByID(req.params.id);
+            console.log("fixture:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting fixtures by id from database" });
+        }
+
+        res.status(200).json(fixture);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
