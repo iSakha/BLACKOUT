@@ -215,6 +215,32 @@ exports.deleteEvent = async (req, res) => {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
 }
+
+exports.getSummary = async (req, res) => {
+
+    console.log("getSummary");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+    if (status.status === 200) {
+
+        try {
+
+            [summary] = await Event.getSummary();
+            console.log("summary:", summary);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting summary data from database" });
+        }
+
+        res.status(200).json(summary);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+}
 // =====================================================================
 
 
@@ -293,23 +319,4 @@ exports.getOneHistory = async (req, res) => {
 
 
 
-exports.getSummary = async (req, res) => {
-    try {
-        console.log("getSummary");
-        let status = await auth.authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status === 200) {
-            const [summary] = await Event.getSummary();
-            console.log(summary);
-            res.status(200).json(summary);
-        } else {
-            res.sendStatus(status);
-        }
 
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-    }
-
-}
