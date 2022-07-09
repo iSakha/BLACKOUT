@@ -39,6 +39,10 @@ exports.createNewEvent = async (req, res) => {
             } catch (error) {
                 console.log("error:", error);
                 res.status(500).json({ msg: "We have problems with writing event data to database" });
+                return {
+                    error: true,
+                    message: 'Error from database'
+                }
             }
             if (eventPhase !== null) {
                 try {
@@ -47,6 +51,10 @@ exports.createNewEvent = async (req, res) => {
                 } catch (error) {
                     console.log("error:", error);
                     res.status(500).json({ msg: "We have problems with writing phase data to database" });
+                    return {
+                        error: true,
+                        message: 'Error from database'
+                    }
                 }
             }
 
@@ -79,6 +87,10 @@ exports.getAll = async (req, res) => {
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting event data from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
         }
 
 
@@ -88,6 +100,10 @@ exports.getAll = async (req, res) => {
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting phase data from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
         }
 
         for (let i = 0; i < allEvents.length; i++) {
@@ -153,6 +169,10 @@ exports.updateEvent = async (req, res) => {
             } catch (error) {
                 console.log("error:", error);
                 res.status(500).json({ msg: "We have problems with writing event data to database" });
+                return {
+                    error: true,
+                    message: 'Error from database'
+                }
             }
             if (eventPhase !== null) {
                 try {
@@ -161,6 +181,10 @@ exports.updateEvent = async (req, res) => {
                 } catch (error) {
                     console.log("error:", error);
                     res.status(500).json({ msg: "We have problems with writing phase data to database" });
+                    return {
+                        error: true,
+                        message: 'Error from database'
+                    }
                 }
             }
             // res.status(200).json({ msg: `Мероприятие успешно обновлено.` });
@@ -206,7 +230,11 @@ exports.deleteEvent = async (req, res) => {
             await Event.deleteEvent(obj);
         } catch (error) {
             console.log("error:", error);
-            res.status(500).json({ msg: "We have problems with writing event data to database" });
+            res.status(500).json({ msg: "We have problems with deleting event data from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
         }
 
         res.status(200).json({ msg: `Мероприятие успешно удалено. idEvent = ${req.params.id}` });
@@ -232,6 +260,10 @@ exports.getSummary = async (req, res) => {
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting summary data from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
         }
 
         res.status(200).json(summary);
@@ -264,34 +296,52 @@ exports.getAllHistory = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-    try {
-        console.log("getOne");
-        let status = await auth.authenticateJWT(req, res);
-        console.log("statusCode:", status);
-        if (status.status === 200) {
-            const [event] = await Event.getOne(req.params.id);
+    let event = {};
+    let phases = {};
+    let eventObj = {};
+    let phaseObj = {};
+
+    console.log("getOne");
+    let status = await auth.authenticateJWT(req, res);
+
+    console.log("statusCode:", status);
+
+    if (status.status === 200) {
+
+        try {
+            [event] = await Event.getOne(req.params.id);
             console.log("event:", event);
-            const [phases] = await Phase.getOnePhase(req.params.id);
+            [phases] = await Phase.getOnePhase(req.params.id);
             console.log("phases:", phases);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting event from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
 
-            // let foundPhase = phases.filter(e => e.idEvent === event.idEvent);
-            // console.log("foundPhase:", i, foundPhase);
-            if (phases.length > 0) {
-                event.phase = phases;
-                console.log("event+phase:", event);
-            } else event.phase = null;
-
-            res.json(event);
+        if (phases.length > 0) {
+            eventObj = utils.convertRowToObj(event[0]);
+            eventObj.phase = phases;
+            console.log("event+phase:", eventObj);
+            res.json(eventObj);
 
         } else {
-            res.sendStatus(status.status);
-        }
+            eventObj = utils.convertRowToObj(event[0]);
+            eventObj.phase = null;
+            res.json(eventObj);
+        };
 
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
+
+
+
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
+
 }
 
 exports.getOneHistory = async (req, res) => {
