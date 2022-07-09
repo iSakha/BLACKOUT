@@ -41,7 +41,7 @@ module.exports = class Phase {
 
     static getOnePhase(idEvent) {
         try {
-            return db.execute('SELECT * FROM `v_event_details` WHERE `idEvent`=?', [idEvent]);
+            return db.execute('SELECT id, phase, start, end FROM `v_event_details` WHERE `idEvent`=?', [idEvent]);
         } catch (error) {
             return error;
         }
