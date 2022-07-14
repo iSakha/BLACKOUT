@@ -30,6 +30,10 @@ router.get('/deps/:idDep/cats/:idCat/name/:idName', equipController.getFixtureBy
 // =====================================================================
 router.get('/fixt/:id', equipController.getFixtureByID);
 
+// Get qty fixtures by id
+// =====================================================================
+router.get('/qty/:id', equipController.getQtyById);
+
 
 
 
