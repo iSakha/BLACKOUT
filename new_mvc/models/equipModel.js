@@ -54,8 +54,8 @@ module.exports = class Equipment {
     static getFixtureByID(id){
 
         let idDep = id.slice(0,3);
-        let idCat = id.slice(3,6);
-        let idName = id.slice(6,9);
+        let idCat = id.slice(4,7);
+        let idName = id.slice(8,11);
         console.log("idDep:",idDep);
         console.log("idCat:",idCat);
         console.log("idName:",idName);
@@ -77,5 +77,14 @@ module.exports = class Equipment {
         }
     }
 
+    static getQtyById(id) {
+        try {
+            return db.execute('SELECT * FROM `v_qty` WHERE id=?', [id]);
+            // return db.execute('SELECT * FROM `t_equipment` WHERE idDep=? AND idCat=? AND idName=?', [idDep, idCat, idName]);
+            
+        } catch (error) {
+            return error;
+        }
+    }
 
 }

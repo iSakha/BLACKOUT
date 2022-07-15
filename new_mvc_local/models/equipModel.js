@@ -79,7 +79,7 @@ module.exports = class Equipment {
 
     static getQtyById(id) {
         try {
-            return db.execute('CALL `p_qty_by_id`(?)', [id]);
+            return db.execute('SELECT * FROM `v_qty` WHERE id=?', [id]);
             // return db.execute('SELECT * FROM `t_equipment` WHERE idDep=? AND idCat=? AND idName=?', [idDep, idCat, idName]);
             
         } catch (error) {

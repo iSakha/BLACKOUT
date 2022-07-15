@@ -173,7 +173,7 @@ exports.getFixtureByDepCatName = async (req, res) => {
 
 exports.getFixtureByID = async (req, res) => {
 
-    console.log("getFixtureByDepCatName");
+    console.log("getFixtureByID");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
 
@@ -202,7 +202,7 @@ exports.getFixtureByID = async (req, res) => {
 exports.getQtyById = async (req, res) => {
 
     let fixture;
-    console.log("getFixtureByDepCatName");
+    console.log("getQtyById");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
 
