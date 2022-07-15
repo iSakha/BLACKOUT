@@ -32,6 +32,9 @@ router.get('/fixt/:id', equipController.getFixtureByID);
 
 // Get qty fixtures by id
 // =====================================================================
+// router.get('/qty/:id', () => {
+//     console.log("getQtyById")
+// });
 router.get('/qty/:id', equipController.getQtyById);
 
 

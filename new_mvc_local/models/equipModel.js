@@ -79,12 +79,18 @@ module.exports = class Equipment {
 
     static getQtyById(id) {
         try {
-            return db.execute('SELECT * FROM `v_qty` WHERE id=?', [id]);
-            // return db.execute('SELECT * FROM `t_equipment` WHERE idDep=? AND idCat=? AND idName=?', [idDep, idCat, idName]);
-            
+            return db.execute('SELECT * FROM `v_qty` WHERE id=?', [id]);            
         } catch (error) {
             return error;
         }
     }
+
+    static changeStatusById(row) {
+        try {
+            return db.execute('INSERT INTO `t_repair_history` (idDep, idCat, idModelName, idAction, comments, spareParts, date, idUser, unixTime, idEvent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', row);            
+        } catch (error) {
+            return error;
+        }
+    }    
 
 }

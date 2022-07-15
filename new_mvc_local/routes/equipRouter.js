@@ -34,6 +34,10 @@ router.get('/fixt/:id', equipController.getFixtureByID);
 // =====================================================================
 router.get('/qty/:id', equipController.getQtyById);
 
+// Get qty fixtures by id
+// =====================================================================
+router.post('/life', equipController.changeStatusById);
+
 
 
 

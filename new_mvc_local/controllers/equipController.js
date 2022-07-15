@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const auth = require('../controllers/authController');
-const Equipment= require('../models/equipModel');
+const Equipment = require('../models/equipModel');
 
 
 exports.getDepartments = async (req, res) => {
@@ -220,6 +220,38 @@ exports.getQtyById = async (req, res) => {
         }
 
         res.status(200).json(fixture);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
+
+exports.changeStatusById = async (req, res) => {
+
+    let fixtureRow = [];
+
+    console.log("changeStatusById");
+    console.log("req.body:", req.body)
+
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+
+    if (status.status === 200) {
+
+        try {
+
+            // [fixture] = await Equipment.changeStatusById(req.params.id);
+            // console.log("getQtyById:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting qty fixtures by id from database" });
+        }
+
+        res.status(200).json(req.body);
 
     } else {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });
