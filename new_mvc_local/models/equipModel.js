@@ -51,16 +51,12 @@ module.exports = class Equipment {
         }
     }
 
-    static getFixtureByID(id){
+    static getFixturesByModelName(id){
 
-        let idDep = id.slice(0,3);
-        let idCat = id.slice(4,7);
-        let idName = id.slice(8,11);
-        console.log("idDep:",idDep);
-        console.log("idCat:",idCat);
-        console.log("idName:",idName);
+        id = id + ".___";
+
         try {
-            return db.execute('SELECT * FROM `t_equipment` WHERE idDep=? AND idCat=? AND idName=?', [idDep, idCat, idName]);
+            return db.execute('SELECT * FROM `t_equipment` WHERE idFixture LIKE ?', [id]);
         } catch (error) {
             return error;
         }
@@ -85,9 +81,33 @@ module.exports = class Equipment {
         }
     }
 
-    static changeStatusById(row) {
+    static writeToHistory(row) {
         try {
-            return db.execute('INSERT INTO `t_repair_history` (idDep, idCat, idModelName, idAction, comments, spareParts, date, idUser, unixTime, idEvent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', row);            
+            return db.execute('INSERT INTO `t_repair_history` (idFixture, idAction, comments, spareParts, date, idUser, unixTime, idEvent) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', row);            
+        } catch (error) {
+            return error;
+        }
+    }    
+
+    static changeStatusById(idStatus,idFixture) {
+        try {
+            return db.execute('UPDATE `t_equipment` SET `idFixtureState`=? WHERE `idFixture`=?', [idStatus,idFixture]);            
+        } catch (error) {
+            return error;
+        }
+    }    
+
+    static getFixtureHistory() {
+        try {
+            return db.execute('SELECT * FROM `v_repair_history`');            
+        } catch (error) {
+            return error;
+        }
+    }    
+
+    static getFixtureHistoryByID(id) {
+        try {
+            return db.execute('SELECT * FROM `v_repair_history` WHERE idFixture=? ', [id]);            
         } catch (error) {
             return error;
         }

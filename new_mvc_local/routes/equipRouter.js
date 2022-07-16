@@ -26,17 +26,25 @@ router.get('/deps/:idDep/cats/:idCat', equipController.getEquipmentByDepCat);
 // =====================================================================
 router.get('/deps/:idDep/cats/:idCat/name/:idName', equipController.getFixtureByDepCatName);
 
-// Get fixtures by id
+// Get fixtures by modelName
 // =====================================================================
-router.get('/fixt/:id', equipController.getFixtureByID);
+router.get('/fixt/:id', equipController.getFixturesByModelName);
 
 // Get qty fixtures by id
 // =====================================================================
 router.get('/qty/:id', equipController.getQtyById);
 
-// Get qty fixtures by id
+// Set fixture status
 // =====================================================================
-router.post('/life', equipController.changeStatusById);
+router.post('/fixturelife/:status', equipController.changeStatusById);
+
+// Get fixtures history
+// =====================================================================
+router.get('/history', equipController.getFixtureHistory);
+
+// Get fixtures history by id
+// =====================================================================
+router.get('/history/:id', equipController.getFixtureHistoryByID);
 
 
 
