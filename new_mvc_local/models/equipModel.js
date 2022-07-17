@@ -1,5 +1,6 @@
 const dtb = require('../config/database');
 const db = dtb.promise();
+const utils = require('../utils/utils');
 
 module.exports = class Equipment {
 
@@ -115,67 +116,11 @@ module.exports = class Equipment {
 
     static fixturesMovement(idWarehouse, idFixture) {
 
-
-
         try {
-            // return db.query('UPDATE `t_equipment` SET idWarehouse=? WHERE idFixture=? ', [idWarehouse,idFixture]); 
-
-            console.log("idWarehouse_fm:", idWarehouse);
-            console.log("idFixture_fm:", idFixture);
-
-            let idW = idWarehouse;
-
-            let idF_1 = idFixture[0];
-            let idF_2 = idFixture[1];
-            let idF_3 = idFixture[2];
-            let idF_4 = idFixture[3];
-
-            let query_1 = "UPDATE t_equipment SET idWarehouse = CASE ";
-            let query_2 = "";
-            let query_4 = "";
-
-            for (let i = 0; i < idFixture.length; i++) {
-                query_2 += " WHEN idFixture = '" + idFixture[i] + "' THEN " + idW;
-                if (i < idFixture.length - 1) {
-                    query_4 += "'" + idFixture[i] + "'" + ",";
-                } else query_4 += "'" + idFixture[i] + "'";
-
-            }
-
-            let query_3 = " END  WHERE idFixture IN ("
-
-            let q = query_1 + query_2 + query_3 + query_4 + ")";
-
-            console.log(q);
-
-            let query = query_1 + query_2 + " END  WHERE idFixture IN ('" + idFixture[0] + "','" + idFixture[1] + "','" + idFixture[2] + "','" + idFixture[3] + "')"
-            return db.query(q);
+            let updateQuery = utils.updateMultiple(idWarehouse, idFixture);
+            return db.query(updateQuery);
         } catch (error) {
             return error;
         }
     }
-
-    // static fixturesMovement() {
-    //     try {
-
-    //         var values = [
-    //             { idWarehouse: 3, idFixture: '001.001.001.103' },
-    //             { idWarehouse: 3, idFixture: '001.001.001.104' }
-    //           ];
-
-    //           var queries = '';
-
-    //           values.forEach(function (item) {
-    //             queries += mysql.format("UPDATE `t_equipment` SET idWarehouse = ? WHERE idFixture = ?; ", item);
-    //           });
-    //            db.query(queries, defered.makeNodeResolver());
-
-    //         // return db.query('UPDATE `t_equipment` SET idWarehouse=? WHERE idFixture=? ', [idWarehouse,idFixture]);            
-    //         // return db.query("UPDATE t_equipment SET idWarehouse = CASE 	WHEN idFixture = '001.001.001.103' THEN 1 WHEN idFixture = '001.001.001.104' THEN 1 WHEN idFixture = '001.001.001.105' THEN 1 WHEN idFixture = '001.001.001.106' THEN 1 END  WHERE idFixture IN ('001.001.001.103','001.001.001.104','001.001.001.105','001.001.001.106')");            
-    //     } catch (error) {
-    //         return error;
-    //     }
-    // }
-
-
 }
