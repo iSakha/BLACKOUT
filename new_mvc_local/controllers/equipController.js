@@ -347,8 +347,6 @@ exports.getFixtureHistoryByID = async (req, res) => {
 
 exports.fixturesMovement = async (req, res) => {
 
-    let fixtureRow = [];
-
     console.log("fixturesMovement");
     console.log("req.body:", req.body);
 
@@ -357,17 +355,6 @@ exports.fixturesMovement = async (req, res) => {
 
 
     if (status.status === 200) {
-
-        // fixtureRow.push(req.body.idFixture);
-        // fixtureRow.push(req.body.idAction);
-        // fixtureRow.push(req.body.comments);
-        // fixtureRow.push(req.body.spareParts);
-        // fixtureRow.push(req.body.date);
-        // fixtureRow.push(req.params.status);
-        // fixtureRow.push(Date.now());
-        // fixtureRow.push(req.body.idEvent);
-
-        // console.log("fixtureRow:", fixtureRow);
 
         let idFixture = [];
 

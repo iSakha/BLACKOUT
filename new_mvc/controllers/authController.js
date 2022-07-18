@@ -41,7 +41,7 @@ exports.validateUser = async (req, res) => {
 
         const [row] = await auth.validateUser(req.body.login);
 
-        const dbUser = row[0];     //  !!!!!
+        const dbUser = row[0]; 
 
         console.log("row:", row);
 
