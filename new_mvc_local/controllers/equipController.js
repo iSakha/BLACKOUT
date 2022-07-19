@@ -356,13 +356,15 @@ exports.fixturesMovement = async (req, res) => {
 
     if (status.status === 200) {
 
-        let idFixture = [];
+        // let idFixture = [];
 
-        for (let i = 1; i < req.body.length; i++) {
-            idFixture.push(req.body[i].idFixture);
-        }
+        const idFixture = req.body.map(item => item.idFixture);
+        idFixture.shift();
+        // for (let i = 1; i < req.body.length; i++) {
+        //     idFixture.push(req.body[i].idFixture);
+        // }
 
-        console.log("idFixture:",idFixture);
+        console.log("idFixture:", idFixture);
 
         try {
 
