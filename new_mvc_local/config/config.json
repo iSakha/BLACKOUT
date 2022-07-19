@@ -3,5 +3,6 @@
     "port": 3306,
     "user": "black_user",
     "database": "b_out_new",
-    "password": "test_black"
+    "password": "test_black",
+    "multipleStatements": true
 }

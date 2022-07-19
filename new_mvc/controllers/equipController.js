@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const auth = require('../controllers/authController');
-const Equipment= require('../models/equipModel');
+const Equipment = require('../models/equipModel');
 
 
 exports.getDepartments = async (req, res) => {
@@ -171,7 +171,7 @@ exports.getFixtureByDepCatName = async (req, res) => {
 
 }
 
-exports.getFixtureByID = async (req, res) => {
+exports.getFixturesByModelName = async (req, res) => {
 
     console.log("getFixtureByID");
     let status = await auth.authenticateJWT(req, res);
@@ -182,8 +182,9 @@ exports.getFixtureByID = async (req, res) => {
 
         try {
 
-            [fixture] = await Equipment.getFixtureByID(req.params.id);
+            [fixture] = await Equipment.getFixturesByModelName(req.params.id);
             console.log("fixture:", fixture);
+            fixture.shift();
 
         } catch (error) {
             console.log("error:", error);
@@ -199,19 +200,21 @@ exports.getFixtureByID = async (req, res) => {
 
 }
 
+// Get qty fixtures by id
+// =====================================================================
 exports.getQtyById = async (req, res) => {
 
     let fixture;
     console.log("getQtyById");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
-
+    let id = req.params.id + ".000"
 
     if (status.status === 200) {
 
         try {
 
-            [fixture] = await Equipment.getQtyById(req.params.id);
+            [fixture] = await Equipment.getQtyById(id);
             console.log("getQtyById:", fixture);
 
         } catch (error) {
@@ -220,6 +223,158 @@ exports.getQtyById = async (req, res) => {
         }
 
         res.status(200).json(fixture);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
+
+// Set fixture status
+// =====================================================================
+
+exports.changeStatusById = async (req, res) => {
+
+    let fixtureRow = [];
+
+    console.log("changeStatusById");
+    console.log("req.body:", req.body);
+
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+
+    if (status.status === 200) {
+
+        fixtureRow.push(req.body.idFixture);
+        fixtureRow.push(req.body.idAction);
+        fixtureRow.push(req.body.comments);
+        fixtureRow.push(req.body.spareParts);
+        fixtureRow.push(req.body.date);
+        fixtureRow.push(req.params.status);
+        fixtureRow.push(Date.now());
+        fixtureRow.push(req.body.idEvent);
+
+        console.log("fixtureRow:", fixtureRow);
+
+        try {
+
+            [fixture] = await Equipment.writeToHistory(fixtureRow);
+            console.log("writeToHistory:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with 'writeToHistory'" });
+        }
+
+        try {
+
+            [fixture] = await Equipment.changeStatusById(req.params.status, req.body.idFixture);
+            console.log("changeStatusById:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with 'changeStatusById'" });
+        }
+
+        res.status(200).json({ msg: "Запись прибора в базу прошла успешно." });
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
+
+
+exports.getFixtureHistory = async (req, res) => {
+    let fixture;
+    console.log("getFixtureHistory");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+
+    if (status.status === 200) {
+
+        try {
+
+            [fixture] = await Equipment.getFixtureHistory();
+            console.log("fixture:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting fixtures history from database" });
+        }
+
+        res.status(200).json(fixture);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
+
+exports.getFixtureHistoryByID = async (req, res) => {
+    let fixture;
+    console.log("getFixtureHistory");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+
+    if (status.status === 200) {
+
+        try {
+
+            [fixture] = await Equipment.getFixtureHistoryByID(req.params.id);
+            console.log("fixture:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting fixtures history from database" });
+        }
+
+        res.status(200).json(fixture);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
+
+
+exports.fixturesMovement = async (req, res) => {
+
+    console.log("fixturesMovement");
+    console.log("req.body:", req.body);
+
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+
+    if (status.status === 200) {
+
+        let idFixture = [];
+
+        for (let i = 1; i < req.body.length; i++) {
+            idFixture.push(req.body[i].idFixture);
+        }
+
+        console.log("idFixture:",idFixture);
+
+        try {
+
+            [fixture] = await Equipment.fixturesMovement(req.body[0].idWarehouse, idFixture);
+            console.log("fixturesMovement:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with 'fixturesMovement'" });
+        }
+
+        res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
 
     } else {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });

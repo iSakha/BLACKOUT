@@ -1,5 +1,6 @@
 const dtb = require('../config/database');
 const db = dtb.promise();
+const utils = require('../utils/utils');
 
 module.exports = class Equipment {
 
@@ -24,7 +25,7 @@ module.exports = class Equipment {
     }
 
     static getCategoriesByDep(idDep) {
-        console.log("idDep:",idDep)
+        console.log("idDep:", idDep)
         try {
             return db.execute('SELECT * FROM `t_category` WHERE idDep=?', [idDep]);
         } catch (error) {
@@ -33,7 +34,7 @@ module.exports = class Equipment {
     }
 
     static getEquipmentByDep(idDep) {
-        console.log("idDep:",idDep)
+        console.log("idDep:", idDep)
         try {
             return db.execute('SELECT * FROM `t_equip_name` WHERE idDep=?', [idDep]);
         } catch (error) {
@@ -42,8 +43,8 @@ module.exports = class Equipment {
     }
 
     static getEquipmentByDepCat(idDep, idCat) {
-        console.log("idDep:",idDep);
-        console.log("idCat:",idCat);
+        console.log("idDep:", idDep);
+        console.log("idCat:", idCat);
         try {
             return db.execute('SELECT * FROM `t_equip_name` WHERE idDep=? AND idCat=?', [idDep, idCat]);
         } catch (error) {
@@ -51,7 +52,7 @@ module.exports = class Equipment {
         }
     }
 
-    static getFixturesByModelName(id){
+    static getFixturesByModelName(id) {
 
         id = id + ".___";
 
@@ -62,10 +63,10 @@ module.exports = class Equipment {
         }
     }
 
-    static getFixtureByDepCatName(idDep, idCat, idName){
-        console.log("idDep:",idDep);
-        console.log("idCat:",idCat);
-        console.log("idName:",idName);
+    static getFixtureByDepCatName(idDep, idCat, idName) {
+        console.log("idDep:", idDep);
+        console.log("idCat:", idCat);
+        console.log("idName:", idName);
         try {
             return db.execute('SELECT * FROM `t_equipment` WHERE idDep=? AND idCat=? AND idName=?', [idDep, idCat, idName]);
         } catch (error) {
@@ -75,7 +76,7 @@ module.exports = class Equipment {
 
     static getQtyById(id) {
         try {
-            return db.execute('SELECT * FROM `v_qty` WHERE id=?', [id]);            
+            return db.execute('SELECT * FROM `v_qty` WHERE id=?', [id]);
         } catch (error) {
             return error;
         }
@@ -83,34 +84,43 @@ module.exports = class Equipment {
 
     static writeToHistory(row) {
         try {
-            return db.execute('INSERT INTO `t_repair_history` (idFixture, idAction, comments, spareParts, date, idUser, unixTime, idEvent) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', row);            
+            return db.execute('INSERT INTO `t_repair_history` (idFixture, idAction, comments, spareParts, date, idUser, unixTime, idEvent) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', row);
         } catch (error) {
             return error;
         }
-    }    
+    }
 
-    static changeStatusById(idStatus,idFixture) {
+    static changeStatusById(idStatus, idFixture) {
         try {
-            return db.execute('UPDATE `t_equipment` SET `idFixtureState`=? WHERE `idFixture`=?', [idStatus,idFixture]);            
+            return db.execute('UPDATE `t_equipment` SET `idFixtureState`=? WHERE `idFixture`=?', [idStatus, idFixture]);
         } catch (error) {
             return error;
         }
-    }    
+    }
 
     static getFixtureHistory() {
         try {
-            return db.execute('SELECT * FROM `v_repair_history`');            
+            return db.execute('SELECT * FROM `v_repair_history`');
         } catch (error) {
             return error;
         }
-    }    
+    }
 
     static getFixtureHistoryByID(id) {
         try {
-            return db.execute('SELECT * FROM `v_repair_history` WHERE idFixture=? ', [id]);            
+            return db.execute('SELECT * FROM `v_repair_history` WHERE idFixture=? ', [id]);
         } catch (error) {
             return error;
         }
-    }    
+    }
 
+    static fixturesMovement(idWarehouse, idFixture) {
+
+        try {
+            let updateQuery = utils.updateMultiple(idWarehouse, idFixture);
+            return db.query(updateQuery);
+        } catch (error) {
+            return error;
+        }
+    }
 }

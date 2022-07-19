@@ -201,6 +201,7 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
 
 }
+
 function convertRowToObj(row) {
 
     console.log("convert row:", row);
@@ -291,10 +292,33 @@ function convertLocationsToObj(locations) {
     return arrLocations;
 }
 
+// Update multiple rows
+// =======================================================================
+function updateMultiple(idWarehouse, idFixture) {
+    let query_1 = "UPDATE t_equipment SET idWarehouse = CASE ";
+    let query_2 = "";
+    let query_4 = "";
+
+    for (let i = 0; i < idFixture.length; i++) {
+        query_2 += " WHEN idFixture = '" + idFixture[i] + "' THEN " + idWarehouse;
+        if (i < idFixture.length - 1) {
+            query_4 += "'" + idFixture[i] + "'" + ",";
+        } else query_4 += "'" + idFixture[i] + "'";
+
+    }
+
+    let query_3 = " END  WHERE idFixture IN ("
+
+    let q = query_1 + query_2 + query_3 + query_4 + ")";
+
+    return q;
+}
+
 module.exports = {
     currentDateTime: currentDateTime,
     createEventId: createEventId,
     convertRowToObj: convertRowToObj,
     convertObjToRow: convertObjToRow,
-    convertLocationsToObj: convertLocationsToObj
+    convertLocationsToObj: convertLocationsToObj,
+    updateMultiple: updateMultiple
 };

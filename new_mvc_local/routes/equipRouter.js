@@ -46,6 +46,10 @@ router.get('/history', equipController.getFixtureHistory);
 // =====================================================================
 router.get('/history/:id', equipController.getFixtureHistoryByID);
 
+// Fixtures movement
+// =====================================================================
+router.post('/movement', equipController.fixturesMovement);
+
 
 
 
