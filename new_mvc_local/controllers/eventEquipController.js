@@ -48,3 +48,36 @@ exports.addEventEquip = async (req, res) => {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
 }
+
+exports.selectFixturesByID = async (req, res) => {
+
+    console.log("addEventEquip req.body:", req.body);
+
+    let status = await auth.authenticateJWT(req, res);
+
+    if (status.status === 200) {
+
+        console.log("authentication successfull!");
+        console.log("req.params:",req.params);
+
+
+        try {
+            const [selectedFixtures] = await EventEquip.selectFixturesByID(req.params.idModelName, req.params.idWarehouse, req.params.qty);
+            console.log("result selectedFixtures:", selectedFixtures);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with writing event equipment to database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+        res.status(200).json({ msg: `Оборудование успешно добавлено.` });
+
+        // } else res.status(400).json(msg);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}

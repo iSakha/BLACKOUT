@@ -4,6 +4,7 @@ const router = express.Router();
 
 
 router.post('/', eventEquipController.addEventEquip);
+router.get('/:idModelName/:idWarehouse/:qty', eventEquipController.selectFixturesByID);
 
 
 module.exports = router;

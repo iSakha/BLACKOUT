@@ -20,4 +20,15 @@ module.exports = class EventEquip {
             return error;
         }
     }
+
+    static selectFixturesByID(idModelName, idWarehouse, qty) {
+        console.log('selectFixturesByID');
+        idModelName = idModelName + '%';
+        let query = "SELECT `idFixture` FROM `t_equipment` WHERE `idFixture` NOT LIKE '%000' AND `idFixture` LIKE ? AND `idWarehouse` = ? ORDER BY RAND() LIMIT ?;"
+        try {
+            return db.execute(query, [idModelName, idWarehouse, qty]);
+        } catch (error) {
+            return error;
+        }
+    }
 }
