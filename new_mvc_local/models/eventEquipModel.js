@@ -9,15 +9,13 @@ module.exports = class EventEquip {
         this.requiredQty = requiredQty;
         this.idWarehouse = idWarehouse;
         this.whsQty = whsQty;
-        this.idUser = idUser;
-        this.unixTime = Date.now();
     }
 
     static addEventEquip(dataRow) {
         console.log('addEventEquip');
-        console.log(`dataRow : ${dataRow}`);
+        console.log('dataRow:', dataRow);
         try {
-            return db.query('INSERT INTO `t_event_equipment` (idEvent, idFixture, requiredQty, idWarehouse, whsQty, idUser, unixTime) VALUES(?)', dataRow);
+            return db.query('INSERT INTO `t_event_equipment` (idEvent, idFixture, requiredQty, idWarehouse, whsQty, idUser, unixTime) VALUES ?', [dataRow]);
         } catch (error) {
             return error;
         }

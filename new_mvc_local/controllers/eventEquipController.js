@@ -10,38 +10,27 @@ exports.addEventEquip = async (req, res) => {
     let status = await auth.authenticateJWT(req, res);
     let userId = status.id;
     let dataRow = [];
+    let unixTime = Date.now();
 
-    for (let i = 0; i < req.body.length; i++) {
-        let obj = new EventEquip(req.body[i].idEvent, req.body[i].idFixture, req.body[i].requiredQty, req.body[i].idWarehouse, req.body[i].whsQty, userId);
-        const objRow = Object.values(obj);
-        dataRow.push(objRow);
-    }
 
-    console.log("dataRow:",dataRow);
 
     if (status.status === 200) {
 
         console.log("authentication successfull!");
 
+        for (let i = 0; i < req.body.length; i++) {
+            let obj = new EventEquip(req.body[i].idEvent, req.body[i].idFixture, req.body[i].requiredQty, req.body[i].idWarehouse, req.body[i].whsQty);
+            obj.userId = userId;
+            obj.unixTime = unixTime;
+            const objRow = Object.values(obj);
+            dataRow.push(objRow);
+        }
 
-        // let obj = utils.convertObjToRow(req.body, "create", userId, null);
-
-        // let msg = obj[0];
-        // let eventRow = obj[1];
-        // let eventPhase = obj[2];
-
-        // console.log("obj:", obj);
-        // console.log("eventRow:", eventRow);
-        // console.log("msg:", msg);
-        // console.log("eventPhase:", eventPhase);
-
-        // if (msg === null) {
-
-
+        console.log("dataRow:", dataRow);
 
         try {
-            // const [newEventEquip] = await EventEquip.addEventEquip(dataRow);
-            // console.log("result newEventEquip:", newEventEquip);
+            const [newEventEquip] = await EventEquip.addEventEquip(dataRow);
+            console.log("result newEventEquip:", newEventEquip);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with writing event equipment to database" });
