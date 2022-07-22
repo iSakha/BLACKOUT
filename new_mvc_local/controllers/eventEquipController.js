@@ -3,6 +3,8 @@ const EventEquip = require('../models/eventEquipModel');
 const utils = require('../utils/utils');
 const auth = require('../controllers/authController');
 
+addingEquipmentArr = [];
+
 exports.addEventEquip = async (req, res) => {
 
     console.log("addEventEquip req.body:", req.body);
@@ -50,7 +52,7 @@ exports.addEventEquip = async (req, res) => {
 }
 
 exports.selectFixturesByID = async (req, res) => {
-
+    let addingEquipmentObj = {};
     console.log("addEventEquip req.body:", req.body);
 
     let status = await auth.authenticateJWT(req, res);
@@ -64,6 +66,14 @@ exports.selectFixturesByID = async (req, res) => {
         try {
             const [selectedFixtures] = await EventEquip.selectFixturesByID(req.params.idModelName, req.params.idWarehouse, req.params.qty);
             console.log("result selectedFixtures:", selectedFixtures);
+            let idFixtureArr = [];
+            for (let i = 0; i < selectedFixtures.length; i++) {
+                idFixtureArr.push(selectedFixtures[i].idFixture);
+            }
+            addingEquipmentObj[req.params.idModelName] = idFixtureArr;
+            console.log("addingEquipment:", addingEquipmentObj);
+            addingEquipmentArr.push(addingEquipmentObj);
+            console.log("addingEquipmentArr:", addingEquipmentArr);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with writing event equipment to database" });
@@ -73,7 +83,7 @@ exports.selectFixturesByID = async (req, res) => {
             }
         }
 
-        res.status(200).json({ msg: `Оборудование успешно добавлено.` });
+        res.status(200).json({ msg: 'OK' });
 
         // } else res.status(400).json(msg);
 
