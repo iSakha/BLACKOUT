@@ -388,8 +388,8 @@ exports.getAll = async (req, res) => {
 
                 e.quantity.onWarehouse.piter = {};
                 e.quantity.onWarehouse.piter.id = allEquip[i].idPiter;
-                e.quantity.onWarehouse.piter.name = allEquip[i].whidPiter;
-                e.quantity.onWarehouse.piter.qty = allEquip[i].qtyidPiter;
+                e.quantity.onWarehouse.piter.name = allEquip[i].whPiter;
+                e.quantity.onWarehouse.piter.qty = allEquip[i].qtyPiter;
 
                 equip.push(e);
             }
