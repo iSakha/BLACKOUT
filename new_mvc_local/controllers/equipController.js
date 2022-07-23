@@ -263,7 +263,7 @@ exports.getFixtureHistory = async (req, res) => {
         } catch (error) {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with getting fixtures history from database" });
-        }       
+        }
 
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
@@ -327,7 +327,7 @@ exports.fixturesMovement = async (req, res) => {
             return res.status(500).json({ msg: "We have problems with 'fixturesMovement'" });
         }
 
-        
+
 
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
@@ -341,13 +341,62 @@ exports.getAll = async (req, res) => {
     console.log("getAll");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
-
+    let equip = [];
     if (status.status === 200) {
 
         try {
             [allEquip] = await Equipment.getAll();
-            console.log("allEquip:", allEquip);
-            return res.status(200).json(allEquip);
+            // console.log("allEquip:", allEquip);
+
+            for (let i = 0; i < allEquip.length; i++) {
+                let e = new Equipment();
+                console.log(e);
+                e.id = allEquip[i].id;
+                e.name = allEquip[i].name;
+                e.manufactor = allEquip[i].manufactor;
+                e.img = allEquip[i].img;
+                e.category.idDep = allEquip[i].idDep;
+                e.category.idCat = allEquip[i].idCat;
+                e.category.idModel = allEquip[i].idModel;
+                e.deviceData.weight = allEquip[i].weight;
+                e.deviceData.power = allEquip[i].power;
+                e.deviceData.transportWeight = allEquip[i].transportWeight;
+                e.deviceData.volume = allEquip[i].volume;
+                e.case.inCase = allEquip[i].inCase;
+                e.case.length = allEquip[i].caseLength;
+                e.case.width = allEquip[i].caseWidth;
+                e.case.height = allEquip[i].caseHeight;
+
+                e.quantity = {};
+                e.quantity.all = allEquip[i].qtyAll;
+                e.quantity.onWarehouse = {};
+                
+                e.quantity.onWarehouse.minsk = {};
+                e.quantity.onWarehouse.minsk.id = allEquip[i].idMinsk;
+                e.quantity.onWarehouse.minsk.name = allEquip[i].whMinsk;
+                e.quantity.onWarehouse.minsk.qty = allEquip[i].qtyMinsk;
+
+                e.quantity.onWarehouse.moscow = {};
+                e.quantity.onWarehouse.moscow.id = allEquip[i].idMoscow;
+                e.quantity.onWarehouse.moscow.name = allEquip[i].whMoscow;
+                e.quantity.onWarehouse.moscow.qty = allEquip[i].qtyMoscow;
+
+                e.quantity.onWarehouse.kazan = {};
+                e.quantity.onWarehouse.kazan.id = allEquip[i].idKazan;
+                e.quantity.onWarehouse.kazan.name = allEquip[i].whKazan;
+                e.quantity.onWarehouse.kazan.qty = allEquip[i].qtyKazan;
+
+                e.quantity.onWarehouse.piter = {};
+                e.quantity.onWarehouse.piter.id = allEquip[i].idPiter;
+                e.quantity.onWarehouse.piter.name = allEquip[i].whidPiter;
+                e.quantity.onWarehouse.piter.qty = allEquip[i].qtyidPiter;
+
+                equip.push(e);
+            }
+
+            // console.log(equip);
+
+            return res.status(200).json(equip);
         } catch (error) {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with getting department list from database" });
