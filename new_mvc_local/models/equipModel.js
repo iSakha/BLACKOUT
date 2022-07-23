@@ -6,6 +6,25 @@ module.exports = class Equipment {
 
     constructor() {
 
+        this.id = "001";
+        this.name = "001";
+        this.manufactor = "001";
+        this.img = "001";
+        this.category = {};
+        this.category.idDep = "001";
+        this.category.idCat = "001";
+        this.category.idModel = "001";
+        this.deviceData = {};
+        this.deviceData.weight = 18.1;
+        this.deviceData.power = 800;
+        this.deviceData.transportWeight = 6.66;
+        this.deviceData.volume = 0.228;
+        this.case = {};
+        this.case.inCase = 4;
+        this.case.length = 2.3;
+        this.case.width = 3.2;
+        this.case.height = 3.3;
+
     }
 
     static getDepartments() {
@@ -119,6 +138,14 @@ module.exports = class Equipment {
         try {
             let updateQuery = utils.updateMultiple(idWarehouse, idFixture);
             return db.query(updateQuery);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static getAll() {
+        try {
+            return db.execute('SELECT * FROM `v_equipment`');
         } catch (error) {
             return error;
         }

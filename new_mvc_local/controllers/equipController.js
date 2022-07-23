@@ -335,3 +335,27 @@ exports.fixturesMovement = async (req, res) => {
 
 
 }
+
+exports.getAll = async (req, res) => {
+
+    console.log("getAll");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+    if (status.status === 200) {
+
+        try {
+            [allEquip] = await Equipment.getAll();
+            console.log("allEquip:", allEquip);
+            return res.status(200).json(allEquip);
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with getting department list from database" });
+        }
+
+    } else {
+        return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
