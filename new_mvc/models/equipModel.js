@@ -75,7 +75,7 @@ module.exports = class Equipment {
         id = id + ".___";
 
         try {
-            return db.execute('SELECT * FROM `t_equipment` WHERE idFixture LIKE ?', [id]);
+            return db.execute('SELECT * FROM `v_equipment` WHERE idFixture LIKE ?', [id]);
         } catch (error) {
             return error;
         }

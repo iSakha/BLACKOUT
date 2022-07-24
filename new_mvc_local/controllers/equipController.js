@@ -143,8 +143,6 @@ exports.getFixtureByDepCatName = async (req, res) => {
 
 exports.getFixturesByModelName = async (req, res) => {
 
-
-
     let fixtureArr = [];
 
     console.log("getFixtureByID");
@@ -426,39 +424,39 @@ exports.getAllModels = async (req, res) => {
                 e.quantity.all.qtyBroken = qty[i].qtyBroken;
                 e.quantity.all.qtyCondWork = qty[i].qty - qty[i].qtyWork - qty[i].qtyBroken;
 
-                e.quantity.onWarehouse = {};
+                e.quantity.onWarehouse = [{}];
 
-                e.quantity.onWarehouse.minsk = {};
-                e.quantity.onWarehouse.minsk.id = 2;
-                e.quantity.onWarehouse.minsk.name = "Минск";
-                e.quantity.onWarehouse.minsk.qty = qty[i].qtyMinsk;
-                e.quantity.onWarehouse.minsk.qtyWork = qty[i].qtyMinsk_work;
-                e.quantity.onWarehouse.minsk.qtyBroken = qty[i].qtyMinsk_broken;
-                e.quantity.onWarehouse.minsk.qtyCondWork = qty[i].qtyMinsk_cond_w;
+                e.quantity.onWarehouse[0] = {};
+                e.quantity.onWarehouse[0].id = 2;
+                e.quantity.onWarehouse[0].name = "Минск";
+                e.quantity.onWarehouse[0].qty = qty[i].qtyMinsk;
+                e.quantity.onWarehouse[0].qtyWork = qty[i].qtyMinsk_work;
+                e.quantity.onWarehouse[0].qtyBroken = qty[i].qtyMinsk_broken;
+                e.quantity.onWarehouse[0].qtyCondWork = qty[i].qtyMinsk_cond_w;
 
-                e.quantity.onWarehouse.moscow = {};
-                e.quantity.onWarehouse.moscow.id = 3;
-                e.quantity.onWarehouse.moscow.name = "Москва";
-                e.quantity.onWarehouse.moscow.qty = qty[i].qtyMoscow;
-                e.quantity.onWarehouse.moscow.qtyWork = qty[i].qtyMoscow_work;
-                e.quantity.onWarehouse.moscow.qtyBroken = qty[i].qtyMoscow_broken;
-                e.quantity.onWarehouse.moscow.qtyCondWork = qty[i].qtyMoscow_cond_w;
+                e.quantity.onWarehouse[1] = {};
+                e.quantity.onWarehouse[1].id = 3;
+                e.quantity.onWarehouse[1].name = "Москва";
+                e.quantity.onWarehouse[1].qty = qty[i].qtyMoscow;
+                e.quantity.onWarehouse[1].qtyWork = qty[i].qtyMoscow_work;
+                e.quantity.onWarehouse[1].qtyBroken = qty[i].qtyMoscow_broken;
+                e.quantity.onWarehouse[1].qtyCondWork = qty[i].qtyMoscow_cond_w;
 
-                e.quantity.onWarehouse.kazan = {};
-                e.quantity.onWarehouse.kazan.id = 4;
-                e.quantity.onWarehouse.kazan.name = "Казань";
-                e.quantity.onWarehouse.kazan.qty = qty[i].qtyKazan;
-                e.quantity.onWarehouse.kazan.qtyWork = qty[i].qtyKazan_work;
-                e.quantity.onWarehouse.kazan.qtyBroken = qty[i].qtyKazan_broken;
-                e.quantity.onWarehouse.kazan.qtyCondWork = qty[i].qtyKazan_cond_w;
+                e.quantity.onWarehouse[2] = {};
+                e.quantity.onWarehouse[2].id = 4;
+                e.quantity.onWarehouse[2].name = "Казань";
+                e.quantity.onWarehouse[2].qty = qty[i].qtyKazan;
+                e.quantity.onWarehouse[2].qtyWork = qty[i].qtyKazan_work;
+                e.quantity.onWarehouse[2].qtyBroken = qty[i].qtyKazan_broken;
+                e.quantity.onWarehouse[2].qtyCondWork = qty[i].qtyKazan_cond_w;
 
-                e.quantity.onWarehouse.piter = {};
-                e.quantity.onWarehouse.piter.id = 5;
-                e.quantity.onWarehouse.piter.name = "Питер";
-                e.quantity.onWarehouse.piter.qty = qty[i].qtyPiter;
-                e.quantity.onWarehouse.piter.qtyWork = qty[i].qtyPiter_work;
-                e.quantity.onWarehouse.piter.qtyBroken = qty[i].qtyPiter_broken;
-                e.quantity.onWarehouse.piter.qtyCondWork = qty[i].qtyPiter_cond_w;
+                e.quantity.onWarehouse[3] = {};
+                e.quantity.onWarehouse[3].id = 5;
+                e.quantity.onWarehouse[3].name = "Питер";
+                e.quantity.onWarehouse[3].qty = qty[i].qtyPiter;
+                e.quantity.onWarehouse[3].qtyWork = qty[i].qtyPiter_work;
+                e.quantity.onWarehouse[3].qtyBroken = qty[i].qtyPiter_broken;
+                e.quantity.onWarehouse[3].qtyCondWork = qty[i].qtyPiter_cond_w;
 
                 equipModels.push(e);
             }
@@ -526,39 +524,39 @@ exports.getOneModel = async (req, res) => {
             e.quantity.all.qtyBroken = qty[0].qtyBroken;
             e.quantity.all.qtyCondWork = qty[0].qty - qty[0].qtyWork - qty[0].qtyBroken;
 
-            e.quantity.onWarehouse = {};
+            e.quantity.onWarehouse = [{}];
 
-            e.quantity.onWarehouse.minsk = {};
-            e.quantity.onWarehouse.minsk.id = 2;
-            e.quantity.onWarehouse.minsk.name = "Минск";
-            e.quantity.onWarehouse.minsk.qty = qty[0].qtyMinsk;
-            e.quantity.onWarehouse.minsk.qtyWork = qty[0].qtyMinsk_work;
-            e.quantity.onWarehouse.minsk.qtyBroken = qty[0].qtyMinsk_broken;
-            e.quantity.onWarehouse.minsk.qtyCondWork = qty[0].qtyMinsk_cond_w;
+            e.quantity.onWarehouse[0] = {};
+            e.quantity.onWarehouse[0].id = 2;
+            e.quantity.onWarehouse[0].name = "Минск";
+            e.quantity.onWarehouse[0].qty = qty[0].qtyMinsk;
+            e.quantity.onWarehouse[0].qtyWork = qty[0].qtyMinsk_work;
+            e.quantity.onWarehouse[0].qtyBroken = qty[0].qtyMinsk_broken;
+            e.quantity.onWarehouse[0].qtyCondWork = qty[0].qtyMinsk_cond_w;
 
-            e.quantity.onWarehouse.moscow = {};
-            e.quantity.onWarehouse.moscow.id = 3;
-            e.quantity.onWarehouse.moscow.name = "Москва";
-            e.quantity.onWarehouse.moscow.qty = qty[0].qtyMoscow;
-            e.quantity.onWarehouse.moscow.qtyWork = qty[0].qtyMoscow_work;
-            e.quantity.onWarehouse.moscow.qtyBroken = qty[0].qtyMoscow_broken;
-            e.quantity.onWarehouse.moscow.qtyCondWork = qty[0].qtyMoscow_cond_w;
+            e.quantity.onWarehouse[1] = {};
+            e.quantity.onWarehouse[1].id = 3;
+            e.quantity.onWarehouse[1].name = "Москва";
+            e.quantity.onWarehouse[1].qty = qty[0].qtyMoscow;
+            e.quantity.onWarehouse[1].qtyWork = qty[0].qtyMoscow_work;
+            e.quantity.onWarehouse[1].qtyBroken = qty[0].qtyMoscow_broken;
+            e.quantity.onWarehouse[1].qtyCondWork = qty[0].qtyMoscow_cond_w;
 
-            e.quantity.onWarehouse.kazan = {};
-            e.quantity.onWarehouse.kazan.id = 4;
-            e.quantity.onWarehouse.kazan.name = "Казань";
-            e.quantity.onWarehouse.kazan.qty = qty[0].qtyKazan;
-            e.quantity.onWarehouse.kazan.qtyWork = qty[0].qtyKazan_work;
-            e.quantity.onWarehouse.kazan.qtyBroken = qty[0].qtyKazan_broken;
-            e.quantity.onWarehouse.kazan.qtyCondWork = qty[0].qtyKazan_cond_w;
+            e.quantity.onWarehouse[2] = {};
+            e.quantity.onWarehouse[2].id = 4;
+            e.quantity.onWarehouse[2].name = "Казань";
+            e.quantity.onWarehouse[2].qty = qty[0].qtyKazan;
+            e.quantity.onWarehouse[2].qtyWork = qty[0].qtyKazan_work;
+            e.quantity.onWarehouse[2].qtyBroken = qty[0].qtyKazan_broken;
+            e.quantity.onWarehouse[2].qtyCondWork = qty[0].qtyKazan_cond_w;
 
-            e.quantity.onWarehouse.piter = {};
-            e.quantity.onWarehouse.piter.id = 5;
-            e.quantity.onWarehouse.piter.name = "Питер";
-            e.quantity.onWarehouse.piter.qty = qty[0].qtyPiter;
-            e.quantity.onWarehouse.piter.qtyWork = qty[0].qtyPiter_work;
-            e.quantity.onWarehouse.piter.qtyBroken = qty[0].qtyPiter_broken;
-            e.quantity.onWarehouse.piter.qtyCondWork = qty[0].qtyPiter_cond_w;
+            e.quantity.onWarehouse[3] = {};
+            e.quantity.onWarehouse[3].id = 5;
+            e.quantity.onWarehouse[3].name = "Питер";
+            e.quantity.onWarehouse[3].qty = qty[0].qtyPiter;
+            e.quantity.onWarehouse[3].qtyWork = qty[0].qtyPiter_work;
+            e.quantity.onWarehouse[3].qtyBroken = qty[0].qtyPiter_broken;
+            e.quantity.onWarehouse[3].qtyCondWork = qty[0].qtyPiter_cond_w;
 
 
             // console.log(equip);

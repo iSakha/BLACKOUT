@@ -28,7 +28,7 @@ router.get('/deps/:idDep/cats/:idCat/name/:idName', equipController.getFixtureBy
 
 // Get fixtures by modelName
 // =====================================================================
-router.get('/fixt/:id', equipController.getFixturesByModelName);
+router.get('/device/:id', equipController.getFixturesByModelName);
 
 // Get qty fixtures by id
 // =====================================================================
