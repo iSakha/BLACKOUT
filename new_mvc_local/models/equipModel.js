@@ -13,7 +13,6 @@ module.exports = class Equipment {
         this.category = {};
         this.category.idDep = "001";
         this.category.idCat = "001";
-        this.category.idModel = "001";
         this.deviceData = {};
         this.deviceData.weight = 18.1;
         this.deviceData.power = 800;
@@ -76,7 +75,7 @@ module.exports = class Equipment {
         id = id + ".___";
 
         try {
-            return db.execute('SELECT * FROM `t_equipment` WHERE idFixture LIKE ?', [id]);
+            return db.execute('SELECT * FROM `v_equipment` WHERE idFixture LIKE ?', [id]);
         } catch (error) {
             return error;
         }
@@ -88,6 +87,14 @@ module.exports = class Equipment {
         console.log("idName:", idName);
         try {
             return db.execute('SELECT * FROM `t_equipment` WHERE idDep=? AND idCat=? AND idName=?', [idDep, idCat, idName]);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static getQty() {
+        try {
+            return db.execute('SELECT * FROM `v_qty`');
         } catch (error) {
             return error;
         }
@@ -143,9 +150,22 @@ module.exports = class Equipment {
         }
     }
 
-    static getAll() {
+    static getAllModels() {
         try {
-            return db.execute('SELECT * FROM `v_equipment`');
+            return db.execute('SELECT * FROM `v_equip_model`');
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static getOneModel(id) {
+        try {
+            const idDep = id.slice(0,3);
+            const idCat = id.slice(4,7);
+            id = id.slice(8,11);
+
+            return db.execute('SELECT * FROM `v_equip_model` WHERE `idDep`=? AND `idCat`=? AND `id`=?',[idDep, idCat, id]);
+
         } catch (error) {
             return error;
         }

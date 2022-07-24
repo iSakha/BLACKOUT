@@ -50,9 +50,13 @@ router.get('/history/:id', equipController.getFixtureHistoryByID);
 // =====================================================================
 router.post('/movement', equipController.fixturesMovement);
 
-// Get all equipment
+// Get all models
 // =====================================================================
-router.get('/all', equipController.getAll);
+router.get('/allmodels', equipController.getAllModels);
+
+// Get fixtures by model
+// =====================================================================
+router.get('/allmodels/:id', equipController.getOneModel);
 
 
 

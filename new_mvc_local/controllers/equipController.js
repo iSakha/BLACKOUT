@@ -143,6 +143,10 @@ exports.getFixtureByDepCatName = async (req, res) => {
 
 exports.getFixturesByModelName = async (req, res) => {
 
+
+
+    let fixtureArr = [];
+
     console.log("getFixtureByID");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
@@ -151,9 +155,46 @@ exports.getFixturesByModelName = async (req, res) => {
 
         try {
             [fixture] = await Equipment.getFixturesByModelName(req.params.id);
-            console.log("fixture:", fixture);
+
             fixture.shift();
-            return res.status(200).json(fixture);
+            console.log("fixture:", fixture);
+
+            for (let i = 0; i < fixture.length; i++) {
+
+                let fixtureObj = {};
+
+                fixtureObj.id = fixture[i].idFixture;
+                fixtureObj.whCode = fixture[i].whCode;
+                fixtureObj.sNumber = fixture[i].sNumber;
+                fixtureObj.uidCloudio = fixture[i].uidCloudio;
+
+                fixtureObj.model = {};
+                fixtureObj.model.id = fixtureObj.id.slice(12, 15);
+                fixtureObj.model.name = fixture[i].modelName;
+                fixtureObj.model.manufactor = fixture[i].manufactor;
+
+                fixtureObj.category = {};
+                fixtureObj.category.idDep = fixtureObj.id.slice(0, 3);
+                fixtureObj.category.idCat = fixtureObj.id.slice(4, 7);
+                fixtureObj.category.idModel = fixtureObj.id.slice(8, 11);
+
+                fixtureObj.warehouse = {};
+                fixtureObj.warehouse.id = fixture[i].idWarehouse;
+                fixtureObj.warehouse.name = fixture[i].whName;
+
+                fixtureObj.workStatus = {};
+                fixtureObj.workStatus.id = fixture[i].idFixtureState;
+                fixtureObj.workStatus.name = fixture[i].workStatus;
+
+                fixtureObj.whereStatus = {};
+                fixtureObj.whereStatus.id = 2;
+                fixtureObj.whereStatus.name = "На складе";
+
+                fixtureArr.push(fixtureObj);
+
+            }
+
+            return res.status(200).json(fixtureArr);
         } catch (error) {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with getting fixtures by id from database" });
@@ -336,70 +377,196 @@ exports.fixturesMovement = async (req, res) => {
 
 }
 
-exports.getAll = async (req, res) => {
+exports.getAllModels = async (req, res) => {
 
-    console.log("getAll");
+    let qty = [];
+
+    console.log("getAllModels");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
-    let equip = [];
+    let equipModels = [];
     if (status.status === 200) {
 
         try {
-            [allEquip] = await Equipment.getAll();
-            // console.log("allEquip:", allEquip);
+            [qty] = await Equipment.getQty();
+            console.log("qty:", qty)
 
-            for (let i = 0; i < allEquip.length; i++) {
+        } catch (error) {
+
+        }
+
+
+        try {
+            [allModels] = await Equipment.getAllModels();
+            // console.log("allModels:", allModels);
+
+            for (let i = 0; i < allModels.length; i++) {
                 let e = new Equipment();
                 console.log(e);
-                e.id = allEquip[i].id;
-                e.name = allEquip[i].name;
-                e.manufactor = allEquip[i].manufactor;
-                e.img = allEquip[i].img;
-                e.category.idDep = allEquip[i].idDep;
-                e.category.idCat = allEquip[i].idCat;
-                e.category.idModel = allEquip[i].idModel;
-                e.deviceData.weight = allEquip[i].weight;
-                e.deviceData.power = allEquip[i].power;
-                e.deviceData.transportWeight = allEquip[i].transportWeight;
-                e.deviceData.volume = allEquip[i].volume;
-                e.case.inCase = allEquip[i].inCase;
-                e.case.length = allEquip[i].caseLength;
-                e.case.width = allEquip[i].caseWidth;
-                e.case.height = allEquip[i].caseHeight;
+                e.id = allModels[i].id;
+                e.name = allModels[i].name;
+                e.manufactor = allModels[i].manufactor;
+                e.img = allModels[i].img;
+                e.category.idDep = allModels[i].idDep;
+                e.category.idCat = allModels[i].idCat;
+
+                e.deviceData.weight = allModels[i].weight;
+                e.deviceData.power = allModels[i].power;
+                e.deviceData.transportWeight = allModels[i].transportWeight;
+                e.deviceData.volume = allModels[i].volume;
+                e.case.inCase = allModels[i].inCase;
+                e.case.length = allModels[i].caseLength;
+                e.case.width = allModels[i].caseWidth;
+                e.case.height = allModels[i].caseHeight;
 
                 e.quantity = {};
-                e.quantity.all = allEquip[i].qtyAll;
+                e.quantity.all = {};
+                e.quantity.all.qty = qty[i].qty;
+                e.quantity.all.qtyWork = qty[i].qtyWork;
+                e.quantity.all.qtyBroken = qty[i].qtyBroken;
+                e.quantity.all.qtyCondWork = qty[i].qty - qty[i].qtyWork - qty[i].qtyBroken;
+
                 e.quantity.onWarehouse = {};
-                
+
                 e.quantity.onWarehouse.minsk = {};
-                e.quantity.onWarehouse.minsk.id = allEquip[i].idMinsk;
-                e.quantity.onWarehouse.minsk.name = allEquip[i].whMinsk;
-                e.quantity.onWarehouse.minsk.qty = allEquip[i].qtyMinsk;
+                e.quantity.onWarehouse.minsk.id = 2;
+                e.quantity.onWarehouse.minsk.name = "Минск";
+                e.quantity.onWarehouse.minsk.qty = qty[i].qtyMinsk;
+                e.quantity.onWarehouse.minsk.qtyWork = qty[i].qtyMinsk_work;
+                e.quantity.onWarehouse.minsk.qtyBroken = qty[i].qtyMinsk_broken;
+                e.quantity.onWarehouse.minsk.qtyCondWork = qty[i].qtyMinsk_cond_w;
 
                 e.quantity.onWarehouse.moscow = {};
-                e.quantity.onWarehouse.moscow.id = allEquip[i].idMoscow;
-                e.quantity.onWarehouse.moscow.name = allEquip[i].whMoscow;
-                e.quantity.onWarehouse.moscow.qty = allEquip[i].qtyMoscow;
+                e.quantity.onWarehouse.moscow.id = 3;
+                e.quantity.onWarehouse.moscow.name = "Москва";
+                e.quantity.onWarehouse.moscow.qty = qty[i].qtyMoscow;
+                e.quantity.onWarehouse.moscow.qtyWork = qty[i].qtyMoscow_work;
+                e.quantity.onWarehouse.moscow.qtyBroken = qty[i].qtyMoscow_broken;
+                e.quantity.onWarehouse.moscow.qtyCondWork = qty[i].qtyMoscow_cond_w;
 
                 e.quantity.onWarehouse.kazan = {};
-                e.quantity.onWarehouse.kazan.id = allEquip[i].idKazan;
-                e.quantity.onWarehouse.kazan.name = allEquip[i].whKazan;
-                e.quantity.onWarehouse.kazan.qty = allEquip[i].qtyKazan;
+                e.quantity.onWarehouse.kazan.id = 4;
+                e.quantity.onWarehouse.kazan.name = "Казань";
+                e.quantity.onWarehouse.kazan.qty = qty[i].qtyKazan;
+                e.quantity.onWarehouse.kazan.qtyWork = qty[i].qtyKazan_work;
+                e.quantity.onWarehouse.kazan.qtyBroken = qty[i].qtyKazan_broken;
+                e.quantity.onWarehouse.kazan.qtyCondWork = qty[i].qtyKazan_cond_w;
 
                 e.quantity.onWarehouse.piter = {};
-                e.quantity.onWarehouse.piter.id = allEquip[i].idPiter;
-                e.quantity.onWarehouse.piter.name = allEquip[i].whPiter;
-                e.quantity.onWarehouse.piter.qty = allEquip[i].qtyPiter;
+                e.quantity.onWarehouse.piter.id = 5;
+                e.quantity.onWarehouse.piter.name = "Питер";
+                e.quantity.onWarehouse.piter.qty = qty[i].qtyPiter;
+                e.quantity.onWarehouse.piter.qtyWork = qty[i].qtyPiter_work;
+                e.quantity.onWarehouse.piter.qtyBroken = qty[i].qtyPiter_broken;
+                e.quantity.onWarehouse.piter.qtyCondWork = qty[i].qtyPiter_cond_w;
 
-                equip.push(e);
+                equipModels.push(e);
             }
 
             // console.log(equip);
 
-            return res.status(200).json(equip);
+            return res.status(200).json(equipModels);
         } catch (error) {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with getting department list from database" });
+        }
+
+    } else {
+        return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
+
+exports.getOneModel = async (req, res) => {
+    let qty;
+    console.log("getOnemodel");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+    // let equipModels = [];
+    if (status.status === 200) {
+
+        try {
+            let id = req.params.id + ".000";
+            [qty] = await Equipment.getQtyById(id);
+            console.log("qty:", qty)
+
+        } catch (error) {
+
+        }
+
+        try {
+            [model] = await Equipment.getOneModel(req.params.id);
+            // console.log("model:", model);
+
+            let e = new Equipment();
+            console.log(e);
+            e.id = model[0].id;
+            e.name = model[0].name;
+            e.manufactor = model[0].manufactor;
+            e.img = model[0].img;
+            e.category.idDep = model[0].idDep;
+            e.category.idCat = model[0].idCat;
+
+            e.deviceData.weight = model[0].weight;
+            e.deviceData.power = model[0].power;
+            e.deviceData.transportWeight = model[0].transportWeight;
+            e.deviceData.volume = model[0].volume;
+            e.case.inCase = model[0].inCase;
+            e.case.length = model[0].caseLength;
+            e.case.width = model[0].caseWidth;
+            e.case.height = model[0].caseHeight;
+
+
+
+            e.quantity = {};
+            e.quantity.all = {};
+            e.quantity.all.qty = qty[0].qty;
+            e.quantity.all.qtyWork = qty[0].qtyWork;
+            e.quantity.all.qtyBroken = qty[0].qtyBroken;
+            e.quantity.all.qtyCondWork = qty[0].qty - qty[0].qtyWork - qty[0].qtyBroken;
+
+            e.quantity.onWarehouse = {};
+
+            e.quantity.onWarehouse.minsk = {};
+            e.quantity.onWarehouse.minsk.id = 2;
+            e.quantity.onWarehouse.minsk.name = "Минск";
+            e.quantity.onWarehouse.minsk.qty = qty[0].qtyMinsk;
+            e.quantity.onWarehouse.minsk.qtyWork = qty[0].qtyMinsk_work;
+            e.quantity.onWarehouse.minsk.qtyBroken = qty[0].qtyMinsk_broken;
+            e.quantity.onWarehouse.minsk.qtyCondWork = qty[0].qtyMinsk_cond_w;
+
+            e.quantity.onWarehouse.moscow = {};
+            e.quantity.onWarehouse.moscow.id = 3;
+            e.quantity.onWarehouse.moscow.name = "Москва";
+            e.quantity.onWarehouse.moscow.qty = qty[0].qtyMoscow;
+            e.quantity.onWarehouse.moscow.qtyWork = qty[0].qtyMoscow_work;
+            e.quantity.onWarehouse.moscow.qtyBroken = qty[0].qtyMoscow_broken;
+            e.quantity.onWarehouse.moscow.qtyCondWork = qty[0].qtyMoscow_cond_w;
+
+            e.quantity.onWarehouse.kazan = {};
+            e.quantity.onWarehouse.kazan.id = 4;
+            e.quantity.onWarehouse.kazan.name = "Казань";
+            e.quantity.onWarehouse.kazan.qty = qty[0].qtyKazan;
+            e.quantity.onWarehouse.kazan.qtyWork = qty[0].qtyKazan_work;
+            e.quantity.onWarehouse.kazan.qtyBroken = qty[0].qtyKazan_broken;
+            e.quantity.onWarehouse.kazan.qtyCondWork = qty[0].qtyKazan_cond_w;
+
+            e.quantity.onWarehouse.piter = {};
+            e.quantity.onWarehouse.piter.id = 5;
+            e.quantity.onWarehouse.piter.name = "Питер";
+            e.quantity.onWarehouse.piter.qty = qty[0].qtyPiter;
+            e.quantity.onWarehouse.piter.qtyWork = qty[0].qtyPiter_work;
+            e.quantity.onWarehouse.piter.qtyBroken = qty[0].qtyPiter_broken;
+            e.quantity.onWarehouse.piter.qtyCondWork = qty[0].qtyPiter_cond_w;
+
+
+            // console.log(equip);
+
+            return res.status(200).json(e);
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with getting one model from database" });
         }
 
     } else {
