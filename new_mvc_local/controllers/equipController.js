@@ -167,7 +167,7 @@ exports.getFixturesByModelName = async (req, res) => {
                 fixtureObj.uidCloudio = fixture[i].uidCloudio;
 
                 fixtureObj.model = {};
-                fixtureObj.model.id = fixtureObj.id.slice(12, 15);
+                fixtureObj.model.id = fixtureObj.id.slice(12, 16);
                 fixtureObj.model.name = fixture[i].modelName;
                 fixtureObj.model.manufactor = fixture[i].manufactor;
 
