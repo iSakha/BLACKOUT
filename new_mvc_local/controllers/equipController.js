@@ -372,7 +372,6 @@ exports.fixturesMovement = async (req, res) => {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
 
-
 }
 
 exports.getAllModels = async (req, res) => {
@@ -485,7 +484,7 @@ exports.getOneModel = async (req, res) => {
     if (status.status === 200) {
 
         try {
-            let id = req.params.id + ".000";
+            let id = req.params.id + ".0000";
             [qty] = await Equipment.getQtyById(id);
             console.log("qty:", qty)
 

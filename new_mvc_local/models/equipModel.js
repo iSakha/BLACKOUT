@@ -23,6 +23,12 @@ module.exports = class Equipment {
         this.case.length = 2.3;
         this.case.width = 3.2;
         this.case.height = 3.3;
+        this.quantity = {};
+        this.quantity.all = {};
+        this.quantity.all.qty = 1;
+        this.quantity.all.qtyWork = 1;
+        this.quantity.all.qtyBroken = 1;
+        this.quantity.all.qtyCondWork = 1;
 
     }
 
