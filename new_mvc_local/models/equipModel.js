@@ -72,7 +72,7 @@ module.exports = class Equipment {
 
     static getFixturesByModelName(id) {
 
-        id = id + ".___";
+        id = id + ".____";
 
         try {
             return db.execute('SELECT * FROM `v_equipment` WHERE idFixture LIKE ?', [id]);
