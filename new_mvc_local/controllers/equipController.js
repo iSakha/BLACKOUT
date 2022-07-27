@@ -233,6 +233,53 @@ exports.getQtyById = async (req, res) => {
 // Set fixture status
 // =====================================================================
 
+exports.workStatusChanged = async (req, res) => {
+
+    let fixtureRow = [];
+
+    console.log("changeStatusById");
+    console.log("req.body:", req.body);
+
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+    if (status.status === 200) {
+
+        fixtureRow.push(req.body.id);
+        fixtureRow.push(req.body.note);
+        fixtureRow.push(req.body.workStatus.id);
+        fixtureRow.push(Date.now());
+
+        console.log("fixtureRow:", fixtureRow);
+
+        try {
+            [fixture] = await Equipment.writeToHistory(fixtureRow);
+            console.log("writeToHistory:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with 'writeToHistory'" });
+        }
+
+        try {
+
+            [fixture] = await Equipment.changeStatusById(req.body.workStatus.id, req.body.id);
+            console.log("changeStatusById:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with 'changeStatusById'" });
+        }
+
+        return res.status(200).json({ msg: "Запись прибора в базу прошла успешно." });
+
+    } else {
+        return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
+
 exports.changeStatusById = async (req, res) => {
 
     let fixtureRow = [];

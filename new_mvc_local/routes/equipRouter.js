@@ -38,6 +38,10 @@ router.get('/qty/:id', equipController.getQtyById);
 // =====================================================================
 router.post('/fixturelife/:status', equipController.changeStatusById);
 
+// Device workStatus Change
+// =====================================================================
+router.post('/workStatus', equipController.workStatusChanged);
+
 // Get fixtures history
 // =====================================================================
 router.get('/history', equipController.getFixtureHistory);
