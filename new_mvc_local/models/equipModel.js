@@ -164,6 +164,23 @@ module.exports = class Equipment {
         }
     }
 
+    static modelsMovement(idWhOut, idWhIn, idModel, modelQty) {
+        idModel = idModel + ".____";
+        modelQty = modelQty + 1;
+        try {
+            return db.execute('SELECT * FROM `t_equipment` WHERE idFixture LIKE ? LIMIT ?', [idModel, modelQty]);
+        } catch (error) {
+            return error;
+        }
+
+        // try {
+        //     let updateQuery = utils.modelsMovement(idWarehouse, idFixture);
+        //     return db.query(updateQuery);
+        // } catch (error) {
+        //     return error;
+        // }
+    }
+
     static getAllModels() {
         try {
             return db.execute('SELECT * FROM `v_equip_model`');
