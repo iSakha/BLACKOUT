@@ -154,7 +154,6 @@ exports.getFixturesByModelName = async (req, res) => {
         try {
             [fixture] = await Equipment.getFixturesByModelName(req.params.id);
 
-            fixture.shift();
             console.log("fixture:", fixture);
 
             for (let i = 0; i < fixture.length; i++) {
@@ -347,13 +346,9 @@ exports.fixturesMovement = async (req, res) => {
 
     if (status.status === 200) {
 
-        // let idFixture = [];
-
         const idFixture = req.body.map(item => item.idFixture);
         idFixture.shift();
-        // for (let i = 1; i < req.body.length; i++) {
-        //     idFixture.push(req.body[i].idFixture);
-        // }
+
 
         console.log("idFixture:", idFixture);
 
