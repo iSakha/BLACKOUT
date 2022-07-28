@@ -164,10 +164,12 @@ module.exports = class Equipment {
         }
     }
 
-    static modelsMovement(idWhOut, idWhIn, idModel, modelQty) {
+    // Models transfer (two functions)
+    // =============================================================
+    static modelsMovement(idWhOut, idModel, modelQty) {
 
         const idModelArr = idModel.map(item => item + ".____");
-        console.log("idModelArr:",idModelArr)
+        console.log("idModelArr:", idModelArr)
 
         try {
 
@@ -178,6 +180,16 @@ module.exports = class Equipment {
         }
     }
 
+    static setNewWarehouse(idWhIn, idModels) {
+
+        try {
+            let updateQuery = utils.updateMultiple(idWhIn, idModels);
+            return db.query(updateQuery);
+        } catch (error) {
+            return error;
+        }
+    }
+    // =============================================================
     static getAllModels() {
         try {
             return db.execute('SELECT * FROM `v_equip_model`');

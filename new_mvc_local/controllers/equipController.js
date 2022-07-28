@@ -425,6 +425,7 @@ exports.modelsMovement = async (req, res) => {
     if (status.status === 200) {
 
         const idModel = req.body[0].model.map(item => item.id);
+        const modelName = req.body[0].model.map(item => item.name);
         const modelQty = req.body[0].model.map(item => item.qtt);
         const idWhOut = req.body[0].warehouseOut.id;
         const idWhIn = req.body[0].warehouseIn.id;
@@ -435,14 +436,36 @@ exports.modelsMovement = async (req, res) => {
         console.log("idWhIn:", idWhIn);
 
         try {
-            [model] = await Equipment.modelsMovement(idWhOut, idWhIn, idModel, modelQty);
+            [model] = await Equipment.modelsMovement(idWhOut, idModel, modelQty);
             console.log("fixturesMovement:", model);
+            let filtered = [];
+            for (let i = 0; i < idModel.length; i++) {
+                filtered[i] = model.filter(item => {
+                    let id = item.idFixture.slice(0, 11);
+                    if (id === idModel[i]) {
+                        return true;
+                    }
+                })
+                // Контроль наличия приборов на складе отгрузки
+                if (filtered[i].length < modelQty[i]) {
+                    let msgObj = { msg: `Недостаточно ${modelName[i]} на складе ${req.body[0].warehouseOut.name}` };
+                    return res.status(200).json(msgObj);
+                }
+                let idModelRow = model.map(item => item.idFixture);
 
-            
+                try {
+                    const [fixtures] = await Equipment.setNewWarehouse(idWhIn, idModelRow);
+                    console.log("fixturesMovement:", model);
+                    return res.status(200).json(fixtures);
+                } catch (error) {
+                    
+                }
+
+            }
             // if(model.length < modelQty) {
             //     return res.status(200).json({msg:`Недостаточно приборов на складе ${req.body[0].warehouseOut.name}`});
             // }
-            return res.status(200).json(model);
+            // return res.status(200).json(model);
             // return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
         } catch (error) {
             console.log("error:", error);
