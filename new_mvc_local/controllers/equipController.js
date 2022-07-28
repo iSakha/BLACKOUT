@@ -393,16 +393,52 @@ exports.fixturesMovement = async (req, res) => {
 
     if (status.status === 200) {
 
-        const idFixture = req.body.map(item => item.idFixture);
-        idFixture.shift();
-
+        const idFixture = req.body[0].devices.map(item => item.id);
 
         console.log("idFixture:", idFixture);
 
         try {
-            [fixture] = await Equipment.fixturesMovement(req.body[0].idWarehouse, idFixture);
+            [fixture] = await Equipment.fixturesMovement(req.body[0].warehouse.id, idFixture);
             console.log("fixturesMovement:", fixture);
             return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with 'fixturesMovement'" });
+        }
+
+
+
+    } else {
+        return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+}
+
+exports.modelsMovement = async (req, res) => {
+
+    console.log("modelsMovement");
+    console.log("req.body:", req.body);
+
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+    if (status.status === 200) {
+
+        const idModel = req.body[0].model.map(item => item.id)[0];
+        const modelQty = req.body[0].model.map(item => item.qtt)[0];
+        const idWhOut = req.body[0].warehouseOut.id;
+        const idWhIn = req.body[0].warehouseIn.id;
+
+        console.log("idModel:", idModel);
+        console.log("modelQty:", modelQty);
+        console.log("idWhOut:", idWhOut);
+        console.log("idWhIn:", idWhIn);
+
+        try {
+            [model] = await Equipment.modelsMovement(idWhOut, idWhIn, idModel, modelQty);
+            console.log("fixturesMovement:", model);
+            return res.status(200).json(model);
+            // return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
         } catch (error) {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with 'fixturesMovement'" });

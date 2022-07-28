@@ -314,11 +314,17 @@ function updateMultiple(idWarehouse, idFixture) {
     return q;
 }
 
+
+function modelsMovement() {
+
+}
+
 module.exports = {
     currentDateTime: currentDateTime,
     createEventId: createEventId,
     convertRowToObj: convertRowToObj,
     convertObjToRow: convertObjToRow,
     convertLocationsToObj: convertLocationsToObj,
-    updateMultiple: updateMultiple
+    updateMultiple: updateMultiple,
+    modelsMovement:modelsMovement
 };

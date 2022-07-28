@@ -52,7 +52,11 @@ router.get('/history/:id', equipController.getFixtureHistoryByID);
 
 // Fixtures movement
 // =====================================================================
-router.post('/movement', equipController.fixturesMovement);
+router.post('/devicesmove', equipController.fixturesMovement);
+
+// Models movement
+// =====================================================================
+router.post('/modelsmove', equipController.modelsMovement);
 
 // Get all models
 // =====================================================================
