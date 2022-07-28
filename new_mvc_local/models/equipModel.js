@@ -165,20 +165,17 @@ module.exports = class Equipment {
     }
 
     static modelsMovement(idWhOut, idWhIn, idModel, modelQty) {
-        idModel = idModel + ".____";
-        modelQty = modelQty + 1;
+
+        const idModelArr = idModel.map(item => item + ".____");
+        console.log("idModelArr:",idModelArr)
+
         try {
-            return db.execute('SELECT * FROM `t_equipment` WHERE idFixture LIKE ? LIMIT ?', [idModel, modelQty]);
+
+            let q = utils.modelsMovement(idWhOut, idModelArr, modelQty);
+            return db.execute(q);
         } catch (error) {
             return error;
         }
-
-        // try {
-        //     let updateQuery = utils.modelsMovement(idWarehouse, idFixture);
-        //     return db.query(updateQuery);
-        // } catch (error) {
-        //     return error;
-        // }
     }
 
     static getAllModels() {

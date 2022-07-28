@@ -424,8 +424,8 @@ exports.modelsMovement = async (req, res) => {
 
     if (status.status === 200) {
 
-        const idModel = req.body[0].model.map(item => item.id)[0];
-        const modelQty = req.body[0].model.map(item => item.qtt)[0];
+        const idModel = req.body[0].model.map(item => item.id);
+        const modelQty = req.body[0].model.map(item => item.qtt);
         const idWhOut = req.body[0].warehouseOut.id;
         const idWhIn = req.body[0].warehouseIn.id;
 
@@ -437,6 +437,11 @@ exports.modelsMovement = async (req, res) => {
         try {
             [model] = await Equipment.modelsMovement(idWhOut, idWhIn, idModel, modelQty);
             console.log("fixturesMovement:", model);
+
+            
+            // if(model.length < modelQty) {
+            //     return res.status(200).json({msg:`Недостаточно приборов на складе ${req.body[0].warehouseOut.name}`});
+            // }
             return res.status(200).json(model);
             // return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
         } catch (error) {
