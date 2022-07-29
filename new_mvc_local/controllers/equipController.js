@@ -456,7 +456,8 @@ exports.modelsMovement = async (req, res) => {
                 try {
                     const [fixtures] = await Equipment.setNewWarehouse(idWhIn, idModelRow);
                     console.log("fixturesMovement:", model);
-                    return res.status(200).json(fixtures);
+                    return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
+                    // return res.status(200).json(fixtures);
                 } catch (error) {
                     
                 }
