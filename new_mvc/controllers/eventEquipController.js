@@ -35,7 +35,7 @@ exports.addEventEquip = async (req, res) => {
             console.log("result newEventEquip:", newEventEquip);
         } catch (error) {
             console.log("error:", error);
-            res.status(500).json({ msg: "We have problems with writing booked equipment to database" });
+            res.status(500).json({ msg: "We have problems with writing event equipment to database" });
             return {
                 error: true,
                 message: 'Error from database'

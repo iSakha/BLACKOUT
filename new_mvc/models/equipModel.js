@@ -23,6 +23,12 @@ module.exports = class Equipment {
         this.case.length = 2.3;
         this.case.width = 3.2;
         this.case.height = 3.3;
+        this.quantity = {};
+        this.quantity.all = {};
+        this.quantity.all.qty = 1;
+        this.quantity.all.qtyWork = 1;
+        this.quantity.all.qtyBroken = 1;
+        this.quantity.all.qtyCondWork = 1;
 
     }
 
@@ -72,7 +78,8 @@ module.exports = class Equipment {
 
     static getFixturesByModelName(id) {
 
-        id = id + ".___";
+        id = id + ".____";
+        console.log("id:", id);
 
         try {
             return db.execute('SELECT * FROM `v_equipment` WHERE idFixture LIKE ?', [id]);
@@ -110,13 +117,20 @@ module.exports = class Equipment {
 
     static writeToHistory(row) {
         try {
-            return db.execute('INSERT INTO `t_repair_history` (idFixture, idAction, comments, spareParts, date, idUser, unixTime, idEvent) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', row);
+            console.log("writeToHistory");
+            console.log("row:", row);
+            return db.execute('INSERT INTO `t_repair_history` (idFixture, comments, idUser, unixTime) VALUES (?, ?, ?, ?)', row);
         } catch (error) {
             return error;
         }
     }
 
     static changeStatusById(idStatus, idFixture) {
+
+        console.log("changeStatusById");
+        console.log("idStatus:", idStatus);
+        console.log("idFixture:", idFixture);
+
         try {
             return db.execute('UPDATE `t_equipment` SET `idFixtureState`=? WHERE `idFixture`=?', [idStatus, idFixture]);
         } catch (error) {
@@ -150,6 +164,32 @@ module.exports = class Equipment {
         }
     }
 
+    // Models transfer (two functions)
+    // =============================================================
+    static modelsMovement(idWhOut, idModel, modelQty) {
+
+        const idModelArr = idModel.map(item => item + ".____");
+        console.log("idModelArr:", idModelArr)
+
+        try {
+
+            let q = utils.modelsMovement(idWhOut, idModelArr, modelQty);
+            return db.execute(q);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static setNewWarehouse(idWhIn, idModels) {
+
+        try {
+            let updateQuery = utils.updateMultiple(idWhIn, idModels);
+            return db.query(updateQuery);
+        } catch (error) {
+            return error;
+        }
+    }
+    // =============================================================
     static getAllModels() {
         try {
             return db.execute('SELECT * FROM `v_equip_model`');
@@ -160,11 +200,11 @@ module.exports = class Equipment {
 
     static getOneModel(id) {
         try {
-            const idDep = id.slice(0,3);
-            const idCat = id.slice(4,7);
-            id = id.slice(8,11);
+            const idDep = id.slice(0, 3);
+            const idCat = id.slice(4, 7);
+            id = id.slice(8, 11);
 
-            return db.execute('SELECT * FROM `v_equip_model` WHERE `idDep`=? AND `idCat`=? AND `id`=?',[idDep, idCat, id]);
+            return db.execute('SELECT * FROM `v_equip_model` WHERE `idDep`=? AND `idCat`=? AND `id`=?', [idDep, idCat, id]);
 
         } catch (error) {
             return error;

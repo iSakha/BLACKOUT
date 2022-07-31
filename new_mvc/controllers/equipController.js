@@ -154,7 +154,6 @@ exports.getFixturesByModelName = async (req, res) => {
         try {
             [fixture] = await Equipment.getFixturesByModelName(req.params.id);
 
-            fixture.shift();
             console.log("fixture:", fixture);
 
             for (let i = 0; i < fixture.length; i++) {
@@ -167,7 +166,7 @@ exports.getFixturesByModelName = async (req, res) => {
                 fixtureObj.uidCloudio = fixture[i].uidCloudio;
 
                 fixtureObj.model = {};
-                fixtureObj.model.id = fixtureObj.id.slice(12, 15);
+                fixtureObj.model.id = fixtureObj.id.slice(12, 16);
                 fixtureObj.model.name = fixture[i].modelName;
                 fixtureObj.model.manufactor = fixture[i].manufactor;
 
@@ -233,6 +232,53 @@ exports.getQtyById = async (req, res) => {
 
 // Set fixture status
 // =====================================================================
+
+exports.workStatusChanged = async (req, res) => {
+
+    let fixtureRow = [];
+
+    console.log("changeStatusById");
+    console.log("req.body:", req.body);
+
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+    if (status.status === 200) {
+
+        fixtureRow.push(req.body.id);
+        fixtureRow.push(req.body.note);
+        fixtureRow.push(req.body.workStatus.id);
+        fixtureRow.push(Date.now());
+
+        console.log("fixtureRow:", fixtureRow);
+
+        try {
+            [fixture] = await Equipment.writeToHistory(fixtureRow);
+            console.log("writeToHistory:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with 'writeToHistory'" });
+        }
+
+        try {
+
+            [fixture] = await Equipment.changeStatusById(req.body.workStatus.id, req.body.id);
+            console.log("changeStatusById:", fixture);
+
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with 'changeStatusById'" });
+        }
+
+        return res.status(200).json({ msg: "Запись прибора в базу прошла успешно." });
+
+    } else {
+        return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+
+}
 
 exports.changeStatusById = async (req, res) => {
 
@@ -347,18 +393,12 @@ exports.fixturesMovement = async (req, res) => {
 
     if (status.status === 200) {
 
-        // let idFixture = [];
-
-        const idFixture = req.body.map(item => item.idFixture);
-        idFixture.shift();
-        // for (let i = 1; i < req.body.length; i++) {
-        //     idFixture.push(req.body[i].idFixture);
-        // }
+        const idFixture = req.body[0].devices.map(item => item.id);
 
         console.log("idFixture:", idFixture);
 
         try {
-            [fixture] = await Equipment.fixturesMovement(req.body[0].idWarehouse, idFixture);
+            [fixture] = await Equipment.fixturesMovement(req.body[0].warehouse.id, idFixture);
             console.log("fixturesMovement:", fixture);
             return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
         } catch (error) {
@@ -372,6 +412,72 @@ exports.fixturesMovement = async (req, res) => {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
 
+}
+
+exports.modelsMovement = async (req, res) => {
+
+    console.log("modelsMovement");
+    console.log("req.body:", req.body);
+
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
+
+    if (status.status === 200) {
+
+        const idModel = req.body[0].model.map(item => item.id);
+        const modelName = req.body[0].model.map(item => item.name);
+        const modelQty = req.body[0].model.map(item => item.qtt);
+        const idWhOut = req.body[0].warehouseOut.id;
+        const idWhIn = req.body[0].warehouseIn.id;
+
+        console.log("idModel:", idModel);
+        console.log("modelQty:", modelQty);
+        console.log("idWhOut:", idWhOut);
+        console.log("idWhIn:", idWhIn);
+
+        try {
+            [model] = await Equipment.modelsMovement(idWhOut, idModel, modelQty);
+            console.log("fixturesMovement:", model);
+            let filtered = [];
+            for (let i = 0; i < idModel.length; i++) {
+                filtered[i] = model.filter(item => {
+                    let id = item.idFixture.slice(0, 11);
+                    if (id === idModel[i]) {
+                        return true;
+                    }
+                })
+                // Контроль наличия приборов на складе отгрузки
+                if (filtered[i].length < modelQty[i]) {
+                    let msgObj = { msg: `Недостаточно ${modelName[i]} на складе ${req.body[0].warehouseOut.name}` };
+                    return res.status(200).json(msgObj);
+                }
+                let idModelRow = model.map(item => item.idFixture);
+
+                try {
+                    const [fixtures] = await Equipment.setNewWarehouse(idWhIn, idModelRow);
+                    console.log("fixturesMovement:", model);
+                    return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
+                    // return res.status(200).json(fixtures);
+                } catch (error) {
+                    
+                }
+
+            }
+            // if(model.length < modelQty) {
+            //     return res.status(200).json({msg:`Недостаточно приборов на складе ${req.body[0].warehouseOut.name}`});
+            // }
+            // return res.status(200).json(model);
+            // return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
+        } catch (error) {
+            console.log("error:", error);
+            return res.status(500).json({ msg: "We have problems with 'fixturesMovement'" });
+        }
+
+
+
+    } else {
+        return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
 
 }
 
@@ -485,7 +591,7 @@ exports.getOneModel = async (req, res) => {
     if (status.status === 200) {
 
         try {
-            let id = req.params.id + ".000";
+            let id = req.params.id + ".0000";
             [qty] = await Equipment.getQtyById(id);
             console.log("qty:", qty)
 

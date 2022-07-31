@@ -38,6 +38,10 @@ router.get('/qty/:id', equipController.getQtyById);
 // =====================================================================
 router.post('/fixturelife/:status', equipController.changeStatusById);
 
+// Device workStatus Change
+// =====================================================================
+router.post('/workStatus', equipController.workStatusChanged);
+
 // Get fixtures history
 // =====================================================================
 router.get('/history', equipController.getFixtureHistory);
@@ -48,7 +52,11 @@ router.get('/history/:id', equipController.getFixtureHistoryByID);
 
 // Fixtures movement
 // =====================================================================
-router.post('/movement', equipController.fixturesMovement);
+router.post('/devicesmove', equipController.fixturesMovement);
+
+// Models movement
+// =====================================================================
+router.post('/modelsmove', equipController.modelsMovement);
 
 // Get all models
 // =====================================================================

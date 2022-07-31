@@ -314,11 +314,26 @@ function updateMultiple(idWarehouse, idFixture) {
     return q;
 }
 
+
+function modelsMovement(idWhOut, idModel, modelQty) {
+    let query = "";
+
+    for (let i = 0; i < idModel.length; i++) {
+        query += "(SELECT * FROM `t_equipment` WHERE idWarehouse=" + idWhOut + " AND idFixture LIKE '" + idModel[i] + "'" + " LIMIT " + modelQty[i] + ")";
+        if (i < idModel.length - 1) {
+            query += " UNION "
+        }
+    }
+    console.log(query);
+    return query;
+}
+
 module.exports = {
     currentDateTime: currentDateTime,
     createEventId: createEventId,
     convertRowToObj: convertRowToObj,
     convertObjToRow: convertObjToRow,
     convertLocationsToObj: convertLocationsToObj,
-    updateMultiple: updateMultiple
+    updateMultiple: updateMultiple,
+    modelsMovement: modelsMovement
 };
