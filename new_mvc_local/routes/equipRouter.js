@@ -26,6 +26,10 @@ router.get('/deps/:idDep/cats/:idCat', equipController.getEquipmentByDepCat);
 // =====================================================================
 router.get('/deps/:idDep/cats/:idCat/name/:idName', equipController.getFixtureByDepCatName);
 
+// Get fixtures by department, category
+// =====================================================================
+router.get('/device/deps/:idDep/cats/:idCat', equipController.getFixturesByDepCat);
+
 // Get fixtures by modelName
 // =====================================================================
 router.get('/device/:id', equipController.getFixturesByModelName);
