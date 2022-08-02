@@ -121,7 +121,7 @@ exports.getEquipmentByDepCat = async (req, res) => {
 
 exports.getFixturesByDepCat = async (req, res) => {
 
-    console.log("getEquipmentByDepCat");
+    console.log("getFixturesByDepCat");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
 
@@ -129,8 +129,47 @@ exports.getFixturesByDepCat = async (req, res) => {
     if (status.status === 200) {
 
         try {
-            // [equip] = await Equipment.getFixturesByDepCat(req.params.idDep, req.params.idCat);
-            // console.log("equip:", equip);
+            [equip] = await Equipment.getFixturesByDepCat(req.params.idDep, req.params.idCat);
+            console.log("equip:", equip);
+            equip.shift();
+            
+            let deviceArr = [];
+
+            for (let i = 0; i < equip.length; i++) {
+                let device = {};
+                device.id = equip[i].idFixture.slice(8,11);
+                device.name = equip[i].modelName;
+                device.manufactor = equip[i].manufactor;
+                device.img = "https://blackout.by/wp-content/uploads/2022/07/lightcat.png";
+
+                device.category = {};
+                device.category.idDep = equip[i].idFixture.slice(0,3);
+                device.category.idCat = equip[i].idFixture.slice(4,7);
+
+                device.data = {};
+                device.data.weight = equip[i].weight;
+                device.data.power = equip[i].power;
+                device.data.length = equip[i].length;
+                device.data.transportWeight = equip[i].transportWeight;
+                device.data.volume = equip[i].volume;
+
+                device.case = {};
+                device.case.inCase = equip[i].inCase;
+                device.case.length = equip[i].cLength;
+                device.case.width = equip[i].cWidth;
+                device.case.height = equip[i].cHeight;
+
+                device.quantity = {};
+                device.quantity.all = {};
+                device.quantity.all.qty = equip[i].qty;
+                device.quantity.all.qtyWork = equip[i].qtyWork;
+                device.quantity.all.qtyBroken = equip[i].qtyBroken;
+                device.quantity.all.qtyCondWork = equip[i].qtyCondWork;
+
+                deviceArr.push(device);
+            }
+
+            console.log("deviceArr:",deviceArr);
 
             let obj = [
                 {
@@ -258,7 +297,7 @@ exports.getFixturesByDepCat = async (req, res) => {
             ]
 
 
-            return res.status(200).json(obj);
+            return res.status(200).json(deviceArr);
         } catch (error) {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with getting equipment by dep and cat from database" });
