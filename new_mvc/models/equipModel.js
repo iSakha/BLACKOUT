@@ -76,6 +76,144 @@ module.exports = class Equipment {
         }
     }
 
+    static getFixturesByDepCat(idDep, idCat) {
+        console.log("idDep:", idDep);
+        console.log("idCat:", idCat);
+        let obj = {
+            "models": [
+                {
+                    "id": "007",
+                    "name": "Alpha Spot QWO 800",
+                    "manufactor": "Clay Paky",
+                    "img": "https://blackout.by/wp-content/uploads/2022/07/lightcat.png",
+                    "category": {
+                        "idDep": "001",
+                        "idCat": "001"
+                    },
+                    "deviceData": {
+                        "weight": 42,
+                        "power": 43,
+                        "transportWeight": "44.66",
+                        "volume": "2.2"
+                    },
+                    "case": {
+                        "inCase": 4,
+                        "length": "2.3",
+                        "width": "3.2",
+                        "height": "3.3"
+                    },
+                    "quantity": {
+                        "all": {
+                            "qty": 21,
+                            "qtyWork": 18,
+                            "qtyBroken": 0,
+                            "qtyCondWork": 3
+                        },
+                        "onWarehouse": [
+                            {
+                                "id": 2,
+                                "name": "Минск",
+                                "qty": 12,
+                                "qtyWork": 11,
+                                "qtyBroken": 0,
+                                "qtyCondWork": 1
+                            },
+                            {
+                                "id": 3,
+                                "name": "Москва",
+                                "qty": 1,
+                                "qtyWork": 1,
+                                "qtyBroken": 0,
+                                "qtyCondWork": 0
+                            },
+                            {
+                                "id": 4,
+                                "name": "Казань",
+                                "qty": 6,
+                                "qtyWork": 6,
+                                "qtyBroken": 0,
+                                "qtyCondWork": 0
+                            },
+                            {
+                                "id": 5,
+                                "name": "Питер",
+                                "qty": 0,
+                                "qtyWork": 0,
+                                "qtyBroken": 0,
+                                "qtyCondWork": 0
+                            }
+                        ]
+                    },   
+                    "devices":[
+                        {
+                            "id": "001.001.005.0006",
+                            "whCode": "1.cp_al_pr1500_006",
+                            "sNumber": "S/N AZ007876",
+                            "uidCloudio": "435008010CEE",
+                            "model": {
+                                "id": "0006",
+                                "name": "Alpha Profile 1500",
+                                "manufactor": "Clay Paky"
+                            },
+                            "category": {
+                                "idDep": "001",
+                                "idCat": "001",
+                                "idModel": "005"
+                            },
+                            "warehouse": {
+                                "id": 2,
+                                "name": "Минск"
+                            },
+                            "workStatus": {
+                                "id": 2,
+                                "name": "Рабочий"
+                            },
+                            "whereStatus": {
+                                "id": 2,
+                                "name": "На складе"
+                            }
+                        },
+                        {
+                            "id": "001.001.005.0006",
+                            "whCode": "1.cp_al_pr1500_006",
+                            "sNumber": "S/N AZ007876",
+                            "uidCloudio": "435008010CEE",
+                            "model": {
+                                "id": "0006",
+                                "name": "Alpha Profile 1500",
+                                "manufactor": "Clay Paky"
+                            },
+                            "category": {
+                                "idDep": "001",
+                                "idCat": "001",
+                                "idModel": "005"
+                            },
+                            "warehouse": {
+                                "id": 2,
+                                "name": "Минск"
+                            },
+                            "workStatus": {
+                                "id": 2,
+                                "name": "Рабочий"
+                            },
+                            "whereStatus": {
+                                "id": 2,
+                                "name": "На складе"
+                            }
+                        }
+                    ]
+                }
+            ]   
+        }
+        
+        try {
+            return obj;
+            // return db.execute('SELECT * FROM `v_equipment` WHERE idDep=? AND idCat=?', [idDep, idCat]);
+        } catch (error) {
+            return error;
+        }
+    }
+
     static getFixturesByModelName(id) {
 
         id = id + ".____";
