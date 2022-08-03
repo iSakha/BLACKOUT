@@ -8,4 +8,5 @@ node_modules/
 img/
 Queries/
 Excel/
+backup/
 *.cashe

@@ -121,7 +121,7 @@ exports.getEquipmentByDepCat = async (req, res) => {
 
 exports.getFixturesByDepCat = async (req, res) => {
 
-    console.log("getEquipmentByDepCat");
+    console.log("getFixturesByDepCat");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
 
@@ -129,8 +129,107 @@ exports.getFixturesByDepCat = async (req, res) => {
     if (status.status === 200) {
 
         try {
-            // [equip] = await Equipment.getFixturesByDepCat(req.params.idDep, req.params.idCat);
-            // console.log("equip:", equip);
+            [equip] = await Equipment.getFixturesByDepCat(req.params.idDep, req.params.idCat);
+            console.log("equip:", equip);
+            equip.shift();
+
+            let deviceArr = [];
+
+            for (let i = 0; i < equip.length; i++) {
+                let device = {};
+                if (equip[i].idFixture.slice(12, 16) === '0000') {
+                    device.id = equip[i].idFixture.slice(8, 11);
+                    device.name = equip[i].modelName;
+                    device.manufactor = equip[i].manufactor;
+                    device.img = equip[i].img;
+
+                    device.category = {};
+                    device.category.idDep = equip[i].idFixture.slice(0, 3);
+                    device.category.idCat = equip[i].idFixture.slice(4, 7);
+
+                    device.data = {};
+                    device.data.weight = equip[i].weight;
+                    device.data.power = equip[i].power;
+                    device.data.length = equip[i].length;
+                    device.data.transportWeight = equip[i].transportWeight;
+                    device.data.volume = equip[i].volume;
+
+                    device.case = {};
+                    device.case.inCase = equip[i].inCase;
+                    device.case.length = equip[i].cLength;
+                    device.case.width = equip[i].cWidth;
+                    device.case.height = equip[i].cHeight;
+
+                    device.quantity = {};
+                    device.quantity.all = {};
+                    device.quantity.all.qty = equip[i].qty;
+                    device.quantity.all.qtyWork = equip[i].qtyWork;
+                    device.quantity.all.qtyBroken = equip[i].qtyBroken;
+                    device.quantity.all.qtyCondWork = equip[i].qtyCondWork;
+
+                    device.onWarehouse = [{}];
+
+                    device.onWarehouse[0] = {};
+                    device.onWarehouse[0].id = 2;
+                    device.onWarehouse[0].name = "Минск";
+                    device.onWarehouse[0].qty = equip[i].qtyMinsk;
+                    device.onWarehouse[0].qtyWork = equip[i].qtyMinsk_work;
+                    device.onWarehouse[0].qtyBroken = equip[i].qtyMinsk_broken;
+                    device.onWarehouse[0].qtyCondWork = equip[i].qtyMinsk_cond_w;
+
+                    device.onWarehouse[1] = {};
+                    device.onWarehouse[1].id = 3;
+                    device.onWarehouse[1].name = "Москва";
+                    device.onWarehouse[1].qty = equip[i].qtyMoscow;
+                    device.onWarehouse[1].qtyWork = equip[i].qtyMoscow_work;
+                    device.onWarehouse[1].qtyBroken = equip[i].qtyMoscow_broken;
+                    device.onWarehouse[1].qtyCondWork = equip[i].qtyMoscow_cond_w;
+
+                    device.onWarehouse[2] = {};
+                    device.onWarehouse[2].id = 4;
+                    device.onWarehouse[2].name = "Казань";
+                    device.onWarehouse[2].qty = equip[i].qtyKazan;
+                    device.onWarehouse[2].qtyWork = equip[i].qtyKazan_work;
+                    device.onWarehouse[2].qtyBroken = equip[i].qtyKazan_broken;
+                    device.onWarehouse[2].qtyCondWork = equip[i].qtyKazan_cond_w;
+
+                    device.onWarehouse[3] = {};
+                    device.onWarehouse[3].id = 5;
+                    device.onWarehouse[3].name = "Питер";
+                    device.onWarehouse[3].qty = equip[i].qtyPiter;
+                    device.onWarehouse[3].qtyWork = equip[i].qtyPiter_work;
+                    device.onWarehouse[3].qtyBroken = equip[i].qtyPiter_broken;
+                    device.onWarehouse[3].qtyCondWork = equip[i].qtyPiter_cond_w;
+
+                    deviceArr.push(device);
+                } else {
+                    device.devices = {};
+                    device.devices.id = equip[i].idFixture;
+                    device.devices.whCode = equip[i].whCode;
+                    device.devices.sNumber = equip[i].sNumber;
+                    device.devices.uidCloudio = equip[i].uidCloudio;
+
+                    device.warehouse = {};
+                    device.warehouse.id = equip[i].idWarehouse;
+                    device.warehouse.name = equip[i].whName;
+
+                    device.workStatus = {};
+                    device.workStatus.id = 2;
+                    device.workStatus.name = "Рабочий";
+
+                    device.whereStatus = {};
+                    device.whereStatus.id = 2;
+                    device.whereStatus.name = "На складе";
+
+
+                    deviceArr.push(device);
+                }
+
+
+
+            }
+
+            console.log("deviceArr:", deviceArr);
 
             let obj = [
                 {
@@ -258,7 +357,7 @@ exports.getFixturesByDepCat = async (req, res) => {
             ]
 
 
-            return res.status(200).json(obj);
+            return res.status(200).json(deviceArr);
         } catch (error) {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with getting equipment by dep and cat from database" });

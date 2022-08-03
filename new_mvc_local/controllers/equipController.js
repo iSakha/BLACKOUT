@@ -130,46 +130,335 @@ exports.getFixturesByDepCat = async (req, res) => {
 
         try {
             [equip] = await Equipment.getFixturesByDepCat(req.params.idDep, req.params.idCat);
-            console.log("equip:", equip);
+            // console.log("equip:", equip);
             equip.shift();
-            
+
+            let equipModel = equip.filter(item => {
+                if (item.idFixture.slice(12, 16) === "0000") {
+                    return true;
+                }
+            })
+
+            let equipDevice = equip.filter(item => {
+                if (item.idFixture.slice(12, 16) !== "0000") {
+                    return true;
+                }
+            })
+
             let deviceArr = [];
 
-            for (let i = 0; i < equip.length; i++) {
+            for (let i = 0; i < equipModel.length; i++) {
+
                 let device = {};
-                device.id = equip[i].idFixture.slice(8,11);
-                device.name = equip[i].modelName;
-                device.manufactor = equip[i].manufactor;
-                device.img = "https://blackout.by/wp-content/uploads/2022/07/lightcat.png";
+
+                device.id = equipModel[i].idFixture.slice(8, 11);
+                device.name = equipModel[i].modelName;
+                device.manufactor = equipModel[i].manufactor;
+                device.img = equipModel[i].img;
 
                 device.category = {};
-                device.category.idDep = equip[i].idFixture.slice(0,3);
-                device.category.idCat = equip[i].idFixture.slice(4,7);
+                device.category.idDep = equipModel[i].idFixture.slice(0, 3);
+                device.category.idCat = equipModel[i].idFixture.slice(4, 7);
 
                 device.data = {};
-                device.data.weight = equip[i].weight;
-                device.data.power = equip[i].power;
-                device.data.length = equip[i].length;
-                device.data.transportWeight = equip[i].transportWeight;
-                device.data.volume = equip[i].volume;
+                device.data.weight = equipModel[i].weight;
+                device.data.power = equipModel[i].power;
+                device.data.length = equipModel[i].length;
+                device.data.transportWeight = equipModel[i].transportWeight;
+                device.data.volume = equipModel[i].volume;
 
                 device.case = {};
-                device.case.inCase = equip[i].inCase;
-                device.case.length = equip[i].cLength;
-                device.case.width = equip[i].cWidth;
-                device.case.height = equip[i].cHeight;
+                device.case.inCase = equipModel[i].inCase;
+                device.case.length = equipModel[i].cLength;
+                device.case.width = equipModel[i].cWidth;
+                device.case.height = equipModel[i].cHeight;
 
                 device.quantity = {};
                 device.quantity.all = {};
-                device.quantity.all.qty = equip[i].qty;
-                device.quantity.all.qtyWork = equip[i].qtyWork;
-                device.quantity.all.qtyBroken = equip[i].qtyBroken;
-                device.quantity.all.qtyCondWork = equip[i].qtyCondWork;
+                device.quantity.all.qty = equipModel[i].qty;
+                device.quantity.all.qtyWork = equipModel[i].qtyWork;
+                device.quantity.all.qtyBroken = equipModel[i].qtyBroken;
+                device.quantity.all.qtyCondWork = equipModel[i].qtyCondWork;
 
+                device.quantity.onWarehouse = [{}];
+
+                device.quantity.onWarehouse[0] = {};
+                device.quantity.onWarehouse[0].id = 2;
+                device.quantity.onWarehouse[0].name = "Минск";
+                device.quantity.onWarehouse[0].qty = equipModel[i].qtyMinsk;
+                device.quantity.onWarehouse[0].qtyWork = equipModel[i].qtyMinsk_work;
+                device.quantity.onWarehouse[0].qtyBroken = equipModel[i].qtyMinsk_broken;
+                device.quantity.onWarehouse[0].qtyCondWork = equipModel[i].qtyMinsk_cond_w;
+
+                device.quantity.onWarehouse[1] = {};
+                device.quantity.onWarehouse[1].id = 3;
+                device.quantity.onWarehouse[1].name = "Москва";
+                device.quantity.onWarehouse[1].qty = equipModel[i].qtyMoscow;
+                device.quantity.onWarehouse[1].qtyWork = equipModel[i].qtyMoscow_work;
+                device.quantity.onWarehouse[1].qtyBroken = equipModel[i].qtyMoscow_broken;
+                device.quantity.onWarehouse[1].qtyCondWork = equipModel[i].qtyMoscow_cond_w;
+
+                device.quantity.onWarehouse[2] = {};
+                device.quantity.onWarehouse[2].id = 4;
+                device.quantity.onWarehouse[2].name = "Казань";
+                device.quantity.onWarehouse[2].qty = equipModel[i].qtyKazan;
+                device.quantity.onWarehouse[2].qtyWork = equipModel[i].qtyKazan_work;
+                device.quantity.onWarehouse[2].qtyBroken = equipModel[i].qtyKazan_broken;
+                device.quantity.onWarehouse[2].qtyCondWork = equipModel[i].qtyKazan_cond_w;
+
+                device.quantity.onWarehouse[3] = {};
+                device.quantity.onWarehouse[3].id = 5;
+                device.quantity.onWarehouse[3].name = "Питер";
+                device.quantity.onWarehouse[3].qty = equipModel[i].qtyPiter;
+                device.quantity.onWarehouse[3].qtyWork = equipModel[i].qtyPiter_work;
+                device.quantity.onWarehouse[3].qtyBroken = equipModel[i].qtyPiter_broken;
+                device.quantity.onWarehouse[3].qtyCondWork = equipModel[i].qtyPiter_cond_w;
+
+                device.devices = [{}];
+
+                for (let j = 0; j < equipModel.length; j++) {
+
+                    
+                    device.devices[j] = {};
+                    device.devices[j].id = j;
+                    // device.devices[j].id = equipDevice[j].idFixture;
+
+                    // console.log("i:",i);
+                    // console.log("j:",j);
+                    // console.log("equipDevice[i].idFixture:",equipDevice[j].idFixture);
+
+                    // device.devices[j].whCode = equipDevice[j].whCode;
+                    // device.devices[j].sNumber = equipDevice[j].sNumber;
+                    // device.devices[j].uidCloudio = equipDevice[j].uidCloudio;
+
+                    // device.devices[j].warehouse = {};
+                    // device.devices[j].warehouse.id = equipDevice[j].idWarehouse;
+                    // device.devices[j].warehouse.name = equipDevice[j].whName;
+
+                    // device.devices[j].workStatus = {};
+                    // device.devices[j].workStatus.id = 2;
+                    // device.devices[j].workStatus.name = "Рабочий";
+
+                    // device.devices[j].whereStatus = {};
+                    // device.devices[j].whereStatus.id = 2;
+                    // device.devices[j].whereStatus.name = "На складе";
+
+
+                }
+                // console.log("device.devices:", device.devices);
                 deviceArr.push(device);
             }
 
-            console.log("deviceArr:",deviceArr);
+
+
+
+
+
+
+
+            // console.log("equipModel:", equipModel);
+            // console.log("equipDevice:", equipDevice);
+
+
+
+
+            // for (let i = 0; i < equipModel.length; i++) {
+
+            //     let device = {};
+            //     device.id = equipModel[i].idFixture.slice(8, 11);
+            //     device.name = equipModel[i].modelName;
+            //     device.manufactor = equipModel[i].manufactor;
+            //     device.img = equipModel[i].img;
+
+            //     device.category = {};
+            //     device.category.idDep = equipModel[i].idFixture.slice(0, 3);
+            //     device.category.idCat = equipModel[i].idFixture.slice(4, 7);
+
+            //     device.data = {};
+            //     device.data.weight = equipModel[i].weight;
+            //     device.data.power = equipModel[i].power;
+            //     device.data.length = equipModel[i].length;
+            //     device.data.transportWeight = equipModel[i].transportWeight;
+            //     device.data.volume = equipModel[i].volume;
+
+            //     device.case = {};
+            //     device.case.inCase = equipModel[i].inCase;
+            //     device.case.length = equipModel[i].cLength;
+            //     device.case.width = equipModel[i].cWidth;
+            //     device.case.height = equipModel[i].cHeight;
+
+            //     device.quantity = {};
+            //     device.quantity.all = {};
+            //     device.quantity.all.qty = equipModel[i].qty;
+            //     device.quantity.all.qtyWork = equipModel[i].qtyWork;
+            //     device.quantity.all.qtyBroken = equipModel[i].qtyBroken;
+            //     device.quantity.all.qtyCondWork = equipModel[i].qtyCondWork;
+
+            //     device.quantity.onWarehouse = [{}];
+
+            //     device.quantity.onWarehouse[0] = {};
+            //     device.quantity.onWarehouse[0].id = 2;
+            //     device.quantity.onWarehouse[0].name = "Минск";
+            //     device.quantity.onWarehouse[0].qty = equipModel[i].qtyMinsk;
+            //     device.quantity.onWarehouse[0].qtyWork = equipModel[i].qtyMinsk_work;
+            //     device.quantity.onWarehouse[0].qtyBroken = equipModel[i].qtyMinsk_broken;
+            //     device.quantity.onWarehouse[0].qtyCondWork = equipModel[i].qtyMinsk_cond_w;
+
+            //     device.quantity.onWarehouse[1] = {};
+            //     device.quantity.onWarehouse[1].id = 3;
+            //     device.quantity.onWarehouse[1].name = "Москва";
+            //     device.quantity.onWarehouse[1].qty = equipModel[i].qtyMoscow;
+            //     device.quantity.onWarehouse[1].qtyWork = equipModel[i].qtyMoscow_work;
+            //     device.quantity.onWarehouse[1].qtyBroken = equipModel[i].qtyMoscow_broken;
+            //     device.quantity.onWarehouse[1].qtyCondWork = equipModel[i].qtyMoscow_cond_w;
+
+            //     device.quantity.onWarehouse[2] = {};
+            //     device.quantity.onWarehouse[2].id = 4;
+            //     device.quantity.onWarehouse[2].name = "Казань";
+            //     device.quantity.onWarehouse[2].qty = equipModel[i].qtyKazan;
+            //     device.quantity.onWarehouse[2].qtyWork = equipModel[i].qtyKazan_work;
+            //     device.quantity.onWarehouse[2].qtyBroken = equipModel[i].qtyKazan_broken;
+            //     device.quantity.onWarehouse[2].qtyCondWork = equipModel[i].qtyKazan_cond_w;
+
+            //     device.quantity.onWarehouse[3] = {};
+            //     device.quantity.onWarehouse[3].id = 5;
+            //     device.quantity.onWarehouse[3].name = "Питер";
+            //     device.quantity.onWarehouse[3].qty = equipModel[i].qtyPiter;
+            //     device.quantity.onWarehouse[3].qtyWork = equipModel[i].qtyPiter_work;
+            //     device.quantity.onWarehouse[3].qtyBroken = equipModel[i].qtyPiter_broken;
+            //     device.quantity.onWarehouse[3].qtyCondWork = equipModel[i].qtyPiter_cond_w;
+
+            //     for (let j = 0; j < equipDevice.length; j++) {
+            //         device.devices = [{}];
+            //         device.devices[j] = {};
+            //         device.devices[j].id = equip[j].idFixture;
+            //         device.devices[j].whCode = equip[j].whCode;
+            //         device.devices[j].sNumber = equip[j].sNumber;
+            //         device.devices[j].uidCloudio = equip[j].uidCloudio;
+
+            //         device.devices[j].warehouse = {};
+            //         device.devices[j].warehouse.id = equip[j].idWarehouse;
+            //         device.devices[j].warehouse.name = equip[j].whName;
+
+            //         device.devices[j].workStatus = {};
+            //         device.devices[j].workStatus.id = 2;
+            //         device.devices[j].workStatus.name = "Рабочий";
+
+            //         device.devices[j].whereStatus = {};
+            //         device.devices[j].whereStatus.id = 2;
+            //         device.devices[j].whereStatus.name = "На складе";
+            //         // deviceArr.push(device);
+            //     }
+
+            //     deviceArr.push(device);
+
+            // }
+
+
+
+
+
+
+
+            for (let i = 0; i < equip.length; i++) {
+                let device = {};
+                if (equip[i].idFixture.slice(12, 16) === '0000') {
+                    // device.id = equip[i].idFixture.slice(8, 11);
+                    // device.name = equip[i].modelName;
+                    // device.manufactor = equip[i].manufactor;
+                    // device.img = equip[i].img;
+
+                    // device.category = {};
+                    // device.category.idDep = equip[i].idFixture.slice(0, 3);
+                    // device.category.idCat = equip[i].idFixture.slice(4, 7);
+
+                    // device.data = {};
+                    // device.data.weight = equip[i].weight;
+                    // device.data.power = equip[i].power;
+                    // device.data.length = equip[i].length;
+                    // device.data.transportWeight = equip[i].transportWeight;
+                    // device.data.volume = equip[i].volume;
+
+                    // device.case = {};
+                    // device.case.inCase = equip[i].inCase;
+                    // device.case.length = equip[i].cLength;
+                    // device.case.width = equip[i].cWidth;
+                    // device.case.height = equip[i].cHeight;
+
+                    // device.quantity = {};
+                    // device.quantity.all = {};
+                    // device.quantity.all.qty = equip[i].qty;
+                    // device.quantity.all.qtyWork = equip[i].qtyWork;
+                    // device.quantity.all.qtyBroken = equip[i].qtyBroken;
+                    // device.quantity.all.qtyCondWork = equip[i].qtyCondWork;
+
+                    // device.onWarehouse = [{}];
+
+                    // device.onWarehouse[0] = {};
+                    // device.onWarehouse[0].id = 2;
+                    // device.onWarehouse[0].name = "Минск";
+                    // device.onWarehouse[0].qty = equip[i].qtyMinsk;
+                    // device.onWarehouse[0].qtyWork = equip[i].qtyMinsk_work;
+                    // device.onWarehouse[0].qtyBroken = equip[i].qtyMinsk_broken;
+                    // device.onWarehouse[0].qtyCondWork = equip[i].qtyMinsk_cond_w;
+
+                    // device.onWarehouse[1] = {};
+                    // device.onWarehouse[1].id = 3;
+                    // device.onWarehouse[1].name = "Москва";
+                    // device.onWarehouse[1].qty = equip[i].qtyMoscow;
+                    // device.onWarehouse[1].qtyWork = equip[i].qtyMoscow_work;
+                    // device.onWarehouse[1].qtyBroken = equip[i].qtyMoscow_broken;
+                    // device.onWarehouse[1].qtyCondWork = equip[i].qtyMoscow_cond_w;
+
+                    // device.onWarehouse[2] = {};
+                    // device.onWarehouse[2].id = 4;
+                    // device.onWarehouse[2].name = "Казань";
+                    // device.onWarehouse[2].qty = equip[i].qtyKazan;
+                    // device.onWarehouse[2].qtyWork = equip[i].qtyKazan_work;
+                    // device.onWarehouse[2].qtyBroken = equip[i].qtyKazan_broken;
+                    // device.onWarehouse[2].qtyCondWork = equip[i].qtyKazan_cond_w;
+
+                    // device.onWarehouse[3] = {};
+                    // device.onWarehouse[3].id = 5;
+                    // device.onWarehouse[3].name = "Питер";
+                    // device.onWarehouse[3].qty = equip[i].qtyPiter;
+                    // device.onWarehouse[3].qtyWork = equip[i].qtyPiter_work;
+                    // device.onWarehouse[3].qtyBroken = equip[i].qtyPiter_broken;
+                    // device.onWarehouse[3].qtyCondWork = equip[i].qtyPiter_cond_w;
+
+                    // deviceArr.push(device);
+                }
+
+                // if (equip[i].idFixture.slice(12, 16) !== '0000') {
+                //     device.devices = {};
+                //     device.devices.id = equip[i].idFixture;
+                //     device.devices.whCode = equip[i].whCode;
+                //     device.devices.sNumber = equip[i].sNumber;
+                //     device.devices.uidCloudio = equip[i].uidCloudio;
+
+                //     device.warehouse = {};
+                //     device.warehouse.id = equip[i].idWarehouse;
+                //     device.warehouse.name = equip[i].whName;
+
+                //     device.workStatus = {};
+                //     device.workStatus.id = 2;
+                //     device.workStatus.name = "Рабочий";
+
+                //     device.whereStatus = {};
+                //     device.whereStatus.id = 2;
+                //     device.whereStatus.name = "На складе";
+                // }
+
+
+
+
+
+
+
+
+            }
+
+            console.log("deviceArr:", deviceArr);
 
             let obj = [
                 {
