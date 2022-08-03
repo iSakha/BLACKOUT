@@ -151,7 +151,7 @@ exports.getFixturesByDepCat = async (req, res) => {
 
                 let device = {};
 
-                device.id = equipModel[i].idFixture.slice(8, 11);
+                device.id = equipModel[i].idFixture.slice(0, 11);
                 device.name = equipModel[i].modelName;
                 device.manufactor = equipModel[i].manufactor;
                 device.img = equipModel[i].img;
@@ -214,34 +214,36 @@ exports.getFixturesByDepCat = async (req, res) => {
                 device.quantity.onWarehouse[3].qtyBroken = equipModel[i].qtyPiter_broken;
                 device.quantity.onWarehouse[3].qtyCondWork = equipModel[i].qtyPiter_cond_w;
 
+                let modelStr = equipModel[i].idFixture.slice(8, 11);
+                let devArr = equipDevice.filter(item => {
+                    if (item.idFixture.slice(8, 11) === modelStr) {
+                        return true;
+                    }
+                })
+
                 device.devices = [{}];
 
-                for (let j = 0; j < equipModel.length; j++) {
+                for (let j = 0; j < devArr.length; j++) {
 
                     
                     device.devices[j] = {};
-                    device.devices[j].id = j;
-                    // device.devices[j].id = equipDevice[j].idFixture;
+                    device.devices[j].id = devArr[j].idFixture;
 
-                    // console.log("i:",i);
-                    // console.log("j:",j);
-                    // console.log("equipDevice[i].idFixture:",equipDevice[j].idFixture);
+                    device.devices[j].whCode = devArr[j].whCode;
+                    device.devices[j].sNumber = devArr[j].sNumber;
+                    device.devices[j].uidCloudio = devArr[j].uidCloudio;
 
-                    // device.devices[j].whCode = equipDevice[j].whCode;
-                    // device.devices[j].sNumber = equipDevice[j].sNumber;
-                    // device.devices[j].uidCloudio = equipDevice[j].uidCloudio;
+                    device.devices[j].warehouse = {};
+                    device.devices[j].warehouse.id = devArr[j].idWarehouse;
+                    device.devices[j].warehouse.name = devArr[j].whName;
 
-                    // device.devices[j].warehouse = {};
-                    // device.devices[j].warehouse.id = equipDevice[j].idWarehouse;
-                    // device.devices[j].warehouse.name = equipDevice[j].whName;
+                    device.devices[j].workStatus = {};
+                    device.devices[j].workStatus.id = 2;
+                    device.devices[j].workStatus.name = "Рабочий";
 
-                    // device.devices[j].workStatus = {};
-                    // device.devices[j].workStatus.id = 2;
-                    // device.devices[j].workStatus.name = "Рабочий";
-
-                    // device.devices[j].whereStatus = {};
-                    // device.devices[j].whereStatus.id = 2;
-                    // device.devices[j].whereStatus.name = "На складе";
+                    device.devices[j].whereStatus = {};
+                    device.devices[j].whereStatus.id = 2;
+                    device.devices[j].whereStatus.name = "На складе";
 
 
                 }
@@ -985,7 +987,7 @@ exports.getAllModels = async (req, res) => {
             for (let i = 0; i < allModels.length; i++) {
                 let e = new Equipment();
                 console.log(e);
-                e.id = allModels[i].id;
+                e.id = allModels[i].id.slice(0,11);
                 e.name = allModels[i].name;
                 e.manufactor = allModels[i].manufactor;
                 e.img = allModels[i].img;
