@@ -210,11 +210,8 @@ module.exports = class Equipment {
 
     static getOneModel(id) {
         try {
-            const idDep = id.slice(0, 3);
-            const idCat = id.slice(4, 7);
-            id = id.slice(8, 11);
 
-            return db.execute('SELECT * FROM `v_equip_model` WHERE `idDep`=? AND `idCat`=? AND `id`=?', [idDep, idCat, id]);
+            return db.execute('SELECT * FROM `v_equip_model` WHERE `id`=?', [id]);
 
         } catch (error) {
             return error;

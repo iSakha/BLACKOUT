@@ -225,7 +225,7 @@ exports.getFixturesByDepCat = async (req, res) => {
 
                 for (let j = 0; j < devArr.length; j++) {
 
-                    
+
                     device.devices[j] = {};
                     device.devices[j].id = devArr[j].idFixture;
 
@@ -252,341 +252,7 @@ exports.getFixturesByDepCat = async (req, res) => {
             }
 
 
-
-
-
-
-
-
-            // console.log("equipModel:", equipModel);
-            // console.log("equipDevice:", equipDevice);
-
-
-
-
-            // for (let i = 0; i < equipModel.length; i++) {
-
-            //     let device = {};
-            //     device.id = equipModel[i].idFixture.slice(8, 11);
-            //     device.name = equipModel[i].modelName;
-            //     device.manufactor = equipModel[i].manufactor;
-            //     device.img = equipModel[i].img;
-
-            //     device.category = {};
-            //     device.category.idDep = equipModel[i].idFixture.slice(0, 3);
-            //     device.category.idCat = equipModel[i].idFixture.slice(4, 7);
-
-            //     device.data = {};
-            //     device.data.weight = equipModel[i].weight;
-            //     device.data.power = equipModel[i].power;
-            //     device.data.length = equipModel[i].length;
-            //     device.data.transportWeight = equipModel[i].transportWeight;
-            //     device.data.volume = equipModel[i].volume;
-
-            //     device.case = {};
-            //     device.case.inCase = equipModel[i].inCase;
-            //     device.case.length = equipModel[i].cLength;
-            //     device.case.width = equipModel[i].cWidth;
-            //     device.case.height = equipModel[i].cHeight;
-
-            //     device.quantity = {};
-            //     device.quantity.all = {};
-            //     device.quantity.all.qty = equipModel[i].qty;
-            //     device.quantity.all.qtyWork = equipModel[i].qtyWork;
-            //     device.quantity.all.qtyBroken = equipModel[i].qtyBroken;
-            //     device.quantity.all.qtyCondWork = equipModel[i].qtyCondWork;
-
-            //     device.quantity.onWarehouse = [{}];
-
-            //     device.quantity.onWarehouse[0] = {};
-            //     device.quantity.onWarehouse[0].id = 2;
-            //     device.quantity.onWarehouse[0].name = "Минск";
-            //     device.quantity.onWarehouse[0].qty = equipModel[i].qtyMinsk;
-            //     device.quantity.onWarehouse[0].qtyWork = equipModel[i].qtyMinsk_work;
-            //     device.quantity.onWarehouse[0].qtyBroken = equipModel[i].qtyMinsk_broken;
-            //     device.quantity.onWarehouse[0].qtyCondWork = equipModel[i].qtyMinsk_cond_w;
-
-            //     device.quantity.onWarehouse[1] = {};
-            //     device.quantity.onWarehouse[1].id = 3;
-            //     device.quantity.onWarehouse[1].name = "Москва";
-            //     device.quantity.onWarehouse[1].qty = equipModel[i].qtyMoscow;
-            //     device.quantity.onWarehouse[1].qtyWork = equipModel[i].qtyMoscow_work;
-            //     device.quantity.onWarehouse[1].qtyBroken = equipModel[i].qtyMoscow_broken;
-            //     device.quantity.onWarehouse[1].qtyCondWork = equipModel[i].qtyMoscow_cond_w;
-
-            //     device.quantity.onWarehouse[2] = {};
-            //     device.quantity.onWarehouse[2].id = 4;
-            //     device.quantity.onWarehouse[2].name = "Казань";
-            //     device.quantity.onWarehouse[2].qty = equipModel[i].qtyKazan;
-            //     device.quantity.onWarehouse[2].qtyWork = equipModel[i].qtyKazan_work;
-            //     device.quantity.onWarehouse[2].qtyBroken = equipModel[i].qtyKazan_broken;
-            //     device.quantity.onWarehouse[2].qtyCondWork = equipModel[i].qtyKazan_cond_w;
-
-            //     device.quantity.onWarehouse[3] = {};
-            //     device.quantity.onWarehouse[3].id = 5;
-            //     device.quantity.onWarehouse[3].name = "Питер";
-            //     device.quantity.onWarehouse[3].qty = equipModel[i].qtyPiter;
-            //     device.quantity.onWarehouse[3].qtyWork = equipModel[i].qtyPiter_work;
-            //     device.quantity.onWarehouse[3].qtyBroken = equipModel[i].qtyPiter_broken;
-            //     device.quantity.onWarehouse[3].qtyCondWork = equipModel[i].qtyPiter_cond_w;
-
-            //     for (let j = 0; j < equipDevice.length; j++) {
-            //         device.devices = [{}];
-            //         device.devices[j] = {};
-            //         device.devices[j].id = equip[j].idFixture;
-            //         device.devices[j].whCode = equip[j].whCode;
-            //         device.devices[j].sNumber = equip[j].sNumber;
-            //         device.devices[j].uidCloudio = equip[j].uidCloudio;
-
-            //         device.devices[j].warehouse = {};
-            //         device.devices[j].warehouse.id = equip[j].idWarehouse;
-            //         device.devices[j].warehouse.name = equip[j].whName;
-
-            //         device.devices[j].workStatus = {};
-            //         device.devices[j].workStatus.id = 2;
-            //         device.devices[j].workStatus.name = "Рабочий";
-
-            //         device.devices[j].whereStatus = {};
-            //         device.devices[j].whereStatus.id = 2;
-            //         device.devices[j].whereStatus.name = "На складе";
-            //         // deviceArr.push(device);
-            //     }
-
-            //     deviceArr.push(device);
-
-            // }
-
-
-
-
-
-
-
-            for (let i = 0; i < equip.length; i++) {
-                let device = {};
-                if (equip[i].idFixture.slice(12, 16) === '0000') {
-                    // device.id = equip[i].idFixture.slice(8, 11);
-                    // device.name = equip[i].modelName;
-                    // device.manufactor = equip[i].manufactor;
-                    // device.img = equip[i].img;
-
-                    // device.category = {};
-                    // device.category.idDep = equip[i].idFixture.slice(0, 3);
-                    // device.category.idCat = equip[i].idFixture.slice(4, 7);
-
-                    // device.data = {};
-                    // device.data.weight = equip[i].weight;
-                    // device.data.power = equip[i].power;
-                    // device.data.length = equip[i].length;
-                    // device.data.transportWeight = equip[i].transportWeight;
-                    // device.data.volume = equip[i].volume;
-
-                    // device.case = {};
-                    // device.case.inCase = equip[i].inCase;
-                    // device.case.length = equip[i].cLength;
-                    // device.case.width = equip[i].cWidth;
-                    // device.case.height = equip[i].cHeight;
-
-                    // device.quantity = {};
-                    // device.quantity.all = {};
-                    // device.quantity.all.qty = equip[i].qty;
-                    // device.quantity.all.qtyWork = equip[i].qtyWork;
-                    // device.quantity.all.qtyBroken = equip[i].qtyBroken;
-                    // device.quantity.all.qtyCondWork = equip[i].qtyCondWork;
-
-                    // device.onWarehouse = [{}];
-
-                    // device.onWarehouse[0] = {};
-                    // device.onWarehouse[0].id = 2;
-                    // device.onWarehouse[0].name = "Минск";
-                    // device.onWarehouse[0].qty = equip[i].qtyMinsk;
-                    // device.onWarehouse[0].qtyWork = equip[i].qtyMinsk_work;
-                    // device.onWarehouse[0].qtyBroken = equip[i].qtyMinsk_broken;
-                    // device.onWarehouse[0].qtyCondWork = equip[i].qtyMinsk_cond_w;
-
-                    // device.onWarehouse[1] = {};
-                    // device.onWarehouse[1].id = 3;
-                    // device.onWarehouse[1].name = "Москва";
-                    // device.onWarehouse[1].qty = equip[i].qtyMoscow;
-                    // device.onWarehouse[1].qtyWork = equip[i].qtyMoscow_work;
-                    // device.onWarehouse[1].qtyBroken = equip[i].qtyMoscow_broken;
-                    // device.onWarehouse[1].qtyCondWork = equip[i].qtyMoscow_cond_w;
-
-                    // device.onWarehouse[2] = {};
-                    // device.onWarehouse[2].id = 4;
-                    // device.onWarehouse[2].name = "Казань";
-                    // device.onWarehouse[2].qty = equip[i].qtyKazan;
-                    // device.onWarehouse[2].qtyWork = equip[i].qtyKazan_work;
-                    // device.onWarehouse[2].qtyBroken = equip[i].qtyKazan_broken;
-                    // device.onWarehouse[2].qtyCondWork = equip[i].qtyKazan_cond_w;
-
-                    // device.onWarehouse[3] = {};
-                    // device.onWarehouse[3].id = 5;
-                    // device.onWarehouse[3].name = "Питер";
-                    // device.onWarehouse[3].qty = equip[i].qtyPiter;
-                    // device.onWarehouse[3].qtyWork = equip[i].qtyPiter_work;
-                    // device.onWarehouse[3].qtyBroken = equip[i].qtyPiter_broken;
-                    // device.onWarehouse[3].qtyCondWork = equip[i].qtyPiter_cond_w;
-
-                    // deviceArr.push(device);
-                }
-
-                // if (equip[i].idFixture.slice(12, 16) !== '0000') {
-                //     device.devices = {};
-                //     device.devices.id = equip[i].idFixture;
-                //     device.devices.whCode = equip[i].whCode;
-                //     device.devices.sNumber = equip[i].sNumber;
-                //     device.devices.uidCloudio = equip[i].uidCloudio;
-
-                //     device.warehouse = {};
-                //     device.warehouse.id = equip[i].idWarehouse;
-                //     device.warehouse.name = equip[i].whName;
-
-                //     device.workStatus = {};
-                //     device.workStatus.id = 2;
-                //     device.workStatus.name = "Рабочий";
-
-                //     device.whereStatus = {};
-                //     device.whereStatus.id = 2;
-                //     device.whereStatus.name = "На складе";
-                // }
-
-
-
-
-
-
-
-
-            }
-
             console.log("deviceArr:", deviceArr);
-
-            let obj = [
-                {
-                    "id": "007",
-                    "name": "Alpha Spot QWO 800",
-                    "manufactor": "Clay Paky",
-                    "img": "https://blackout.by/wp-content/uploads/2022/07/lightcat.png",
-                    "category": {
-                        "idDep": "001",
-                        "idCat": "001"
-                    },
-                    "deviceData": {
-                        "weight": 42,
-                        "power": 43,
-                        "transportWeight": "44.66",
-                        "volume": "2.2"
-                    },
-                    "case": {
-                        "inCase": 4,
-                        "length": "2.3",
-                        "width": "3.2",
-                        "height": "3.3"
-                    },
-                    "quantity": {
-                        "all": {
-                            "qty": 21,
-                            "qtyWork": 18,
-                            "qtyBroken": 0,
-                            "qtyCondWork": 3
-                        },
-                        "onWarehouse": [
-                            {
-                                "id": 2,
-                                "name": "Минск",
-                                "qty": 12,
-                                "qtyWork": 11,
-                                "qtyBroken": 0,
-                                "qtyCondWork": 1
-                            },
-                            {
-                                "id": 3,
-                                "name": "Москва",
-                                "qty": 1,
-                                "qtyWork": 1,
-                                "qtyBroken": 0,
-                                "qtyCondWork": 0
-                            },
-                            {
-                                "id": 4,
-                                "name": "Казань",
-                                "qty": 6,
-                                "qtyWork": 6,
-                                "qtyBroken": 0,
-                                "qtyCondWork": 0
-                            },
-                            {
-                                "id": 5,
-                                "name": "Питер",
-                                "qty": 0,
-                                "qtyWork": 0,
-                                "qtyBroken": 0,
-                                "qtyCondWork": 0
-                            }
-                        ]
-                    },
-                    "devices": [
-                        {
-                            "id": "001.001.005.0006",
-                            "whCode": "1.cp_al_pr1500_006",
-                            "sNumber": "S/N AZ007876",
-                            "uidCloudio": "435008010CEE",
-                            "model": {
-                                "id": "0006",
-                                "name": "Alpha Profile 1500",
-                                "manufactor": "Clay Paky"
-                            },
-                            "category": {
-                                "idDep": "001",
-                                "idCat": "001",
-                                "idModel": "005"
-                            },
-                            "warehouse": {
-                                "id": 2,
-                                "name": "Минск"
-                            },
-                            "workStatus": {
-                                "id": 2,
-                                "name": "Рабочий"
-                            },
-                            "whereStatus": {
-                                "id": 2,
-                                "name": "На складе"
-                            }
-                        },
-                        {
-                            "id": "001.001.005.0006",
-                            "whCode": "1.cp_al_pr1500_006",
-                            "sNumber": "S/N AZ007876",
-                            "uidCloudio": "435008010CEE",
-                            "model": {
-                                "id": "0006",
-                                "name": "Alpha Profile 1500",
-                                "manufactor": "Clay Paky"
-                            },
-                            "category": {
-                                "idDep": "001",
-                                "idCat": "001",
-                                "idModel": "005"
-                            },
-                            "warehouse": {
-                                "id": 2,
-                                "name": "Минск"
-                            },
-                            "workStatus": {
-                                "id": 2,
-                                "name": "Рабочий"
-                            },
-                            "whereStatus": {
-                                "id": 2,
-                                "name": "На складе"
-                            }
-                        }
-                    ]
-                }
-            ]
-
 
             return res.status(200).json(deviceArr);
         } catch (error) {
@@ -706,8 +372,6 @@ exports.getQtyById = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 // Set fixture status
@@ -756,8 +420,6 @@ exports.workStatusChanged = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 exports.changeStatusById = async (req, res) => {
@@ -807,8 +469,6 @@ exports.changeStatusById = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 
@@ -817,7 +477,6 @@ exports.getFixtureHistory = async (req, res) => {
     console.log("getFixtureHistory");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
-
 
     if (status.status === 200) {
 
@@ -833,8 +492,6 @@ exports.getFixtureHistory = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 exports.getFixtureHistoryByID = async (req, res) => {
@@ -858,8 +515,6 @@ exports.getFixtureHistoryByID = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 
@@ -885,8 +540,6 @@ exports.fixturesMovement = async (req, res) => {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with 'fixturesMovement'" });
         }
-
-
 
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
@@ -941,13 +594,7 @@ exports.modelsMovement = async (req, res) => {
                 } catch (error) {
 
                 }
-
             }
-            // if(model.length < modelQty) {
-            //     return res.status(200).json({msg:`Недостаточно приборов на складе ${req.body[0].warehouseOut.name}`});
-            // }
-            // return res.status(200).json(model);
-            // return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
         } catch (error) {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with 'fixturesMovement'" });
@@ -987,7 +634,7 @@ exports.getAllModels = async (req, res) => {
             for (let i = 0; i < allModels.length; i++) {
                 let e = new Equipment();
                 console.log(e);
-                e.id = allModels[i].id.slice(0,11);
+                e.id = allModels[i].id.slice(0, 11);
                 e.name = allModels[i].name;
                 e.manufactor = allModels[i].manufactor;
                 e.img = allModels[i].img;
@@ -1069,9 +716,9 @@ exports.getOneModel = async (req, res) => {
     console.log("statusCode:", status);
     // let equipModels = [];
     if (status.status === 200) {
-
+        let id = req.params.id + ".0000";
         try {
-            let id = req.params.id + ".0000";
+
             [qty] = await Equipment.getQtyById(id);
             console.log("qty:", qty)
 
@@ -1080,12 +727,12 @@ exports.getOneModel = async (req, res) => {
         }
 
         try {
-            [model] = await Equipment.getOneModel(req.params.id);
-            // console.log("model:", model);
+            [model] = await Equipment.getOneModel(id);
+            console.log("model:", model);
 
             let e = new Equipment();
             console.log(e);
-            e.id = model[0].id;
+            e.id = model[0].id.slice(0, 11);
             e.name = model[0].name;
             e.manufactor = model[0].manufactor;
             e.img = model[0].img;

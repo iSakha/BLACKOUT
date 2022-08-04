@@ -247,9 +247,11 @@ exports.getFixturesByDepCat = async (req, res) => {
 
 
                 }
+                // console.log("device.devices:", device.devices);
                 deviceArr.push(device);
             }
-            
+
+
             console.log("deviceArr:", deviceArr);
 
             return res.status(200).json(deviceArr);
@@ -370,8 +372,6 @@ exports.getQtyById = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 // Set fixture status
@@ -420,8 +420,6 @@ exports.workStatusChanged = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 exports.changeStatusById = async (req, res) => {
@@ -471,8 +469,6 @@ exports.changeStatusById = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 
@@ -481,7 +477,6 @@ exports.getFixtureHistory = async (req, res) => {
     console.log("getFixtureHistory");
     let status = await auth.authenticateJWT(req, res);
     console.log("statusCode:", status);
-
 
     if (status.status === 200) {
 
@@ -497,8 +492,6 @@ exports.getFixtureHistory = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 exports.getFixtureHistoryByID = async (req, res) => {
@@ -522,8 +515,6 @@ exports.getFixtureHistoryByID = async (req, res) => {
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-
-
 }
 
 
@@ -549,8 +540,6 @@ exports.fixturesMovement = async (req, res) => {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with 'fixturesMovement'" });
         }
-
-
 
     } else {
         return res.status(status.status).json({ msg: "We have problems with JWT authentication" });
@@ -605,13 +594,7 @@ exports.modelsMovement = async (req, res) => {
                 } catch (error) {
 
                 }
-
             }
-            // if(model.length < modelQty) {
-            //     return res.status(200).json({msg:`Недостаточно приборов на складе ${req.body[0].warehouseOut.name}`});
-            // }
-            // return res.status(200).json(model);
-            // return res.status(200).json({ msg: "Запись в базу перемещения приборов прошло успешно." });
         } catch (error) {
             console.log("error:", error);
             return res.status(500).json({ msg: "We have problems with 'fixturesMovement'" });
@@ -651,7 +634,7 @@ exports.getAllModels = async (req, res) => {
             for (let i = 0; i < allModels.length; i++) {
                 let e = new Equipment();
                 console.log(e);
-                e.id = allModels[i].id;
+                e.id = allModels[i].id.slice(0, 11);
                 e.name = allModels[i].name;
                 e.manufactor = allModels[i].manufactor;
                 e.img = allModels[i].img;
@@ -733,9 +716,9 @@ exports.getOneModel = async (req, res) => {
     console.log("statusCode:", status);
     // let equipModels = [];
     if (status.status === 200) {
-
+        let id = req.params.id + ".0000";
         try {
-            let id = req.params.id + ".0000";
+
             [qty] = await Equipment.getQtyById(id);
             console.log("qty:", qty)
 
@@ -744,12 +727,12 @@ exports.getOneModel = async (req, res) => {
         }
 
         try {
-            [model] = await Equipment.getOneModel(req.params.id);
-            // console.log("model:", model);
+            [model] = await Equipment.getOneModel(id);
+            console.log("model:", model);
 
             let e = new Equipment();
             console.log(e);
-            e.id = model[0].id;
+            e.id = model[0].id.slice(0, 11);
             e.name = model[0].name;
             e.manufactor = model[0].manufactor;
             e.img = model[0].img;
