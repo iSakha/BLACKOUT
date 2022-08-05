@@ -52,7 +52,8 @@ exports.setBookedModels = async (req, res) => {
                 console.log("event:", event);
                 // [phases] = await Phase.getOnePhase(req.params.id);
                 // console.log("phases:", phases);
-                updateBookingCalendar(res, event[0].start.toISOString().slice(0, 10), event[0].end.toISOString().slice(0, 10));
+
+                updateBookingCalendar(dataRow, res, event[0].start.toISOString().slice(0, 10), event[0].end.toISOString().slice(0, 10));
 
             } catch (error) {
                 console.log("error:", error);
@@ -82,7 +83,7 @@ exports.setBookedModels = async (req, res) => {
     }
 }
 
-updateBookingCalendar = async (res, dateStart, dateEnd) => {
+updateBookingCalendar = async (dataRow, res, dateStart, dateEnd) => {
 
     console.log("updateBookingCalendar");
     console.log("start:", dateStart);
@@ -91,7 +92,44 @@ updateBookingCalendar = async (res, dateStart, dateEnd) => {
     const diffInMs = new Date(dateEnd) - new Date(dateStart)
     const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
 
-    console.log("eventDays :", eventDays );
+    console.log("eventDays :", eventDays);
+    let date = new Date(dateStart);
+    // add a day
+    date.setDate(date.getDate() + 1);
+    let newDataRowArr = [];
+    for (let i = 0; i < eventDays; i++) {
 
-    res.status(200).json({ msg: `Оборудование для мероприятия выбрано.` });
+        for (let j = 0; j < dataRow.length; j++) {
+            console.log("dataRow.length:",dataRow.length);
+            console.log(date.toISOString().slice(0, 10));
+            let row = dataRow[j];
+            row = row.slice(0,4);
+            row.unshift(date.toISOString().slice(0, 10));
+            newDataRowArr.push(row);
+            // dataRow[j].pop();
+            // dataRow[j].push(date.toISOString().slice(0, 10));
+            console.log("dataRow:",dataRow[j]);
+
+
+        }
+
+        date.setDate(date.getDate() + 1);
+    }
+
+    console.log("newDataRowArr:",newDataRowArr);
+
+    try {
+        const [equipPerDay] = await BookedEquip.writeToBookCalendar(newDataRowArr);
+        console.log("equipPerDay:", equipPerDay);
+        return res.status(200).json({ msg: `Оборудование добавлено в календарь` });
+    } catch (error) {
+        console.log("error:", error);
+        res.status(500).json({ msg: "We have problems with writing data to Booking Calendar" });
+        return {
+            error: true,
+            message: 'Error from database'
+        }
+    }
+
+
 }
