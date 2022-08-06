@@ -17,4 +17,9 @@ static writeToBookCalendar(dataRow) {
    return db.query('INSERT INTO `t_booking_calendar` (date, idEvent, idModel, qtt, idWh) VALUES ?', [dataRow]);
 }
 
+static getBookedModelsByEventID(id) {
+   console.log("getBookedModelsByEventID:",id);
+   return db.query('SELECT `t`.`idFixture`, `t`.`whsQty`, `t`.`idWarehouse`, `e`.`modelName` FROM `t_event_equipment` `t` JOIN `t_equipment` `e` ON `t`.idFixture =`e`.`idFixture` WHERE `idEvent`=?', [id]);
+}
+
 }
