@@ -88,7 +88,7 @@ updateBookingCalendar = async (dataRow, res, dateStart, dateEnd) => {
     console.log("updateBookingCalendar");
     console.log("start:", dateStart);
     console.log("end:", dateEnd);
-    console.log("dataRow:",dataRow);
+    console.log("dataRow:", dataRow);
 
     const diffInMs = new Date(dateEnd) - new Date(dateStart)
     const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
@@ -101,15 +101,15 @@ updateBookingCalendar = async (dataRow, res, dateStart, dateEnd) => {
     for (let i = 0; i < eventDays; i++) {
         console.log("dataRow.length:", dataRow.length);
         for (let j = 0; j < dataRow.length; j++) {
-            
+
             // console.log(date.toISOString().slice(0, 10));
             let row = dataRow[j];
-            row = row.slice(0,4);
+            row = row.slice(0, 4);
             row.unshift(date.toISOString().slice(0, 10));
             newDataRowArr.push(row);
             dataRow[j].pop();
             dataRow[j].push(date.toISOString().slice(0, 10));
-            console.log("dataRow:",dataRow[j]);
+            console.log("dataRow:", dataRow[j]);
 
 
         }
@@ -117,7 +117,7 @@ updateBookingCalendar = async (dataRow, res, dateStart, dateEnd) => {
         date.setDate(date.getDate() + 1);
     }
 
-    console.log("newDataRowArr:",newDataRowArr);
+    console.log("newDataRowArr:", newDataRowArr);
 
     try {
         const [equipPerDay] = await BookedEquip.writeToBookCalendar(newDataRowArr);
@@ -153,6 +153,43 @@ exports.getBookedModelsByEventID = async (req, res) => {
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting booked equipment from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}
+
+exports.deleteModelsByEventID = async (req, res) => {
+
+    console.log("deleteModelsByEventID", req.params.id);
+
+    let status = await auth.authenticateJWT(req, res);
+
+    if (status.status === 200) {
+
+        console.log("authentication successfull!");
+
+        try {
+            const [delEventEquip] = await BookedEquip.deleteModelsByEventID_1(req.params.id);
+            try {
+                const [delEquip] = await BookedEquip.deleteModelsByEventID_2(req.params.id);
+                return res.status(200).json({ msg: `Оборудование удалено` });
+            } catch (error) {
+                console.log("error:", error);
+                res.status(500).json({ msg: "We have problems with deleting booked equipment from t_booking_calendar table" });
+                return {
+                    error: true,
+                    message: 'Error from database'
+                }
+            }
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with deleting booked equipment from t_event_equipment table" });
             return {
                 error: true,
                 message: 'Error from database'
