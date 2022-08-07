@@ -200,3 +200,116 @@ exports.deleteModelsByEventID = async (req, res) => {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
 }
+
+
+exports.bookedEquipGetAll = async (req, res) => {
+
+    console.log("deleteModelsByEventID", req.params.id);
+
+    let status = await auth.authenticateJWT(req, res);
+
+    if (status.status === 200) {
+
+        console.log("authentication successfull!");
+
+        try {
+            const [allBookedEquip] = await BookedEquip.bookedEquipGetAll();
+            console.log("allBookedEquip:",allBookedEquip);
+            return res.status(200).json(allBookedEquip);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting all booked equipment from `v_booked_equip` table" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}
+
+exports.getEvents = async (req, res) => {
+
+    console.log("deleteModelsByEventID", req.params.id);
+
+    let status = await auth.authenticateJWT(req, res);
+
+    if (status.status === 200) {
+
+        console.log("authentication successfull!");
+
+        try {
+            const [events] = await BookedEquip.getEvents();
+            console.log("events:",events);
+            return res.status(200).json(events);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting events from `v_booked_equip` table" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}
+
+exports.getBookedEquipOnInterval = async (req, res) => {
+
+    console.log("getBookedEquipOnInterval", req.body.start);
+
+    let status = await auth.authenticateJWT(req, res);
+
+    if (status.status === 200) {
+
+        console.log("authentication successfull!");
+
+        try {
+            const [equip] = await BookedEquip.getBookedEquipOnInterval(req.body.start,req.body.end);
+            console.log("equip:",equip);
+            return res.status(200).json(equip);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting equipment on interval from `v_booked_equip` table" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}
+
+exports.getBookedEquipOnDate = async (req, res) => {
+
+    console.log("getBookedEquipOnInterval", req.body.start);
+
+    let status = await auth.authenticateJWT(req, res);
+
+    if (status.status === 200) {
+
+        console.log("authentication successfull!");
+
+        try {
+            const [equip] = await BookedEquip.getBookedEquipOnInterval(req.body.start,req.body.start);
+            console.log("equip:",equip);
+            return res.status(200).json(equip);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting equipment on interval from `v_booked_equip` table" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}
