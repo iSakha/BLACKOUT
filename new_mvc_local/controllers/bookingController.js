@@ -32,7 +32,6 @@ exports.setBookedModels = async (req, res) => {
             obj.idModel = req.body[0].model[i].id + ".0000";
             obj.modelQtt = req.body[0].model[i].qtt;
             obj.idWhOut = req.body[0].warehouseOut.id;
-            obj.requireQtt = req.body[0].model[i].qtt;
             obj.userId = userId;
             obj.unixTime = unixTime;
             const objRow = Object.values(obj);

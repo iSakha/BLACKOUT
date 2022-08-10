@@ -75,10 +75,26 @@ module.exports = class Event {
         }
     }
 
-    static deleteEvent(eventObj) {
-        console.log("eventObj:", eventObj);
+    // static deleteEvent(eventObj) {
+    //     console.log("eventObj:", eventObj);
+    //     try {
+    //         return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, idManager_1, idManager_2, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idPhase,idUpdatedBy, is_deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.idManager_1, eventObj.idManager_2, eventObj.idEventCity, eventObj.idEventPlace, eventObj.idClient, eventObj.idCreatedBy, eventObj.notes, eventObj.idStatus, eventObj.idPhase, eventObj.idUpdatedBy, eventObj.is_deleted]);
+    //     } catch (error) {
+    //         return error;
+    //     }
+    // }
+
+    static deleteEvent(id) {
         try {
-            return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, idManager_1, idManager_2, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idPhase,idUpdatedBy, is_deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.idManager_1, eventObj.idManager_2, eventObj.idEventCity, eventObj.idEventPlace, eventObj.idClient, eventObj.idCreatedBy, eventObj.notes, eventObj.idStatus, eventObj.idPhase, eventObj.idUpdatedBy, eventObj.is_deleted]);
+            return db.execute('DELETE FROM `t_events` WHERE `idEvent`=?', [id]);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static deletePhase(id) {
+        try {
+            return db.execute('DELETE FROM `t_event_details` WHERE `idEvent`=?', [id]);
         } catch (error) {
             return error;
         }

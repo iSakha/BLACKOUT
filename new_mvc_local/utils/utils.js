@@ -58,8 +58,11 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
     // msg - check required fields such as warehouse, title, datetime
     let msg = null;
     let eventRow = [];
-    let phaseRow = null;
     let oPhase = {};
+    let phaseRow = null;
+    let oBook = {};
+    let bookRow = null;
+
 
     console.log("title:", reqbody.title);
     console.log("time.start:", reqbody.time.start);
@@ -201,7 +204,45 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
     console.log("eventRow:", eventRow);
 
-    return [msg, eventRow, phaseRow];
+    // CREATE BOOKED EQUIPMENT
+    // ===========================================================
+
+    if (reqbody.booking != null) {
+
+        bookRow = [];
+
+        for (let i = 0; i < reqbody.booking.length; i++) {
+            let arr = [];
+
+            oBook.idEvent= oEvent.id;
+            arr.push(oBook.idEvent);
+
+            oBook.id = reqbody.booking[i].id + ".0000";
+            arr.push(oBook.id);
+
+            oBook.qtt = reqbody.booking[i].qtt;
+            arr.push(oBook.qtt);
+
+            oBook.idWh = oEvent.warehouse.id;
+            arr.push(oBook.idWh);
+
+            oBook.userId = oEvent.creator.id;
+            arr.push(oBook.userId);
+
+            oBook.unixTime = oEvent.unixTime;
+            arr.push(oBook.unixTime);
+
+
+
+            bookRow.push(arr);            
+
+        }
+
+        console.log("bookRow:", bookRow);
+
+    }
+
+    return [msg, eventRow, phaseRow, bookRow];
 
 
 }
