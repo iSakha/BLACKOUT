@@ -48,10 +48,14 @@ function createEventId() {
     return id;
 }
 
+
+// EVENT destructor
+// ===========================================================
 function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
     console.log("convertObjToRow reqbody:", reqbody);
 
+    // msg - check required fields such as warehouse, title, datetime
     let msg = null;
     let eventRow = [];
     let phaseRow = null;
@@ -202,6 +206,8 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
 }
 
+// EVENT constructor
+// ===========================================================
 function convertRowToObj(row) {
 
     console.log("convert row:", row);

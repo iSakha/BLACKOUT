@@ -22,12 +22,6 @@ module.exports = class BookedEquip {
       return db.query('SELECT `t`.`idFixture`, `t`.`whsQty`, `t`.`idWarehouse`, `e`.`modelName` FROM `t_event_equipment` `t` JOIN `t_equipment` `e` ON `t`.idFixture =`e`.`idFixture` WHERE `idEvent`=?', [id]);
    }
 
-   static getBookedModelsByEventIDwhID(eventID, whID) {
-      console.log("getBookedModelsByEventID, eventID:", eventID);
-      console.log("getBookedModelsByEventID, whID", whID);
-      return db.query('SELECT `t`.`idFixture`, `t`.`whsQty`, `t`.`idWarehouse`, `e`.`modelName` FROM `t_event_equipment` `t` JOIN `t_equipment` `e` ON `t`.idFixture =`e`.`idFixture` WHERE `t`.`idEvent`=? AND `t`.`idWarehouse`=?'  , [eventID, whID]);
-   }
-
    // delete from t_event_equipment
    static deleteModelsByEventID_1(id) {
       console.log("deleteModelsByEventID_1:", id);
