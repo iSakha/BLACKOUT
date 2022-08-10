@@ -26,9 +26,13 @@ router.get('/deps/:idDep/cats/:idCat', equipController.getEquipmentByDepCat);
 // =====================================================================
 router.get('/deps/:idDep/cats/:idCat/name/:idName', equipController.getFixtureByDepCatName);
 
+// Get fixtures by department, category
+// =====================================================================
+router.get('/device/deps/:idDep/cats/:idCat', equipController.getFixturesByDepCat);
+
 // Get fixtures by modelName
 // =====================================================================
-router.get('/fixt/:id', equipController.getFixturesByModelName);
+router.get('/device/:id', equipController.getFixturesByModelName);
 
 // Get qty fixtures by id
 // =====================================================================
@@ -38,6 +42,10 @@ router.get('/qty/:id', equipController.getQtyById);
 // =====================================================================
 router.post('/fixturelife/:status', equipController.changeStatusById);
 
+// Device workStatus Change
+// =====================================================================
+router.post('/workStatus', equipController.workStatusChanged);
+
 // Get fixtures history
 // =====================================================================
 router.get('/history', equipController.getFixtureHistory);
@@ -46,6 +54,21 @@ router.get('/history', equipController.getFixtureHistory);
 // =====================================================================
 router.get('/history/:id', equipController.getFixtureHistoryByID);
 
+// Fixtures movement
+// =====================================================================
+router.post('/devicesmove', equipController.fixturesMovement);
+
+// Models movement
+// =====================================================================
+router.post('/modelsmove', equipController.modelsMovement);
+
+// Get all models
+// =====================================================================
+router.get('/allmodels', equipController.getAllModels);
+
+// Get fixtures by model
+// =====================================================================
+router.get('/allmodels/:id', equipController.getOneModel);
 
 
 

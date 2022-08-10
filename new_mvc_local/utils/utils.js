@@ -48,10 +48,14 @@ function createEventId() {
     return id;
 }
 
+
+// EVENT destructor
+// ===========================================================
 function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
     console.log("convertObjToRow reqbody:", reqbody);
 
+    // msg - check required fields such as warehouse, title, datetime
     let msg = null;
     let eventRow = [];
     let phaseRow = null;
@@ -201,6 +205,9 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
 
 }
+
+// EVENT constructor
+// ===========================================================
 function convertRowToObj(row) {
 
     console.log("convert row:", row);
@@ -291,10 +298,48 @@ function convertLocationsToObj(locations) {
     return arrLocations;
 }
 
+// Update multiple rows
+// =======================================================================
+function updateMultiple(idWarehouse, idFixture) {
+    let query_1 = "UPDATE t_equipment SET idWarehouse = CASE ";
+    let query_2 = "";
+    let query_4 = "";
+
+    for (let i = 0; i < idFixture.length; i++) {
+        query_2 += " WHEN idFixture = '" + idFixture[i] + "' THEN " + idWarehouse;
+        if (i < idFixture.length - 1) {
+            query_4 += "'" + idFixture[i] + "'" + ",";
+        } else query_4 += "'" + idFixture[i] + "'";
+
+    }
+
+    let query_3 = " END  WHERE idFixture IN ("
+
+    let q = query_1 + query_2 + query_3 + query_4 + ")";
+
+    return q;
+}
+
+
+function modelsMovement(idWhOut, idModel, modelQty) {
+    let query = "";
+
+    for (let i = 0; i < idModel.length; i++) {
+        query += "(SELECT * FROM `t_equipment` WHERE idWarehouse=" + idWhOut + " AND idFixture LIKE '" + idModel[i] + "'" + " LIMIT " + modelQty[i] + ")";
+        if (i < idModel.length - 1) {
+            query += " UNION "
+        }
+    }
+    console.log(query);
+    return query;
+}
+
 module.exports = {
     currentDateTime: currentDateTime,
     createEventId: createEventId,
     convertRowToObj: convertRowToObj,
     convertObjToRow: convertObjToRow,
-    convertLocationsToObj: convertLocationsToObj
+    convertLocationsToObj: convertLocationsToObj,
+    updateMultiple: updateMultiple,
+    modelsMovement: modelsMovement
 };

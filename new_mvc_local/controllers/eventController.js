@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Event = require('../models/eventModel');
 const Phase = require('../models/phaseModel');
+const BookedEquip = require('../models/bookingModel')
 const utils = require('../utils/utils');
 const auth = require('../controllers/authController');
 
@@ -298,8 +299,10 @@ exports.getAllHistory = async (req, res) => {
 exports.getOne = async (req, res) => {
     let event = {};
     let phases = {};
+    let booked = {};
+    let subBooked = {};
     let eventObj = {};
-    let phaseObj = {};
+     
 
     console.log("getOne");
     let status = await auth.authenticateJWT(req, res);
@@ -311,8 +314,11 @@ exports.getOne = async (req, res) => {
         try {
             [event] = await Event.getOne(req.params.id);
             console.log("event:", event);
+            console.log("idWarehouse:",event[0].idWarehouse);
             [phases] = await Phase.getOnePhase(req.params.id);
             console.log("phases:", phases);
+            [booked] = await BookedEquip.getBookedModelsByEventIDwhID(req.params.id, event[0].idWarehouse);
+            console.log("booked:", booked);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting event from database" });
@@ -322,17 +328,33 @@ exports.getOne = async (req, res) => {
             }
         }
 
+        // go to constructor
+        eventObj = utils.convertRowToObj(event[0]);
+
         if (phases.length > 0) {
-            eventObj = utils.convertRowToObj(event[0]);
             eventObj.phase = phases;
             console.log("event+phase:", eventObj);
-            res.json(eventObj);
+        }
 
-        } else {
-            eventObj = utils.convertRowToObj(event[0]);
-            eventObj.phase = null;
-            res.json(eventObj);
-        };
+        if (booked.length > 0) {
+            let newItemArr = [];
+            booked.map(item => {
+                
+                let newItem = {};
+                newItem.id = item.idFixture.slice(0,11);
+                newItem.qtt = item.whsQty;
+
+                // console.log("newItem.id:",newItem.id);
+
+                newItemArr.push(newItem);
+
+            })
+            
+            eventObj.booking = newItemArr;
+            console.log("event+booking:", eventObj);
+        }
+
+        res.json(eventObj);
 
 
 

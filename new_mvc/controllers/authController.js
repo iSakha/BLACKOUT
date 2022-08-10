@@ -41,47 +41,49 @@ exports.validateUser = async (req, res) => {
 
         const [row] = await auth.validateUser(req.body.login);
 
+        const dbUser = row[0]; 
+
         console.log("row:", row);
 
         if (row.length > 0) {
             let passwordEnteredByUser = req.body.pass;
-            let salt = row[0].salt;
+            let salt = dbUser.salt;
 
             console.log("salt:", salt);
 
 
-            if (bcrypt.hashSync(passwordEnteredByUser, salt) === row[0].crypto) {
+            if (bcrypt.hashSync(passwordEnteredByUser, salt) === dbUser.crypto) {
                 
                 let user = {};
 
-                user.id = row[0].id;
-                user.login = row[0].login;
+                user.id = dbUser.id;
+                user.login = dbUser.login;
                 let name = {};
-                name.firstName = row[0].firstName;
-                name.lastName = row[0].lastName;
-                name.patronymic = row[0].patrName;
-                name.fullName = row[0].fullName;
+                name.firstName = dbUser.firstName;
+                name.lastName = dbUser.lastName;
+                name.patronymic = dbUser.patrName;
+                name.fullName = dbUser.fullName;
                 user.name = name;
-                name.avatar = row[0].avatar;
+                name.avatar = dbUser.avatar;
                 let role = {};
-                role.id = row[0].idRole;
-                role.name = row[0].role;
+                role.id = dbUser.idRole;
+                role.name = dbUser.role;
                 user.role = role;
                 let contacts = {};
-                contacts.phone1 = row[0].phone1;
-                contacts.phone2 = row[0].phone2;
-                contacts.email = row[0].email;
+                contacts.phone1 = dbUser.phone1;
+                contacts.phone2 = dbUser.phone2;
+                contacts.email = dbUser.email;
                 user.contacts = contacts;
                 let warehouse = {};
-                warehouse.id = row[0].idWarehouse;
-                warehouse.name = row[0].warehouse;
+                warehouse.id = dbUser.idWarehouse;
+                warehouse.name = dbUser.warehouse;
                 user.warehouse = warehouse;
                 let department = {};
-                department.id = row[0].idDepartment;
-                department.name = row[0].department;
+                department.id = dbUser.idDepartment;
+                department.name = dbUser.department;
                 user.department = department;
 
-                console.log("row[0]:", row[0]);
+                console.log("dbUser:", dbUser);
                 console.log("user:", user);
                 const accessToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, accessTokenSecret, { expiresIn: '120m' });
                 const refreshToken = jwt.sign({ username: user.username, role: user.role, id: user.id }, refreshTokenSecret);
