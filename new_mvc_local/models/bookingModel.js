@@ -43,10 +43,15 @@ module.exports = class BookedEquip {
       return db.query('DELETE FROM `t_booking_calendar` WHERE `idEvent`=?', [id]);
    }
 
-   static bookedEquipGetAll() {
-      console.log("bookedEquipGetAll");
-      return db.query('SELECT * FROM `v_booked_equip`');
+   static bookedGetAll() {
+      console.log("bookedGetAll");
+      return db.query('SELECT * FROM `v_event_equipment`');
    }
+
+   // static bookedEquipGetAll() {
+   //    console.log("bookedEquipGetAll");
+   //    return db.query('SELECT * FROM `v_booked_equip`');
+   // }
 
    static getEvents() {
       console.log("getEvents");

@@ -127,6 +127,7 @@ exports.getAll = async (req, res) => {
     let allEventsArr = [];
     let allEvents;
     let phases;
+    let equip;
 
     if (status.status === 200) {
 
@@ -144,10 +145,21 @@ exports.getAll = async (req, res) => {
             }
         }
 
-
         try {
             [phases] = await Phase.getAllPhase();
             console.log("phases:", phases);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting phase data from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+        try {
+            [equip] = await BookedEquip.bookedGetAll();
+            console.log("booked equip:", equip);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting phase data from database" });
@@ -173,6 +185,16 @@ exports.getAll = async (req, res) => {
             if (foundPhase.length > 0) {
                 eventObj.phase = foundPhase;
             } else eventObj.phase = null;
+
+            let foundEquip = equip.filter(e => e.idEvent === allEvents[i].idEvent);
+            console.log("foundEquip:", i, foundEquip);
+
+            if (foundEquip.length > 0) {
+                eventObj.booking = foundEquip;
+            } else eventObj.booking = null;
+
+
+
 
             allEventsArr.push(eventObj);
         }
@@ -205,18 +227,37 @@ exports.updateEvent = async (req, res) => {
         let msg = obj[0];
         let eventRow = obj[1];
         let eventPhase = obj[2];
+        let bookedEquip = obj[3];
 
         console.log("obj:", obj);
         console.log("eventRow:", eventRow);
         console.log("msg:", msg);
         console.log("eventPhase:", eventPhase);
+        console.log("bookedEquip:", bookedEquip);
+        console.log("eventRow[13]:", eventRow[13]);
+
+        let unixTime = eventRow[13];
 
 
         if (msg === null) {
 
             try {
+                await Event.deleteEvent(req.params.id, userId, unixTime);
                 const [newEvent] = await Event.createEvent(eventRow);
                 console.log("result newEvent:", newEvent);
+
+                if (eventPhase !== null) {
+                    await Event.deletePhase(req.params.id, userId, unixTime);
+                    const [newPhase] = await Phase.writeEventPhase(eventPhase);
+                    console.log("result newPhase:", newPhase);
+                }
+
+                if (bookedEquip !== null) {
+                    await Event.deleteEquipment(req.params.id, userId, unixTime);
+                    const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
+                    console.log("result booked equipment:", bkEquip);
+                }
+
             } catch (error) {
                 console.log("error:", error);
                 res.status(500).json({ msg: "We have problems with writing event data to database" });
@@ -225,20 +266,7 @@ exports.updateEvent = async (req, res) => {
                     message: 'Error from database'
                 }
             }
-            if (eventPhase !== null) {
-                try {
-                    const [newPhase] = await Phase.updateEventPhase(eventPhase);
-                    console.log("result eventPhase:", newPhase);
-                } catch (error) {
-                    console.log("error:", error);
-                    res.status(500).json({ msg: "We have problems with writing phase data to database" });
-                    return {
-                        error: true,
-                        message: 'Error from database'
-                    }
-                }
-            }
-            // res.status(200).json({ msg: `Мероприятие успешно обновлено.` });
+
             res.status(200).json({ msg: `Мероприятие успешно обновлено. idEvent = ${eventRow[0]}` });
 
         } else res.status(400).json(msg);
@@ -259,24 +287,6 @@ exports.deleteEvent = async (req, res) => {
     if (status.status === 200) {
 
         console.log("authentication successfull!");
-
-
-        // let obj = {}
-
-        // obj.idEvent = req.params.id;
-        // obj.idWarehouse = 1;
-        // obj.title = "delete";
-        // obj.idManager_1 = 1;
-        // obj.idManager_2 = 1;
-        // obj.idEventCity = 1;
-        // obj.idEventPlace = 1;
-        // obj.idClient = 1;
-        // obj.idCreatedBy = 1;
-        // obj.notes = "";
-        // obj.idStatus = 1;
-        // obj.idPhase = 1;
-        // obj.idUpdatedBy = userId;
-        // obj.is_deleted = 1;
 
         try {
             await Event.deleteEvent(req.params.id, userId, unixTime);
@@ -367,9 +377,9 @@ exports.getOne = async (req, res) => {
         try {
             [event] = await Event.getOne(req.params.id);
             console.log("event:", event);
-            if(event.length < 1) {
-                res.status(200).json({ msg: `Мероприятия с id = ${req.params.id} не существует`});
-                return; 
+            if (event.length < 1) {
+                res.status(200).json({ msg: `Мероприятия с id = ${req.params.id} не существует` });
+                return;
             }
             console.log("idWarehouse:", event[0].idWarehouse);
             [phases] = await Phase.getOnePhase(req.params.id);

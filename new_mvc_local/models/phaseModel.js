@@ -33,7 +33,7 @@ module.exports = class Phase {
 
     static getAllPhase() {
         try {
-            return db.execute('SELECT idEvent, id, phase, start, end FROM `v_event_phase_latest_state`');
+            return db.execute('SELECT idEvent, id, phase, start, end FROM `v_event_phase`');
         } catch (error) {
             return error;
         }

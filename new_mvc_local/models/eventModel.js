@@ -26,7 +26,7 @@ module.exports = class Event {
     // =====================================================================
     static getAll() {
         try {
-            return db.execute('SELECT * FROM `v_events_latest_state` WHERE `v_events_latest_state`.`isDeleted` = 0');
+            return db.execute('SELECT * FROM `v_events`');
         } catch (error) {
             return error;
         }
