@@ -172,6 +172,10 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
             // console.log("reqbody.phase:",reqbody.phase[i]);
             let arr = [];
 
+            // idEvent
+            oPhase.idEvent = oEvent.id;
+            arr.push(oPhase.idEvent);
+
             // idPhase
             oPhase.idPhase = reqbody.phase[i].id;
             arr.push(oPhase.idPhase);
@@ -184,15 +188,13 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
             oPhase.endPhase = reqbody.phase[i].end.slice(0, 16);
             arr.push(oPhase.endPhase);
 
+            // idUser
+            oPhase.idUser = idUser;
+            arr.push(oPhase.idUser);
+
             // unixTime
             oPhase.unixTime = oEvent.unixTime;
             arr.push(oPhase.unixTime);
-
-            // idEvent
-            oPhase.idEvent = oEvent.id;
-            arr.push(oPhase.idEvent);
-
-
 
             phaseRow.push(arr);
 
@@ -214,7 +216,7 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
         for (let i = 0; i < reqbody.booking.length; i++) {
             let arr = [];
 
-            oBook.idEvent= oEvent.id;
+            oBook.idEvent = oEvent.id;
             arr.push(oBook.idEvent);
 
             oBook.id = reqbody.booking[i].id + ".0000";
@@ -234,7 +236,7 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
 
 
-            bookRow.push(arr);            
+            bookRow.push(arr);
 
         }
 

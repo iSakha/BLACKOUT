@@ -254,6 +254,7 @@ exports.deleteEvent = async (req, res) => {
 
     let status = await auth.authenticateJWT(req, res);
     let userId = status.id;
+    let unixTime = Date.now();
 
     if (status.status === 200) {
 
@@ -278,8 +279,9 @@ exports.deleteEvent = async (req, res) => {
         // obj.is_deleted = 1;
 
         try {
-            await Event.deleteEvent(req.params.id);
-            await Event.deletePhase(req.params.id);
+            await Event.deleteEvent(req.params.id, userId, unixTime);
+            await Event.deletePhase(req.params.id, userId, unixTime);
+            await Event.deleteEquipment(req.params.id, userId, unixTime);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with deleting event data from database" });
@@ -398,7 +400,7 @@ exports.getOne = async (req, res) => {
                 let newItem = {};
                 newItem.id = item.idFixture.slice(0, 11);
                 newItem.qtt = item.qtt;
-                newItem.name = item.modelName;
+                newItem.name = item.name;
 
                 // console.log("newItem.id:",newItem.id);
 
