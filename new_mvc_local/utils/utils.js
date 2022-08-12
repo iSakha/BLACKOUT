@@ -165,7 +165,7 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
     // CREATE PHASE
     // ===========================================================
 
-    if (reqbody.phase != null) {
+    if (reqbody.phase.length > 0) {
         phaseRow = [];
 
         for (let i = 0; i < reqbody.phase.length; i++) {
@@ -209,7 +209,7 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
     // CREATE BOOKED EQUIPMENT
     // ===========================================================
 
-    if (reqbody.booking != null) {
+    if (reqbody.booking.length > 0) {
 
         bookRow = [];
 

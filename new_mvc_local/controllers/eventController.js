@@ -18,6 +18,15 @@ exports.createNewEvent = async (req, res) => {
 
     if (status.status === 200) {
 
+        const dateStart = req.body.time.start.slice(0, 10);
+        const dateEnd = req.body.time.end.slice(0, 10);
+        const diffInMs = new Date(dateEnd) - new Date(dateStart);
+        const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
+
+        console.log("eventDays :", eventDays);
+        let date = new Date(dateStart);
+        let newDataRowArr = [];
+
         console.log("authentication successfull!");
 
 
@@ -64,6 +73,21 @@ exports.createNewEvent = async (req, res) => {
                 try {
                     const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
                     console.log("result booked equipment:", bkEquip);
+
+                    for (let i = 0; i < eventDays; i++) {
+                        for (let j = 0; j < bookedEquip.length; j++) {
+                            let row = bookedEquip[j];
+                            row = row.slice(0, 4);
+                            row.unshift(date.toISOString().slice(0, 10));
+                            newDataRowArr.push(row);
+                            bookedEquip[j].pop();
+                            bookedEquip[j].push(date.toISOString().slice(0, 10));
+                            console.log("bookedEquip:", bookedEquip[j]);
+                        }
+                        date.setDate(date.getDate() + 1);
+                    }
+
+
                 } catch (error) {
                     console.log("error:", error);
                     res.status(500).json({ msg: "We have problems with booked equipment to `t_event_equipment` table" });
@@ -74,40 +98,7 @@ exports.createNewEvent = async (req, res) => {
                 }
             }
 
-            const dateStart = req.body.time.start.slice(0, 10);
-            const dateEnd = req.body.time.end.slice(0, 10);
-            const diffInMs = new Date(dateEnd) - new Date(dateStart);
-            const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
 
-            console.log("eventDays :", eventDays);
-            let date = new Date(dateStart);
-            let newDataRowArr = [];
-            for (let i = 0; i < eventDays; i++) {
-                for (let j = 0; j < bookedEquip.length; j++) {
-                    let row = bookedEquip[j];
-                    row = row.slice(0, 4);
-                    row.unshift(date.toISOString().slice(0, 10));
-                    newDataRowArr.push(row);
-                    bookedEquip[j].pop();
-                    bookedEquip[j].push(date.toISOString().slice(0, 10));
-                    console.log("bookedEquip:", bookedEquip[j]);
-                }
-                date.setDate(date.getDate() + 1);
-            }
-
-            console.log("newDataRowArr :", newDataRowArr);
-
-            try {
-                const [equipPerDay] = await BookedEquip.writeToBookCalendar(newDataRowArr);
-                console.log("equipPerDay:", equipPerDay);
-            } catch (error) {
-                console.log("error:", error);
-                res.status(500).json({ msg: "We have problems with writing data to Booking Calendar" });
-                return {
-                    error: true,
-                    message: 'Error from database'
-                }
-            }
 
             res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` });
 
@@ -181,20 +172,23 @@ exports.getAll = async (req, res) => {
 
             let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
             console.log("foundPhase:", i, foundPhase);
+            foundPhase.map(item => {
+                delete item.idEvent;
+            })
 
             if (foundPhase.length > 0) {
                 eventObj.phase = foundPhase;
             } else eventObj.phase = null;
 
+            
             let foundEquip = equip.filter(e => e.idEvent === allEvents[i].idEvent);
             console.log("foundEquip:", i, foundEquip);
-
+            foundEquip.map(item => {
+                delete item.idEvent;
+            })
             if (foundEquip.length > 0) {
                 eventObj.booking = foundEquip;
             } else eventObj.booking = null;
-
-
-
 
             allEventsArr.push(eventObj);
         }
@@ -244,16 +238,17 @@ exports.updateEvent = async (req, res) => {
             try {
                 await Event.deleteEvent(req.params.id, userId, unixTime);
                 const [newEvent] = await Event.createEvent(eventRow);
+
                 console.log("result newEvent:", newEvent);
+                await Event.deletePhase(req.params.id, userId, unixTime);
 
                 if (eventPhase !== null) {
-                    await Event.deletePhase(req.params.id, userId, unixTime);
                     const [newPhase] = await Phase.writeEventPhase(eventPhase);
                     console.log("result newPhase:", newPhase);
                 }
+                await Event.deleteEquipment(req.params.id, userId, unixTime);
 
                 if (bookedEquip !== null) {
-                    await Event.deleteEquipment(req.params.id, userId, unixTime);
                     const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
                     console.log("result booked equipment:", bkEquip);
                 }
