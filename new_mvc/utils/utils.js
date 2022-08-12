@@ -48,14 +48,21 @@ function createEventId() {
     return id;
 }
 
+
+// EVENT destructor
+// ===========================================================
 function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
     console.log("convertObjToRow reqbody:", reqbody);
 
+    // msg - check required fields such as warehouse, title, datetime
     let msg = null;
     let eventRow = [];
-    let phaseRow = null;
     let oPhase = {};
+    let phaseRow = null;
+    let oBook = {};
+    let bookRow = null;
+
 
     console.log("title:", reqbody.title);
     console.log("time.start:", reqbody.time.start);
@@ -158,12 +165,16 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
     // CREATE PHASE
     // ===========================================================
 
-    if (reqbody.phase != null) {
+    if (reqbody.phase.length > 0) {
         phaseRow = [];
 
         for (let i = 0; i < reqbody.phase.length; i++) {
             // console.log("reqbody.phase:",reqbody.phase[i]);
             let arr = [];
+
+            // idEvent
+            oPhase.idEvent = oEvent.id;
+            arr.push(oPhase.idEvent);
 
             // idPhase
             oPhase.idPhase = reqbody.phase[i].id;
@@ -177,15 +188,13 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
             oPhase.endPhase = reqbody.phase[i].end.slice(0, 16);
             arr.push(oPhase.endPhase);
 
+            // idUser
+            oPhase.idUser = idUser;
+            arr.push(oPhase.idUser);
+
             // unixTime
             oPhase.unixTime = oEvent.unixTime;
             arr.push(oPhase.unixTime);
-
-            // idEvent
-            oPhase.idEvent = oEvent.id;
-            arr.push(oPhase.idEvent);
-
-
 
             phaseRow.push(arr);
 
@@ -197,11 +206,51 @@ function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
     console.log("eventRow:", eventRow);
 
-    return [msg, eventRow, phaseRow];
+    // CREATE BOOKED EQUIPMENT
+    // ===========================================================
+
+    if (reqbody.booking.length > 0) {
+
+        bookRow = [];
+
+        for (let i = 0; i < reqbody.booking.length; i++) {
+            let arr = [];
+
+            oBook.idEvent = oEvent.id;
+            arr.push(oBook.idEvent);
+
+            oBook.id = reqbody.booking[i].id + ".0000";
+            arr.push(oBook.id);
+
+            oBook.qtt = reqbody.booking[i].qtt;
+            arr.push(oBook.qtt);
+
+            oBook.idWh = oEvent.warehouse.id;
+            arr.push(oBook.idWh);
+
+            oBook.userId = oEvent.creator.id;
+            arr.push(oBook.userId);
+
+            oBook.unixTime = oEvent.unixTime;
+            arr.push(oBook.unixTime);
+
+
+
+            bookRow.push(arr);
+
+        }
+
+        console.log("bookRow:", bookRow);
+
+    }
+
+    return [msg, eventRow, phaseRow, bookRow];
 
 
 }
 
+// EVENT constructor
+// ===========================================================
 function convertRowToObj(row) {
 
     console.log("convert row:", row);

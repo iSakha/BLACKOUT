@@ -21,7 +21,7 @@ module.exports = class BookedEquip {
 
    static getBookedModelsByEventID(id) {
       console.log("getBookedModelsByEventID:", id);
-      return db.query('SELECT * FROM v_event_equipment WHERE `idEvent`=?', [id]);
+      return db.query('SELECT `idEvent`, SUBSTRING(`id`,1,11) AS `id`, `name`, `qtt` FROM `v_event_equipment` WHERE `idEvent`=?', [id]);
       // return db.query('SELECT `t`.`idFixture`, `t`.`idWarehouse`, `e`.`modelName`, `t`.`requiredQty` AS `qtt`  FROM `t_event_equipment` `t` JOIN `t_equipment` `e` ON `t`.idFixture =`e`.`idFixture` WHERE `idEvent`=?', [id]);
    }
 

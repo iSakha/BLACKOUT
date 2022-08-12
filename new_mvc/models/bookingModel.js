@@ -9,8 +9,10 @@ module.exports = class BookedEquip {
 
    static setBookedModels(dataRow) {
       console.log("setBookedModels dataRow:", dataRow);
-      return db.query('INSERT INTO `t_event_equipment` (idEvent, idFixture, requiredQty, idWarehouse, whsQty, idUser, unixTime) VALUES ?', [dataRow]);
+      return db.query('INSERT INTO `t_event_equipment` (idEvent, idFixture, requiredQty, idWarehouse, idUser, unixTime) VALUES ?', [dataRow]);
    }
+
+
 
    static writeToBookCalendar(dataRow) {
       console.log("writeToBookCalendar dataRow:", dataRow);
@@ -19,8 +21,15 @@ module.exports = class BookedEquip {
 
    static getBookedModelsByEventID(id) {
       console.log("getBookedModelsByEventID:", id);
-      return db.query('SELECT `t`.`idFixture`, `t`.`whsQty`, `t`.`idWarehouse`, `e`.`modelName` FROM `t_event_equipment` `t` JOIN `t_equipment` `e` ON `t`.idFixture =`e`.`idFixture` WHERE `idEvent`=?', [id]);
+      return db.query('SELECT `idEvent`, SUBSTRING(`id`,1,11) AS `id`, `name`, `qtt` FROM `v_event_equipment` WHERE `idEvent`=?', [id]);
+      // return db.query('SELECT `t`.`idFixture`, `t`.`idWarehouse`, `e`.`modelName`, `t`.`requiredQty` AS `qtt`  FROM `t_event_equipment` `t` JOIN `t_equipment` `e` ON `t`.idFixture =`e`.`idFixture` WHERE `idEvent`=?', [id]);
    }
+
+   // static getBookedModelsByEventIDwhID(eventID, whID) {
+   //    console.log("getBookedModelsByEventID, eventID:", eventID);
+   //    console.log("getBookedModelsByEventID, whID", whID);
+   //    return db.query('SELECT `t`.`idFixture`, `t`.`idWarehouse`, `e`.`modelName`, `t`.`requiredQty` AS `qtt` FROM `t_event_equipment` `t` JOIN `t_equipment` `e` ON `t`.idFixture =`e`.`idFixture` WHERE `t`.`idEvent`=? AND `t`.`idWarehouse`=?'  , [eventID, whID]);
+   // }
 
    // delete from t_event_equipment
    static deleteModelsByEventID_1(id) {
@@ -34,10 +43,15 @@ module.exports = class BookedEquip {
       return db.query('DELETE FROM `t_booking_calendar` WHERE `idEvent`=?', [id]);
    }
 
-   static bookedEquipGetAll() {
-      console.log("bookedEquipGetAll");
-      return db.query('SELECT * FROM `v_booked_equip`');
+   static bookedGetAll() {
+      console.log("bookedGetAll");
+      return db.query('SELECT `idEvent`, SUBSTRING(`id`,1,11) AS `id`, `name`, `qtt` FROM `v_event_equipment`');
    }
+
+   // static bookedEquipGetAll() {
+   //    console.log("bookedEquipGetAll");
+   //    return db.query('SELECT * FROM `v_booked_equip`');
+   // }
 
    static getEvents() {
       console.log("getEvents");

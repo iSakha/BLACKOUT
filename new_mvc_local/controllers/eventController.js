@@ -178,9 +178,9 @@ exports.getAll = async (req, res) => {
 
             if (foundPhase.length > 0) {
                 eventObj.phase = foundPhase;
-            } else eventObj.phase = null;
+            } else eventObj.phase = [];
 
-            
+
             let foundEquip = equip.filter(e => e.idEvent === allEvents[i].idEvent);
             console.log("foundEquip:", i, foundEquip);
             foundEquip.map(item => {
@@ -188,7 +188,7 @@ exports.getAll = async (req, res) => {
             })
             if (foundEquip.length > 0) {
                 eventObj.booking = foundEquip;
-            } else eventObj.booking = null;
+            } else eventObj.booking = [];
 
             allEventsArr.push(eventObj);
         }
@@ -396,25 +396,21 @@ exports.getOne = async (req, res) => {
         if (phases.length > 0) {
             eventObj.phase = phases;
             console.log("event+phase:", eventObj);
+        } else {
+            eventObj.phase = [];
         }
 
         if (booked.length > 0) {
-            let newItemArr = [];
+            console.log("booked before map:", booked);
             booked.map(item => {
-
-                let newItem = {};
-                newItem.id = item.idFixture.slice(0, 11);
-                newItem.qtt = item.qtt;
-                newItem.name = item.name;
-
-                // console.log("newItem.id:",newItem.id);
-
-                newItemArr.push(newItem);
-
+                delete item.idEvent;
             })
-
-            eventObj.booking = newItemArr;
+            console.log("booked after map:", booked);
+            eventObj.booking = booked;
             console.log("event+booking:", eventObj);
+            console.log("event+booking:", eventObj);
+        }else {
+            eventObj.booking = [];
         }
 
         res.json(eventObj);

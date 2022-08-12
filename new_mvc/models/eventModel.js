@@ -26,7 +26,7 @@ module.exports = class Event {
     // =====================================================================
     static getAll() {
         try {
-            return db.execute('SELECT * FROM `v_events_latest_state` WHERE `v_events_latest_state`.`isDeleted` = 0');
+            return db.execute('SELECT * FROM `v_events`');
         } catch (error) {
             return error;
         }
@@ -43,7 +43,7 @@ module.exports = class Event {
 
     static getOne(idEvent) {
         try {
-            return db.execute('SELECT * FROM `v_events_latest_state` WHERE `idEvent`=?', [idEvent]);
+            return db.execute('SELECT * FROM `v_events` WHERE `idEvent`=?', [idEvent]);
         } catch (error) {
             return error;
         }
@@ -75,10 +75,34 @@ module.exports = class Event {
         }
     }
 
-    static deleteEvent(eventObj) {
-        console.log("eventObj:", eventObj);
+    // static deleteEvent(eventObj) {
+    //     console.log("eventObj:", eventObj);
+    //     try {
+    //         return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, idManager_1, idManager_2, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idPhase,idUpdatedBy, is_deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.idManager_1, eventObj.idManager_2, eventObj.idEventCity, eventObj.idEventPlace, eventObj.idClient, eventObj.idCreatedBy, eventObj.notes, eventObj.idStatus, eventObj.idPhase, eventObj.idUpdatedBy, eventObj.is_deleted]);
+    //     } catch (error) {
+    //         return error;
+    //     }
+    // }
+
+    static deleteEvent(id, userId, unixTime) {
         try {
-            return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, idManager_1, idManager_2, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idPhase,idUpdatedBy, is_deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [eventObj.idEvent, eventObj.idWarehouse, eventObj.title, eventObj.idManager_1, eventObj.idManager_2, eventObj.idEventCity, eventObj.idEventPlace, eventObj.idClient, eventObj.idCreatedBy, eventObj.notes, eventObj.idStatus, eventObj.idPhase, eventObj.idUpdatedBy, eventObj.is_deleted]);
+            return db.execute('UPDATE t_events SET t_events.is_deleted = 1, t_events.idUpdatedBy=?, t_events.unixTime=? WHERE t_events.idEvent=?', [userId, unixTime, id]);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static deletePhase(id, userId, unixTime) {
+        try {
+            return db.execute('UPDATE t_event_phase SET t_event_phase.is_deleted = 1, t_event_phase.idUser=?, t_event_phase.unixTime=? WHERE t_event_phase.idEvent=?', [userId, unixTime, id]);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static deleteEquipment(id, userId, unixTime) {
+        try {
+            return db.execute('UPDATE t_event_equipment SET t_event_equipment.is_deleted = 1, t_event_equipment.idUser=?, t_event_equipment.unixTime=? WHERE t_event_equipment.idEvent=?', [userId, unixTime, id]);
         } catch (error) {
             return error;
         }

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Event = require('../models/eventModel');
 const Phase = require('../models/phaseModel');
+const BookedEquip = require('../models/bookingModel')
 const utils = require('../utils/utils');
 const auth = require('../controllers/authController');
 
@@ -17,6 +18,15 @@ exports.createNewEvent = async (req, res) => {
 
     if (status.status === 200) {
 
+        const dateStart = req.body.time.start.slice(0, 10);
+        const dateEnd = req.body.time.end.slice(0, 10);
+        const diffInMs = new Date(dateEnd) - new Date(dateStart);
+        const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
+
+        console.log("eventDays :", eventDays);
+        let date = new Date(dateStart);
+        let newDataRowArr = [];
+
         console.log("authentication successfull!");
 
 
@@ -25,6 +35,7 @@ exports.createNewEvent = async (req, res) => {
         let msg = obj[0];
         let eventRow = obj[1];
         let eventPhase = obj[2];
+        let bookedEquip = obj[3];
 
         console.log("obj:", obj);
         console.log("eventRow:", eventRow);
@@ -58,6 +69,37 @@ exports.createNewEvent = async (req, res) => {
                 }
             }
 
+            if (bookedEquip !== null) {
+                try {
+                    const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
+                    console.log("result booked equipment:", bkEquip);
+
+                    for (let i = 0; i < eventDays; i++) {
+                        for (let j = 0; j < bookedEquip.length; j++) {
+                            let row = bookedEquip[j];
+                            row = row.slice(0, 4);
+                            row.unshift(date.toISOString().slice(0, 10));
+                            newDataRowArr.push(row);
+                            bookedEquip[j].pop();
+                            bookedEquip[j].push(date.toISOString().slice(0, 10));
+                            console.log("bookedEquip:", bookedEquip[j]);
+                        }
+                        date.setDate(date.getDate() + 1);
+                    }
+
+
+                } catch (error) {
+                    console.log("error:", error);
+                    res.status(500).json({ msg: "We have problems with booked equipment to `t_event_equipment` table" });
+                    return {
+                        error: true,
+                        message: 'Error from database'
+                    }
+                }
+            }
+
+
+
             res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` });
 
         } else res.status(400).json(msg);
@@ -76,6 +118,7 @@ exports.getAll = async (req, res) => {
     let allEventsArr = [];
     let allEvents;
     let phases;
+    let equip;
 
     if (status.status === 200) {
 
@@ -93,10 +136,21 @@ exports.getAll = async (req, res) => {
             }
         }
 
-
         try {
             [phases] = await Phase.getAllPhase();
             console.log("phases:", phases);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting phase data from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+        try {
+            [equip] = await BookedEquip.bookedGetAll();
+            console.log("booked equip:", equip);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting phase data from database" });
@@ -118,10 +172,23 @@ exports.getAll = async (req, res) => {
 
             let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
             console.log("foundPhase:", i, foundPhase);
+            foundPhase.map(item => {
+                delete item.idEvent;
+            })
 
             if (foundPhase.length > 0) {
                 eventObj.phase = foundPhase;
-            } else eventObj.phase = null;
+            } else eventObj.phase = [];
+
+
+            let foundEquip = equip.filter(e => e.idEvent === allEvents[i].idEvent);
+            console.log("foundEquip:", i, foundEquip);
+            foundEquip.map(item => {
+                delete item.idEvent;
+            })
+            if (foundEquip.length > 0) {
+                eventObj.booking = foundEquip;
+            } else eventObj.booking = [];
 
             allEventsArr.push(eventObj);
         }
@@ -154,18 +221,38 @@ exports.updateEvent = async (req, res) => {
         let msg = obj[0];
         let eventRow = obj[1];
         let eventPhase = obj[2];
+        let bookedEquip = obj[3];
 
         console.log("obj:", obj);
         console.log("eventRow:", eventRow);
         console.log("msg:", msg);
         console.log("eventPhase:", eventPhase);
+        console.log("bookedEquip:", bookedEquip);
+        console.log("eventRow[13]:", eventRow[13]);
+
+        let unixTime = eventRow[13];
 
 
         if (msg === null) {
 
             try {
+                await Event.deleteEvent(req.params.id, userId, unixTime);
                 const [newEvent] = await Event.createEvent(eventRow);
+
                 console.log("result newEvent:", newEvent);
+                await Event.deletePhase(req.params.id, userId, unixTime);
+
+                if (eventPhase !== null) {
+                    const [newPhase] = await Phase.writeEventPhase(eventPhase);
+                    console.log("result newPhase:", newPhase);
+                }
+                await Event.deleteEquipment(req.params.id, userId, unixTime);
+
+                if (bookedEquip !== null) {
+                    const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
+                    console.log("result booked equipment:", bkEquip);
+                }
+
             } catch (error) {
                 console.log("error:", error);
                 res.status(500).json({ msg: "We have problems with writing event data to database" });
@@ -174,20 +261,7 @@ exports.updateEvent = async (req, res) => {
                     message: 'Error from database'
                 }
             }
-            if (eventPhase !== null) {
-                try {
-                    const [newPhase] = await Phase.updateEventPhase(eventPhase);
-                    console.log("result eventPhase:", newPhase);
-                } catch (error) {
-                    console.log("error:", error);
-                    res.status(500).json({ msg: "We have problems with writing phase data to database" });
-                    return {
-                        error: true,
-                        message: 'Error from database'
-                    }
-                }
-            }
-            // res.status(200).json({ msg: `Мероприятие успешно обновлено.` });
+
             res.status(200).json({ msg: `Мероприятие успешно обновлено. idEvent = ${eventRow[0]}` });
 
         } else res.status(400).json(msg);
@@ -203,31 +277,16 @@ exports.deleteEvent = async (req, res) => {
 
     let status = await auth.authenticateJWT(req, res);
     let userId = status.id;
+    let unixTime = Date.now();
 
     if (status.status === 200) {
 
         console.log("authentication successfull!");
 
-
-        let obj = {}
-
-        obj.idEvent = req.params.id;
-        obj.idWarehouse = 1;
-        obj.title = "delete";
-        obj.idManager_1 = 1;
-        obj.idManager_2 = 1;
-        obj.idEventCity = 1;
-        obj.idEventPlace = 1;
-        obj.idClient = 1;
-        obj.idCreatedBy = 1;
-        obj.notes = "";
-        obj.idStatus = 1;
-        obj.idPhase = 1;
-        obj.idUpdatedBy = userId;
-        obj.is_deleted = 1;
-
         try {
-            await Event.deleteEvent(obj);
+            await Event.deleteEvent(req.params.id, userId, unixTime);
+            await Event.deletePhase(req.params.id, userId, unixTime);
+            await Event.deleteEquipment(req.params.id, userId, unixTime);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with deleting event data from database" });
@@ -298,8 +357,10 @@ exports.getAllHistory = async (req, res) => {
 exports.getOne = async (req, res) => {
     let event = {};
     let phases = {};
+    let booked = {};
+    // let subBooked = {};
     let eventObj = {};
-    let phaseObj = {};
+
 
     console.log("getOne");
     let status = await auth.authenticateJWT(req, res);
@@ -311,8 +372,15 @@ exports.getOne = async (req, res) => {
         try {
             [event] = await Event.getOne(req.params.id);
             console.log("event:", event);
+            if (event.length < 1) {
+                res.status(200).json({ msg: `Мероприятия с id = ${req.params.id} не существует` });
+                return;
+            }
+            console.log("idWarehouse:", event[0].idWarehouse);
             [phases] = await Phase.getOnePhase(req.params.id);
             console.log("phases:", phases);
+            [booked] = await BookedEquip.getBookedModelsByEventID(req.params.id);
+            console.log("booked:", booked);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting event from database" });
@@ -322,17 +390,26 @@ exports.getOne = async (req, res) => {
             }
         }
 
+        // go to constructor
+        eventObj = utils.convertRowToObj(event[0]);
+
         if (phases.length > 0) {
-            eventObj = utils.convertRowToObj(event[0]);
             eventObj.phase = phases;
             console.log("event+phase:", eventObj);
-            res.json(eventObj);
-
         } else {
-            eventObj = utils.convertRowToObj(event[0]);
-            eventObj.phase = null;
-            res.json(eventObj);
-        };
+            eventObj.phase = [];
+        }
+
+        if (booked.length > 0) {
+            booked.map(item => {
+                delete item.idEvent;
+            })
+            eventObj.booking = booked;
+        } else {
+            eventObj.booking = [];
+        }
+
+        res.json(eventObj);
 
 
 
