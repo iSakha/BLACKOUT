@@ -4,22 +4,17 @@ const db = dtb.promise();
 
 module.exports = class Event {
 
-    constructor() {
+    constructor(eventId, event) {
 
-        this.id = null;
-        this.title = null;
-        this.time = { start: null };
-        this.warehouse = { id: null };
-        this.creator = { id: 1 };
-        this.client = { id: 1 };
-        this.status = { id: 1 };
-        this.location = {
-            city: { id: 1 },
-            place: { id: 1 }
-        }
-        this.manager = { id: 1 };
-        this.phase = null;
-        this.notes = "";
+        this.id = eventId;
+        this.title = event.title;
+        this.time = { start: event.start, end: event.end };
+        this.warehouse = { id: event.idWarehouse, name: event.warehouse };
+        this.client = { id: event.idClient, name: event.client};
+        this.status = { id: event.idStatus, name: event.status};
+        this.location = {city:{id:event.idEventCity,name:event.eventCity},place:{id:event.idEventPlace,name:event.eventPlace}};
+        this.manager = {id:event.idManager_1,name:event.manager_1};
+        this.notes = event.notes;
     }
 
     // Events queries

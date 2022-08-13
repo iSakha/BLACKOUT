@@ -355,7 +355,7 @@ exports.getAllHistory = async (req, res) => {
 }
 
 exports.getOne = async (req, res) => {
-    let event = {};
+    // let event = {};
     let phases = {};
     let booked = {};
     // let subBooked = {};
@@ -370,7 +370,8 @@ exports.getOne = async (req, res) => {
     if (status.status === 200) {
 
         try {
-            [event] = await Event.getOne(req.params.id);
+            const [event] = await Event.getOne(req.params.id);
+            let eventObj = new Event(req.params.id, event[0]);
             console.log("event:", event);
             if (event.length < 1) {
                 res.status(200).json({ msg: `Мероприятия с id = ${req.params.id} не существует` });
@@ -391,7 +392,7 @@ exports.getOne = async (req, res) => {
         }
 
         // go to constructor
-        eventObj = utils.convertRowToObj(event[0]);
+        // eventObj = utils.convertRowToObj(event[0]);
 
         if (phases.length > 0) {
             eventObj.phase = phases;
