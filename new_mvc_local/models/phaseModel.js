@@ -2,14 +2,11 @@ const dtb = require('../config/database');
 const db = dtb.promise();
 
 module.exports = class Phase {
-    constructor(oPhase) {
-
-        this.idEvent = oPhase.idEvent;
-        this.id = oPhase.id;
-        this.phase = oPhase.phase;
-        this.start = oPhase.start;
-        this.end = oPhase.end;
-        this.unixTime = oPhase.unixTime;
+    constructor(phase) {
+        this.id = phase.id;
+        this.phase = phase.phase;
+        this.start = phase.start;
+        this.end = phase.end;
     }
 
     static writeEventPhase(eventPhase) {

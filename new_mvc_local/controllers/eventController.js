@@ -23,28 +23,35 @@ exports.createNewEvent = async (req, res) => {
         const diffInMs = new Date(dateEnd) - new Date(dateStart);
         const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
 
-        console.log("eventDays :", eventDays);
         let date = new Date(dateStart);
         let newDataRowArr = [];
+
+        console.log("eventDays :", eventDays);
+
 
         console.log("authentication successfull!");
 
 
-        let obj = utils.convertObjToRow(req.body, "create", userId, null);
+        let destructArr = utils.destructObj(userId, req.body);
+        // console.log("destructArr:",destructArr);
+        // let obj = utils.convertObjToRow(req.body, "create", userId, null);
 
-        let msg = obj[0];
-        let eventRow = obj[1];
-        let eventPhase = obj[2];
-        let bookedEquip = obj[3];
+        let errMsg = destructArr[0];
+        let eventRow = destructArr[1];
+        let eventPhase = destructArr[2];
+        let bookedEquip = destructArr[3];
 
-        console.log("obj:", obj);
-        console.log("eventRow:", eventRow);
-        console.log("msg:", msg);
-        console.log("eventPhase:", eventPhase);
+        // console.log("obj:", obj);
+        // console.log("msg:", msg);
+        // console.log("eventRow:", eventRow);
+        // console.log("eventPhase:", eventPhase);
+        // console.log("bookedEquip:", bookedEquip);
 
-        if (msg === null) {
+
+        if (errMsg === null) {
 
             try {
+                // write to `t_events` table
                 const [newEvent] = await Event.createEvent(eventRow);
                 console.log("result newEvent:", newEvent);
             } catch (error) {
@@ -55,8 +62,9 @@ exports.createNewEvent = async (req, res) => {
                     message: 'Error from database'
                 }
             }
-            if (eventPhase !== null) {
+            if (eventPhase.length > 0) {
                 try {
+                    // write to `t_event_phase` table
                     const [newPhase] = await Phase.writeEventPhase(eventPhase);
                     console.log("result eventPhase:", newPhase);
                 } catch (error) {
@@ -69,24 +77,11 @@ exports.createNewEvent = async (req, res) => {
                 }
             }
 
-            if (bookedEquip !== null) {
+            if (bookedEquip.length > 0) {
                 try {
+                    // write to `t_event_equipment` table
                     const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
                     console.log("result booked equipment:", bkEquip);
-
-                    for (let i = 0; i < eventDays; i++) {
-                        for (let j = 0; j < bookedEquip.length; j++) {
-                            let row = bookedEquip[j];
-                            row = row.slice(0, 4);
-                            row.unshift(date.toISOString().slice(0, 10));
-                            newDataRowArr.push(row);
-                            bookedEquip[j].pop();
-                            bookedEquip[j].push(date.toISOString().slice(0, 10));
-                            console.log("bookedEquip:", bookedEquip[j]);
-                        }
-                        date.setDate(date.getDate() + 1);
-                    }
-
 
                 } catch (error) {
                     console.log("error:", error);
@@ -96,9 +91,22 @@ exports.createNewEvent = async (req, res) => {
                         message: 'Error from database'
                     }
                 }
+                console.log("bookedEquip:", bookedEquip);
+
+
+                for (let i = 0; i < eventDays; i++) {
+
+                    bookedEquip.map(item => {
+                        item = item.slice(0, 6);
+                        item.push(date.toISOString().slice(0, 10));
+                        newDataRowArr.push(item);
+                    })
+
+                    date.setDate(date.getDate() + 1);
+                }
             }
 
-
+            console.log("newDataRowArr:", newDataRowArr);
 
             res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` });
 
@@ -125,7 +133,7 @@ exports.getAll = async (req, res) => {
         try {
 
             [allEvents] = await Event.getAll();
-            console.log("allEvents:", allEvents);
+            console.log("allEvents from db:", allEvents);
 
         } catch (error) {
             console.log("error:", error);
@@ -166,15 +174,17 @@ exports.getAll = async (req, res) => {
             console.log("allEvents.length:", allEvents.length);
 
 
-            let eventObj = utils.convertRowToObj(allEvents[i]);
+            let eventObj = new Event(allEvents[i].idEvent, allEvents[i]);
+            // let eventObj = utils.convertRowToObj(allEvents[i]);
 
-            console.log("eventObj:", eventObj);
+            // console.log("eventObj:", eventObj);
 
             let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
             console.log("foundPhase:", i, foundPhase);
-            foundPhase.map(item => {
-                delete item.idEvent;
-            })
+
+            foundPhase = foundPhase.map(item => {
+                return item = new Phase(item);
+            });
 
             if (foundPhase.length > 0) {
                 eventObj.phase = foundPhase;
@@ -183,9 +193,10 @@ exports.getAll = async (req, res) => {
 
             let foundEquip = equip.filter(e => e.idEvent === allEvents[i].idEvent);
             console.log("foundEquip:", i, foundEquip);
-            foundEquip.map(item => {
-                delete item.idEvent;
-            })
+            foundEquip = foundEquip.map(item => {
+                return item = new BookedEquip(item);
+            });
+
             if (foundEquip.length > 0) {
                 eventObj.booking = foundEquip;
             } else eventObj.booking = [];
@@ -336,22 +347,32 @@ exports.getSummary = async (req, res) => {
 
 
 exports.getAllHistory = async (req, res) => {
-    // try {
-    //     console.log("getAllEvents");
-    //     let status = await auth.authenticateJWT(req, res);
-    //     console.log("statusCode:", status);
-    //     if (status === 200) {
-    //         const [allEvents] = await Event.getAllHistory();
-    //         res.json(allEvents);
-    //     } else {
-    //         res.sendStatus(status);
-    //     }
+    console.log("getOneHistory");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
 
-    // } catch (error) {
-    //     if (!error.statusCode) {
-    //         error.statusCode = 500;
-    //     }
-    // }
+    if (status.status === 200) {
+
+        try {
+            const [event] = await Event.getAllHistory();
+            console.log("event:", event);
+
+            let allEventsArr = [];
+            for (let i = 0; i < event.length; i++) {
+                let eventObj = new Event(event[i].id, event[i]);
+                allEventsArr.push(eventObj);
+
+            }
+            res.status(200).json(allEventsArr);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting event from database" });
+        }
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
 }
 
 exports.getOne = async (req, res) => {
@@ -371,13 +392,13 @@ exports.getOne = async (req, res) => {
 
         try {
             const [event] = await Event.getOne(req.params.id);
-            let eventObj = new Event(req.params.id, event[0]);
-            console.log("event:", event);
+            // console.log("event:", event);
             if (event.length < 1) {
                 res.status(200).json({ msg: `Мероприятия с id = ${req.params.id} не существует` });
                 return;
             }
-            console.log("idWarehouse:", event[0].idWarehouse);
+            eventObj = new Event(req.params.id, event[0]);
+
             [phases] = await Phase.getOnePhase(req.params.id);
             console.log("phases:", phases);
             [booked] = await BookedEquip.getBookedModelsByEventID(req.params.id);
@@ -410,11 +431,11 @@ exports.getOne = async (req, res) => {
             eventObj.booking = booked;
             console.log("event+booking:", eventObj);
             console.log("event+booking:", eventObj);
-        }else {
+        } else {
             eventObj.booking = [];
         }
 
-        res.json(eventObj);
+        res.status(200).json(eventObj);
 
 
 
@@ -427,22 +448,36 @@ exports.getOne = async (req, res) => {
 }
 
 exports.getOneHistory = async (req, res) => {
-    // try {
-    //     console.log("getOneHistory");
-    //     let status = await auth.authenticateJWT(req, res);
-    //     console.log("statusCode:", status);
-    //     if (status === 200) {
-    //         const [event] = await Event.getOneHistory(req.params.id);
-    //         res.json(event);
-    //     } else {
-    //         res.sendStatus(status);
-    //     }
+    console.log("getOneHistory");
+    let status = await auth.authenticateJWT(req, res);
+    console.log("statusCode:", status);
 
-    // } catch (error) {
-    //     if (!error.statusCode) {
-    //         error.statusCode = 500;
-    //     }
-    // }
+    if (status.status === 200) {
+
+        try {
+            const [event] = await Event.getOneHistory(req.params.id);
+            console.log("event:", event);
+            if (event.length < 1) {
+                res.status(200).json({ msg: `Мероприятия с id = ${req.params.id} не существует` });
+                return;
+            }
+            let allEventsArr = [];
+            for (let i = 0; i < event.length; i++) {
+                let eventObj = new Event(event[i].id, event[i]);
+                allEventsArr.push(eventObj);
+
+            }
+            res.status(200).json(allEventsArr);
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting event from database" });
+        }
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
 }
 
 

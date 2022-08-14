@@ -5,7 +5,8 @@ const db = dtb.promise();
 module.exports = class Event {
 
     constructor(eventId, event) {
-
+        console.log("eventRow:", event);
+        console.log("eventId:", eventId);
         this.id = eventId;
         this.title = event.title;
         this.time = { start: event.start, end: event.end };
@@ -30,7 +31,7 @@ module.exports = class Event {
 
     static getAllHistory() {
         try {
-            return db.execute('SELECT * FROM `v_events`');
+            return db.execute('SELECT * FROM `v_events_history`');
         } catch (error) {
             return error;
         }
@@ -46,7 +47,7 @@ module.exports = class Event {
 
     static getOneHistory(idEvent) {
         try {
-            return db.execute('SELECT * FROM `v_events` WHERE `idEvent`=?', [idEvent]);
+            return db.execute('SELECT * FROM `v_events_history` WHERE `idEvent`=?', [idEvent]);
         } catch (error) {
             return error;
         }

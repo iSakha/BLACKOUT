@@ -51,202 +51,278 @@ function createEventId() {
 
 // EVENT destructor
 // ===========================================================
-function convertObjToRow(reqbody, mode, idUser, idEvent) {
+// function convertObjToRow(reqbody, mode, idUser, idEvent) {
 
-    console.log("convertObjToRow reqbody:", reqbody);
+//     console.log("convertObjToRow reqbody:", reqbody);
 
-    // msg - check required fields such as warehouse, title, datetime
-    let msg = null;
+//     // msg - check required fields such as warehouse, title, datetime
+//     let msg = null;
+//     let eventRow = [];
+//     let oPhase = {};
+//     let phaseRow = null;
+//     let oBook = {};
+//     let bookRow = null;
+
+
+//     console.log("title:", reqbody.title);
+//     console.log("time.start:", reqbody.time.start);
+//     console.log("time.end:", reqbody.time.end);
+//     // console.log("warehouse.id:", reqbody.warehouse.id);
+
+//     // CREATE EVENT
+//     // ===========================================================
+
+//     let oEvent = {};
+
+//     // idEvent
+//     if (mode === "create") {
+//         oEvent.id = createEventId();
+//         console.log("oEvent.id:", oEvent.id);
+//         eventRow.push(oEvent.id);
+//     } else {
+//         oEvent.id = idEvent;
+//         console.log("oEvent.id_else:", oEvent.id);
+//         eventRow.push(oEvent.id);
+//     }
+
+//     // idWarehouse
+//     if (reqbody.warehouse != null) {
+//         oEvent.warehouse.id = reqbody.warehouse.id;
+//         eventRow.push(oEvent.warehouse.id);
+//     } else msg = "Не выбран склад отгрузки";
+
+//     // title
+//     if (reqbody.title != null) { oEvent.title = reqbody.title }
+//     else msg = "Не указано название проекта";
+//     eventRow.push(oEvent.title);
+
+//     // timeEvent
+//     // start
+//     if (reqbody.time.start != undefined) { oEvent.time.start = reqbody.time.start.slice(0, 16) }
+//     else msg = "Не указана дата начала проекта";
+//     eventRow.push(oEvent.time.start);
+//     // end
+//     if (reqbody.time.end != undefined) { oEvent.time.end = reqbody.time.end.slice(0, 16) }
+//     else msg = "Не указано дата окончания проекта";
+//     eventRow.push(oEvent.time.end);
+
+//     // manager
+//     if (reqbody.manager !== undefined) { oEvent.manager.id = reqbody.manager.id }
+//     eventRow.push(oEvent.manager.id);
+
+//     // location
+//     // idEventCity
+//     if (reqbody.location != undefined) {
+//         if (reqbody.location.city != undefined) {
+//             oEvent.location.city.id = reqbody.location.city.id;
+//         } else { eventRow.push(oEvent.location.city.id); }
+//         eventRow.push(oEvent.location.city.id);
+//         // idEventPlace
+//         if (reqbody.location.place != undefined) {
+//             oEvent.location.place.id = reqbody.location.place.id;
+//         } else { eventRow.push(oEvent.location.place.id); }
+//         eventRow.push(oEvent.location.place.id);
+//     } else {
+//         eventRow.push(oEvent.location.city.id);
+//         eventRow.push(oEvent.location.place.id);
+//     }
+
+//     // client
+//     if (reqbody.client != undefined) {
+//         oEvent.client.id = reqbody.client.id;
+//     }
+//     eventRow.push(oEvent.client.id);
+
+//     // creator
+//     if (reqbody.creator !== undefined) { oEvent.creator.id = reqbody.creator.id }
+//     eventRow.push(oEvent.creator.id);
+
+
+//     // notes
+//     if (reqbody.notes != undefined) {
+//         oEvent.notes = reqbody.notes;
+//     }
+//     eventRow.push(oEvent.notes);
+
+
+//     // status
+//     if (reqbody.status != undefined) {
+//         oEvent.status.id = reqbody.status.id;
+//     }
+//     eventRow.push(oEvent.status.id);
+
+
+//     // idUpdatedBy
+//     oEvent.idUpdatedBy = idUser;
+//     eventRow.push(oEvent.idUpdatedBy);
+
+//     // unixTime
+//     oEvent.unixTime = Date.now();
+//     eventRow.push(oEvent.unixTime);
+
+//     console.log("oEvent:", oEvent);
+
+//     // CREATE PHASE
+//     // ===========================================================
+
+//     if (reqbody.phase.length > 0) {
+//         phaseRow = [];
+
+//         for (let i = 0; i < reqbody.phase.length; i++) {
+//             // console.log("reqbody.phase:",reqbody.phase[i]);
+//             let arr = [];
+
+//             // idEvent
+//             oPhase.idEvent = oEvent.id;
+//             arr.push(oPhase.idEvent);
+
+//             // idPhase
+//             oPhase.idPhase = reqbody.phase[i].id;
+//             arr.push(oPhase.idPhase);
+
+//             // startPhase
+//             oPhase.startPhase = reqbody.phase[i].start.slice(0, 16);
+//             arr.push(oPhase.startPhase);
+
+//             // endPhase
+//             oPhase.endPhase = reqbody.phase[i].end.slice(0, 16);
+//             arr.push(oPhase.endPhase);
+
+//             // idUser
+//             oPhase.idUser = idUser;
+//             arr.push(oPhase.idUser);
+
+//             // unixTime
+//             oPhase.unixTime = oEvent.unixTime;
+//             arr.push(oPhase.unixTime);
+
+//             phaseRow.push(arr);
+
+//         }
+
+//     } else {
+//         phaseRow = null;
+//     }
+
+//     console.log("eventRow:", eventRow);
+
+//     // CREATE BOOKED EQUIPMENT
+//     // ===========================================================
+
+//     if (reqbody.booking.length > 0) {
+
+//         bookRow = [];
+
+//         for (let i = 0; i < reqbody.booking.length; i++) {
+//             let arr = [];
+
+//             oBook.idEvent = oEvent.id;
+//             arr.push(oBook.idEvent);
+
+//             oBook.id = reqbody.booking[i].id + ".0000";
+//             arr.push(oBook.id);
+
+//             oBook.qtt = reqbody.booking[i].qtt;
+//             arr.push(oBook.qtt);
+
+//             oBook.idWh = oEvent.warehouse.id;
+//             arr.push(oBook.idWh);
+
+//             oBook.userId = oEvent.creator.id;
+//             arr.push(oBook.userId);
+
+//             oBook.unixTime = oEvent.unixTime;
+//             arr.push(oBook.unixTime);
+
+
+
+//             bookRow.push(arr);
+
+//         }
+
+//         console.log("bookRow:", bookRow);
+
+//     }
+
+//     return [msg, eventRow, phaseRow, bookRow];
+
+
+// }
+
+function destructObj(usrId, obj) {
+
+    console.log("destructObj:", obj);
+    console.log("=====================================");
+
+    let { id, time: { start }, time: { end }, warehouse: { id: whId }, title, creator: { id: creatorId }, client: { id: clientId }, status: { id: statusId }, location: { city: { id: cityId }, place: { id: placeId } }, manager: { id: managerId }, notes } = obj;
+
     let eventRow = [];
-    let oPhase = {};
-    let phaseRow = null;
-    let oBook = {};
-    let bookRow = null;
+    let phaseArr = [];
+    let bookArr = [];
+    let errMsg = null;
 
+    let userId = usrId;
 
-    console.log("title:", reqbody.title);
-    console.log("time.start:", reqbody.time.start);
-    console.log("time.end:", reqbody.time.end);
-    // console.log("warehouse.id:", reqbody.warehouse.id);
+    let unixTime = Date.now();
 
-    // CREATE EVENT
-    // ===========================================================
-
-    let oEvent = new Event();
-
-    // idEvent
-    if (mode === "create") {
-        oEvent.id = createEventId();
-        console.log("oEvent.id:", oEvent.id);
-        eventRow.push(oEvent.id);
-    } else {
-        oEvent.id = idEvent;
-        console.log("oEvent.id_else:", oEvent.id);
-        eventRow.push(oEvent.id);
-    }
-
-    // idWarehouse
-    if (reqbody.warehouse != null) {
-        oEvent.warehouse.id = reqbody.warehouse.id;
-        eventRow.push(oEvent.warehouse.id);
-    } else msg = "Не выбран склад отгрузки";
-
-    // title
-    if (reqbody.title != null) { oEvent.title = reqbody.title }
-    else msg = "Не указано название проекта";
-    eventRow.push(oEvent.title);
-
-    // timeEvent
-    // start
-    if (reqbody.time.start != undefined) { oEvent.time.start = reqbody.time.start.slice(0, 16) }
-    else msg = "Не указана дата начала проекта";
-    eventRow.push(oEvent.time.start);
-    // end
-    if (reqbody.time.end != undefined) { oEvent.time.end = reqbody.time.end.slice(0, 16) }
-    else msg = "Не указано дата окончания проекта";
-    eventRow.push(oEvent.time.end);
-
-    // manager
-    if (reqbody.manager !== undefined) { oEvent.manager.id = reqbody.manager.id }
-    eventRow.push(oEvent.manager.id);
-
-    // location
-    // idEventCity
-    if (reqbody.location != undefined) {
-        if (reqbody.location.city != undefined) {
-            oEvent.location.city.id = reqbody.location.city.id;
-        } else { eventRow.push(oEvent.location.city.id); }
-        eventRow.push(oEvent.location.city.id);
-        // idEventPlace
-        if (reqbody.location.place != undefined) {
-            oEvent.location.place.id = reqbody.location.place.id;
-        } else { eventRow.push(oEvent.location.place.id); }
-        eventRow.push(oEvent.location.place.id);
-    } else {
-        eventRow.push(oEvent.location.city.id);
-        eventRow.push(oEvent.location.place.id);
-    }
-
-    // client
-    if (reqbody.client != undefined) {
-        oEvent.client.id = reqbody.client.id;
-    }
-    eventRow.push(oEvent.client.id);
-
-    // creator
-    if (reqbody.creator !== undefined) { oEvent.creator.id = reqbody.creator.id }
-    eventRow.push(oEvent.creator.id);
-
-
-    // notes
-    if (reqbody.notes != undefined) {
-        oEvent.notes = reqbody.notes;
-    }
-    eventRow.push(oEvent.notes);
-
-
-    // status
-    if (reqbody.status != undefined) {
-        oEvent.status.id = reqbody.status.id;
-    }
-    eventRow.push(oEvent.status.id);
-
-
-    // idUpdatedBy
-    oEvent.idUpdatedBy = idUser;
-    eventRow.push(oEvent.idUpdatedBy);
-
-    // unixTime
-    oEvent.unixTime = Date.now();
-    eventRow.push(oEvent.unixTime);
-
-    console.log("oEvent:", oEvent);
-
-    // CREATE PHASE
-    // ===========================================================
-
-    if (reqbody.phase.length > 0) {
-        phaseRow = [];
-
-        for (let i = 0; i < reqbody.phase.length; i++) {
-            // console.log("reqbody.phase:",reqbody.phase[i]);
-            let arr = [];
-
-            // idEvent
-            oPhase.idEvent = oEvent.id;
-            arr.push(oPhase.idEvent);
-
-            // idPhase
-            oPhase.idPhase = reqbody.phase[i].id;
-            arr.push(oPhase.idPhase);
-
-            // startPhase
-            oPhase.startPhase = reqbody.phase[i].start.slice(0, 16);
-            arr.push(oPhase.startPhase);
-
-            // endPhase
-            oPhase.endPhase = reqbody.phase[i].end.slice(0, 16);
-            arr.push(oPhase.endPhase);
-
-            // idUser
-            oPhase.idUser = idUser;
-            arr.push(oPhase.idUser);
-
-            // unixTime
-            oPhase.unixTime = oEvent.unixTime;
-            arr.push(oPhase.unixTime);
-
-            phaseRow.push(arr);
-
-        }
-
-    } else {
-        phaseRow = null;
-    }
+    eventRow.push(id);
+    eventRow.push(whId);
+    eventRow.push(title);
+    eventRow.push(start.slice(0, 16));
+    eventRow.push(end.slice(0, 16));
+    eventRow.push(managerId);
+    eventRow.push(cityId);
+    eventRow.push(placeId);
+    eventRow.push(clientId);
+    eventRow.push(creatorId);
+    eventRow.push(notes);
+    eventRow.push(statusId);
+    eventRow.push(userId);
+    eventRow.push(unixTime);
 
     console.log("eventRow:", eventRow);
 
-    // CREATE BOOKED EQUIPMENT
-    // ===========================================================
+    if (obj.phase.length > 0) {
+        obj.phase.map(item => {
+            let phaseRow = [];
+            let { id, start, end } = item;
 
-    if (reqbody.booking.length > 0) {
+            // console.log("obj.phase:", obj.phase);
+            
+            phaseRow.push(eventRow[0]);     // eventId
+            phaseRow.push(id);
+            phaseRow.push(start.slice(0, 16));
+            phaseRow.push(end.slice(0, 16));
+            phaseRow.push(userId);
+            phaseRow.push(unixTime);
 
-        bookRow = [];
+            phaseArr.push(phaseRow);
+        })
 
-        for (let i = 0; i < reqbody.booking.length; i++) {
-            let arr = [];
-
-            oBook.idEvent = oEvent.id;
-            arr.push(oBook.idEvent);
-
-            oBook.id = reqbody.booking[i].id + ".0000";
-            arr.push(oBook.id);
-
-            oBook.qtt = reqbody.booking[i].qtt;
-            arr.push(oBook.qtt);
-
-            oBook.idWh = oEvent.warehouse.id;
-            arr.push(oBook.idWh);
-
-            oBook.userId = oEvent.creator.id;
-            arr.push(oBook.userId);
-
-            oBook.unixTime = oEvent.unixTime;
-            arr.push(oBook.unixTime);
-
-
-
-            bookRow.push(arr);
-
-        }
-
-        console.log("bookRow:", bookRow);
-
+        console.log("phaseArr:", phaseArr);
     }
 
-    return [msg, eventRow, phaseRow, bookRow];
+    if (obj.booking.length > 0) {
+        obj.booking.map(item => {
+            let bookRow = [];
+            let { id, qtt } = item;
 
+            // console.log("req.body.booking:", req.body.booking);
 
+            bookRow.push(eventRow[0]);      // eventId
+            bookRow.push(id + ".0000");
+            bookRow.push(qtt);
+            bookRow.push(eventRow[1]);      // whId
+            bookRow.push(userId);
+            bookRow.push(unixTime);
+
+            bookArr.push(bookRow);
+        })
+
+        console.log("bookArr:", bookArr);
+    }
+
+    return [errMsg, eventRow, phaseArr, bookArr];
 }
 
 // EVENT constructor
@@ -381,8 +457,9 @@ module.exports = {
     currentDateTime: currentDateTime,
     createEventId: createEventId,
     convertRowToObj: convertRowToObj,
-    convertObjToRow: convertObjToRow,
+    // convertObjToRow: convertObjToRow,
     convertLocationsToObj: convertLocationsToObj,
     updateMultiple: updateMultiple,
-    modelsMovement: modelsMovement
+    modelsMovement: modelsMovement,
+    destructObj: destructObj
 };

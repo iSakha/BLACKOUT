@@ -3,8 +3,10 @@ const db = dtb.promise();
 const utils = require('../utils/utils');
 
 module.exports = class BookedEquip {
-   constructor() {
-
+   constructor(equip) {
+      this.id = equip.id;
+      this.name = equip.name;
+      this.qtt = equip.qtt;
    }
 
    static setBookedModels(dataRow) {
