@@ -212,7 +212,7 @@ exports.bookedEquipGetAll = async (req, res) => {
         console.log("authentication successfull!");
 
         try {
-            const [allBookedEquip] = await BookedEquip.bookedEquipGetAll();
+            const [allBookedEquip] = await BookedEquip.bookedGetAllModels();
             console.log("allBookedEquip:",allBookedEquip);
             return res.status(200).json(allBookedEquip);
         } catch (error) {

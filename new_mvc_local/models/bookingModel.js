@@ -16,9 +16,9 @@ module.exports = class BookedEquip {
 
 
 
-   static writeToBookCalendar(dataRow) {
-      console.log("writeToBookCalendar dataRow:", dataRow);
-      return db.query('INSERT INTO `t_booking_calendar` (date, idEvent, idModel, qtt, idWh) VALUES ?', [dataRow]);
+   static writeToBookCalendar(dataArr) {
+      console.log("writeToBookCalendar dataRow:", dataArr);
+      return db.query('INSERT INTO `t_booking_calendar` (idEvent, idModel, qtt, idWh, idUser, unixTime, date) VALUES ?', [dataArr]);
    }
 
    static getBookedModelsByEventID(id) {
@@ -45,7 +45,7 @@ module.exports = class BookedEquip {
       return db.query('DELETE FROM `t_booking_calendar` WHERE `idEvent`=?', [id]);
    }
 
-   static bookedGetAll() {
+   static bookedGetAllModels() {
       console.log("bookedGetAll");
       return db.query('SELECT `idEvent`, SUBSTRING(`id`,1,11) AS `id`, `name`, `qtt` FROM `v_event_equipment`');
    }

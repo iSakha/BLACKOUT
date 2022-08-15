@@ -31,7 +31,7 @@ exports.createNewEvent = async (req, res) => {
 
         console.log("authentication successfull!");
 
-
+        req.body.id = utils.createEventId();
         let destructArr = utils.destructObj(userId, req.body);
         // console.log("destructArr:",destructArr);
         // let obj = utils.convertObjToRow(req.body, "create", userId, null);
@@ -104,9 +104,27 @@ exports.createNewEvent = async (req, res) => {
 
                     date.setDate(date.getDate() + 1);
                 }
+
+                console.log("newDataRowArr:", newDataRowArr);
+
+                try {
+                    // write to `t_booking_calendar` table
+                    const [bookedCalendar] = await BookedEquip.writeToBookCalendar(newDataRowArr);
+                    console.log("result bookedCalendar:", bookedCalendar);
+
+                } catch (error) {
+                    console.log("error:", error);
+                    res.status(500).json({ msg: "We have problems with booked equipment to `t_booking_calendar` table" });
+                    return {
+                        error: true,
+                        message: 'Error from database'
+                    }
+                }
             }
 
-            console.log("newDataRowArr:", newDataRowArr);
+
+
+
 
             res.status(200).json({ msg: `Мероприятие успешно создано. idEvent = ${eventRow[0]}` });
 
