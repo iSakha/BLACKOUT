@@ -7,15 +7,100 @@ module.exports = class Event {
     constructor(eventId, event) {
         console.log("eventRow:", event);
         console.log("eventId:", eventId);
+        
         this.id = eventId;
-        this.title = event.title;
         this.time = { start: event.start, end: event.end };
         this.warehouse = { id: event.idWarehouse, name: event.warehouse };
+        this.title = event.title;
+        this.creator = { id: event.idCreatedBy, name: event.createdBy};
         this.client = { id: event.idClient, name: event.client};
-        this.status = { id: event.idStatus, name: event.status};
+        this.status = { id: event.idStatus, name: event.status}; 
         this.location = {city:{id:event.idEventCity,name:event.eventCity},place:{id:event.idEventPlace,name:event.eventPlace}};
-        this.manager = {id:event.idManager_1,name:event.manager_1};
+        this.manager = {id:event.idManager_1,name:event.manager_1};           
         this.notes = event.notes;
+    }
+
+    static  destructObj(userId, obj) {
+
+        console.log("destructObj:", obj);
+        console.log("=====================================");
+    
+        console.log("id:", obj.id);
+    
+        let { id, time: { start }, time: { end }, warehouse: { id: whId }, title, creator: { id: creatorId }, client: { id: clientId }, status: { id: statusId }, location: { city: { id: cityId }, place: { id: placeId } }, manager: { id: managerId }, notes } = obj;
+    
+        let eventRow = [];
+        let phaseArr = [];
+        let bookArr = [];
+        let errMsg = null;
+    
+        let unixTime = Date.now();
+    
+        eventRow.push(id);
+        eventRow.push(whId);
+        eventRow.push(title);
+        eventRow.push(start.slice(0, 16));
+        eventRow.push(end.slice(0, 16));
+        eventRow.push(managerId);
+        eventRow.push(cityId);
+        eventRow.push(placeId);
+        eventRow.push(clientId);
+        eventRow.push(creatorId);
+        eventRow.push(notes);
+        eventRow.push(statusId);
+        eventRow.push(userId);
+        eventRow.push(unixTime);
+        
+    
+        let i = 0;
+        eventRow.map(item => {
+    
+            console.log(i, "item:", item);
+            i++;
+        })
+    
+    
+        if (obj.phase.length > 0) {
+            obj.phase.map(item => {
+                let phaseRow = [];
+                let { id, start, end } = item;
+    
+                // console.log("obj.phase:", obj.phase);
+    
+                phaseRow.push(eventRow[0]);     // eventId
+                phaseRow.push(id);
+                phaseRow.push(start.slice(0, 16));
+                phaseRow.push(end.slice(0, 16));
+                phaseRow.push(clientId);
+                phaseRow.push(unixTime);
+    
+                phaseArr.push(phaseRow);
+            })
+    
+            console.log("phaseArr:", phaseArr);
+        }
+    
+        if (obj.booking.length > 0) {
+            obj.booking.map(item => {
+                let bookRow = [];
+                let { id, qtt } = item;
+    
+                // console.log("req.body.booking:", req.body.booking);
+    
+                bookRow.push(eventRow[0]);      // eventId
+                bookRow.push(id + ".0000");
+                bookRow.push(qtt);
+                bookRow.push(eventRow[1]);      // whId
+                bookRow.push(clientId);
+                bookRow.push(unixTime);
+    
+                bookArr.push(bookRow);
+            })
+    
+            console.log("bookArr:", bookArr);
+        }
+    
+        return [errMsg, eventRow, phaseArr, bookArr];
     }
 
     // Events queries

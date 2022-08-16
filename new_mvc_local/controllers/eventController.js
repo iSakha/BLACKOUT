@@ -32,7 +32,9 @@ exports.createNewEvent = async (req, res) => {
         console.log("authentication successfull!");
 
         req.body.id = utils.createEventId();
-        let destructArr = utils.destructObj(userId, req.body);
+        req.body.creator = {};
+        req.body.creator.id = userId;
+        let destructArr = Event.destructObj(userId, req.body);
         // console.log("destructArr:",destructArr);
         // let obj = utils.convertObjToRow(req.body, "create", userId, null);
 
@@ -175,7 +177,7 @@ exports.getAll = async (req, res) => {
         }
 
         try {
-            [equip] = await BookedEquip.bookedGetAll();
+            [equip] = await BookedEquip.bookedGetAllModels();
             console.log("booked equip:", equip);
         } catch (error) {
             console.log("error:", error);
@@ -242,27 +244,39 @@ exports.updateEvent = async (req, res) => {
 
     if (status.status === 200) {
 
+        const dateStart = req.body.time.start.slice(0, 10);
+        const dateEnd = req.body.time.end.slice(0, 10);
+        const diffInMs = new Date(dateEnd) - new Date(dateStart);
+        const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
+
+        let date = new Date(dateStart);
+        let newDataRowArr = [];
+        
+        console.log("eventDays :", eventDays);
+
+
         console.log("authentication successfull!");
 
+        
 
-        let obj = utils.convertObjToRow(req.body, "update", userId, req.params.id);
+        let destructArr = Event.destructObj(userId, req.body);
 
-        let msg = obj[0];
-        let eventRow = obj[1];
-        let eventPhase = obj[2];
-        let bookedEquip = obj[3];
+        let errMsg = destructArr[0];
+        let eventRow = destructArr[1];
+        let eventPhase = destructArr[2];
+        let bookedEquip = destructArr[3];
 
-        console.log("obj:", obj);
-        console.log("eventRow:", eventRow);
-        console.log("msg:", msg);
-        console.log("eventPhase:", eventPhase);
-        console.log("bookedEquip:", bookedEquip);
-        console.log("eventRow[13]:", eventRow[13]);
+        // console.log("obj:", obj);
+        // console.log("eventRow:", eventRow);
+        // console.log("msg:", msg);
+        // console.log("eventPhase:", eventPhase);
+        // console.log("bookedEquip:", bookedEquip);
+        // console.log("eventRow[13]:", eventRow[13]);
 
-        let unixTime = eventRow[13];
+        // let unixTime = Date.now();
 
 
-        if (msg === null) {
+        if (errMsg === null) {
 
             try {
                 await Event.deleteEvent(req.params.id, userId, unixTime);
@@ -271,13 +285,13 @@ exports.updateEvent = async (req, res) => {
                 console.log("result newEvent:", newEvent);
                 await Event.deletePhase(req.params.id, userId, unixTime);
 
-                if (eventPhase !== null) {
+                if (eventPhase.length > 0) {
                     const [newPhase] = await Phase.writeEventPhase(eventPhase);
                     console.log("result newPhase:", newPhase);
                 }
                 await Event.deleteEquipment(req.params.id, userId, unixTime);
 
-                if (bookedEquip !== null) {
+                if (bookedEquip.length > 0) {
                     const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
                     console.log("result booked equipment:", bkEquip);
                 }
@@ -397,7 +411,6 @@ exports.getOne = async (req, res) => {
     // let event = {};
     let phases = {};
     let booked = {};
-    // let subBooked = {};
     let eventObj = {};
 
 

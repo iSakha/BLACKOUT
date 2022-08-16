@@ -249,81 +249,7 @@ function createEventId() {
 
 // }
 
-function destructObj(usrId, obj) {
 
-    console.log("destructObj:", obj);
-    console.log("=====================================");
-
-    let { id, time: { start }, time: { end }, warehouse: { id: whId }, title, creator: { id: creatorId }, client: { id: clientId }, status: { id: statusId }, location: { city: { id: cityId }, place: { id: placeId } }, manager: { id: managerId }, notes } = obj;
-
-    let eventRow = [];
-    let phaseArr = [];
-    let bookArr = [];
-    let errMsg = null;
-
-    let userId = usrId;
-
-    let unixTime = Date.now();
-
-    eventRow.push(id);
-    eventRow.push(whId);
-    eventRow.push(title);
-    eventRow.push(start.slice(0, 16));
-    eventRow.push(end.slice(0, 16));
-    eventRow.push(managerId);
-    eventRow.push(cityId);
-    eventRow.push(placeId);
-    eventRow.push(clientId);
-    eventRow.push(creatorId);
-    eventRow.push(notes);
-    eventRow.push(statusId);
-    eventRow.push(userId);
-    eventRow.push(unixTime);
-
-    console.log("eventRow:", eventRow);
-
-    if (obj.phase.length > 0) {
-        obj.phase.map(item => {
-            let phaseRow = [];
-            let { id, start, end } = item;
-
-            // console.log("obj.phase:", obj.phase);
-            
-            phaseRow.push(eventRow[0]);     // eventId
-            phaseRow.push(id);
-            phaseRow.push(start.slice(0, 16));
-            phaseRow.push(end.slice(0, 16));
-            phaseRow.push(userId);
-            phaseRow.push(unixTime);
-
-            phaseArr.push(phaseRow);
-        })
-
-        console.log("phaseArr:", phaseArr);
-    }
-
-    if (obj.booking.length > 0) {
-        obj.booking.map(item => {
-            let bookRow = [];
-            let { id, qtt } = item;
-
-            // console.log("req.body.booking:", req.body.booking);
-
-            bookRow.push(eventRow[0]);      // eventId
-            bookRow.push(id + ".0000");
-            bookRow.push(qtt);
-            bookRow.push(eventRow[1]);      // whId
-            bookRow.push(userId);
-            bookRow.push(unixTime);
-
-            bookArr.push(bookRow);
-        })
-
-        console.log("bookArr:", bookArr);
-    }
-
-    return [errMsg, eventRow, phaseArr, bookArr];
-}
 
 // EVENT constructor
 // ===========================================================
@@ -461,5 +387,5 @@ module.exports = {
     convertLocationsToObj: convertLocationsToObj,
     updateMultiple: updateMultiple,
     modelsMovement: modelsMovement,
-    destructObj: destructObj
+    // destructObj: destructObj
 };
