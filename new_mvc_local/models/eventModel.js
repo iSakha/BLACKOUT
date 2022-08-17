@@ -167,7 +167,7 @@ module.exports = class Event {
 
     static deleteEvent(idEvent) {
         try {
-            return db.execute('SELECT * FROM t_events', [idEvent]);
+            return db.execute('SELECT idEvent, idWarehouse, title, start, end, idManager_1, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idUpdatedBy, unixTime FROM t_events WHERE idEvent=? AND is_deleted=0', [idEvent]);
         } catch (error) {
             return error;
         }

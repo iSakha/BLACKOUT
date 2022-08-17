@@ -329,8 +329,17 @@ exports.deleteEvent = async (req, res) => {
         try {
             const [delEvent] = await Event.deleteEvent(req.params.id);
             console.log("delEvent:",delEvent);
-            await Event.deletePhase(req.params.id, userId, unixTime);
-            await Event.deleteEquipment(req.params.id, userId, unixTime);
+            delEvent[0].idUpdatedBy = userId;
+            delEvent[0].unixTime = unixTime;
+            let delEventRow = Object.values(delEvent[0]);
+            console.log("delEventRow:",delEventRow);
+            const [newEvent] = await Event.createEvent(delEventRow);
+            console.log("result:",newEvent);
+            return res.status(200).json(delEvent);
+
+
+            // await Event.deletePhase(req.params.id, userId, unixTime);
+            // await Event.deleteEquipment(req.params.id, userId, unixTime);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with deleting event data from database" });
@@ -340,7 +349,7 @@ exports.deleteEvent = async (req, res) => {
             }
         }
 
-        res.status(200).json({ msg: `Мероприятие успешно удалено. idEvent = ${req.params.id}` });
+        // res.status(200).json({ msg: `Мероприятие успешно удалено. idEvent = ${req.params.id}` });
 
     } else {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });
