@@ -165,13 +165,21 @@ module.exports = class Event {
     //     }
     // }
 
-    static deleteEvent(id, userId, unixTime) {
+    static deleteEvent(idEvent) {
         try {
-            return db.execute('UPDATE t_events SET t_events.is_deleted = 1, t_events.idUpdatedBy=?, t_events.unixTime=? WHERE t_events.idEvent=?', [userId, unixTime, id]);
+            return db.execute('SELECT * FROM t_events', [idEvent]);
         } catch (error) {
             return error;
         }
     }
+
+    // static deleteEvent(id, userId, unixTime) {
+    //     try {
+    //         return db.execute('UPDATE t_events SET t_events.is_deleted = 1, t_events.idUpdatedBy=?, t_events.unixTime=? WHERE t_events.idEvent=?', [userId, unixTime, id]);
+    //     } catch (error) {
+    //         return error;
+    //     }
+    // }
 
     static deletePhase(id, userId, unixTime) {
         try {

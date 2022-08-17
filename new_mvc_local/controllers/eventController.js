@@ -327,7 +327,8 @@ exports.deleteEvent = async (req, res) => {
         console.log("authentication successfull!");
 
         try {
-            await Event.deleteEvent(req.params.id, userId, unixTime);
+            const [delEvent] = await Event.deleteEvent(req.params.id);
+            console.log("delEvent:",delEvent);
             await Event.deletePhase(req.params.id, userId, unixTime);
             await Event.deleteEquipment(req.params.id, userId, unixTime);
         } catch (error) {
