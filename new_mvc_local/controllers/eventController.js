@@ -327,17 +327,19 @@ exports.deleteEvent = async (req, res) => {
         console.log("authentication successfull!");
   
         try {
-            const [delEvent] = await Event.deleteEvent(req.params.id);
+            const [delEvent] = await Event.copyRow(req.params.id);
             console.log("delEvent:", delEvent);
             delEvent[0].idUpdatedBy = userId;
             delEvent[0].unixTime = unixTime;
+            delEvent[0].is_deleted = 1;
             let delEventRow = Object.values(delEvent[0]);
+
             console.log("delEventRow:", delEventRow);
             
-            await Event.markEventDel(req.params.id);
-            delEventRow.push(1);
-            const [newEvent] = await Event.createEvent(delEventRow);
-            console.log("result:", newEvent);
+            // await Event.markEventDel(req.params.id);
+            delEventRow.shift();        //  delete id
+            const [paste] = await Event.pasteRow(delEventRow);
+            console.log("delEventRow:", delEventRow);
             return res.status(200).json(delEvent);
 
             // await Event.deletePhase(req.params.id, userId, unixTime);

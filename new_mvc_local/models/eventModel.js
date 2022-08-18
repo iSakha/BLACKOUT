@@ -166,10 +166,10 @@ module.exports = class Event {
     //     }
     // }
 
-    static deleteEvent(idEvent) {
+    static copyRow(idEvent) {
         try {
 
-            return db.execute('SELECT idEvent, idWarehouse, title, start, end, idManager_1, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idUpdatedBy, unixTime FROM t_events WHERE idEvent=?', [idEvent]);
+            return db.execute('SELECT * FROM `t_events` WHERE `idEvent`=? AND `is_deleted`=0', [idEvent]);
         } catch (error) {
             return error;
         }
@@ -178,6 +178,15 @@ module.exports = class Event {
     static markEventDel(idEvent) {
         try {
             return db.execute('UPDATE t_events SET is_deleted=1 WHERE idEvent=?' , [idEvent]);
+
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static pasteRow(row) {
+        try {
+            return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, start, end, idManager_1,  idEventCity, idEventPlace, idClient, idCreatedBy, createdAt, notes, idStatus, idPhase, phaseTimeStart, phaseTimeEnd, idUpdatedBy, updatedAt, filledUp, is_deleted, unixTime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' , [row]);
 
         } catch (error) {
             return error;
