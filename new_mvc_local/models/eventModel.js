@@ -50,6 +50,7 @@ module.exports = class Event {
         eventRow.push(statusId);
         eventRow.push(userId);
         eventRow.push(unixTime);
+        eventRow.push(0);
         
     
         let i = 0;
@@ -141,7 +142,7 @@ module.exports = class Event {
     static createEvent(eventRow) {
         console.log("createEvent_mod eventRow:", eventRow);
         try {
-            return db.execute('INSERT INTO `t_events` (idEvent, idWarehouse, title, start, end, idManager_1, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idUpdatedBy, unixTime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', eventRow);
+            return db.execute('INSERT INTO `t_events` (idEvent, idWarehouse, title, start, end, idManager_1, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idUpdatedBy, unixTime, is_deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', eventRow);
         } catch (error) {
             return error;
         }
@@ -167,7 +168,15 @@ module.exports = class Event {
 
     static deleteEvent(idEvent) {
         try {
-            return db.execute('SELECT * FROM t_events', [idEvent]);
+            return db.execute('SELECT idEvent, idWarehouse, title, start, end, idManager_1, idEventCity, idEventPlace, idClient, idCreatedBy, notes, idStatus, idUpdatedBy, unixTime FROM t_events WHERE idEvent=?', [idEvent]);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    static markEventDel(idEvent) {
+        try {
+            return db.execute('UPDATE t_events SET is_deleted=1 WHERE idEvent=?' , [idEvent]);
         } catch (error) {
             return error;
         }
