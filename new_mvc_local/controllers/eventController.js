@@ -331,7 +331,12 @@ exports.deleteEvent = async (req, res) => {
             console.log("delEvent:",delEvent);
             delEvent[0].idUpdatedBy = userId;
             delEvent[0].unixTime = unixTime;
+            delEvent[0].is_deleted = 1;
             let delEventRow = Object.values(delEvent[0]);
+
+            await Event.markEventDel(req.params.id);
+
+            delEventRow.shift();        //  delete id
             console.log("delEventRow:",delEventRow);
             // const [newEvent] = await Event.createEvent(delEventRow);
             // console.log("result:",newEvent);

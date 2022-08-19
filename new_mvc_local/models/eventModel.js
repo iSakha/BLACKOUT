@@ -173,6 +173,15 @@ module.exports = class Event {
         }
     }
 
+    static markEventDel(idEvent) {
+        try {
+            return db.execute('UPDATE t_events SET is_deleted=1 WHERE idEvent=?' , [idEvent]);
+
+        } catch (error) {
+            return error;
+        }
+    }
+    
     // static deleteEvent(id, userId, unixTime) {
     //     try {
     //         return db.execute('UPDATE t_events SET t_events.is_deleted = 1, t_events.idUpdatedBy=?, t_events.unixTime=? WHERE t_events.idEvent=?', [userId, unixTime, id]);
