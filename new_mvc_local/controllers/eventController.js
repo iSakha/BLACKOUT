@@ -317,30 +317,26 @@ exports.updateEvent = async (req, res) => {
 exports.deleteEvent = async (req, res) => {
 
     console.log("delete Event req.body:", req.body);
-  
+
     let status = await auth.authenticateJWT(req, res);
     let userId = status.id;
     let unixTime = Date.now();
-  
+
     if (status.status === 200) {
-  
+
         console.log("authentication successfull!");
-  
+
         try {
             const [delEvent] = await Event.copyRow(req.params.id);
-            console.log("delEvent:", delEvent);
+            console.log("delEvent:",delEvent);
             delEvent[0].idUpdatedBy = userId;
             delEvent[0].unixTime = unixTime;
-            delEvent[0].is_deleted = 1;
             let delEventRow = Object.values(delEvent[0]);
-
-            console.log("delEventRow:", delEventRow);
-            
-            // await Event.markEventDel(req.params.id);
-            delEventRow.shift();        //  delete id
-            const [paste] = await Event.pasteRow(delEventRow);
-            console.log("delEventRow:", delEventRow);
+            console.log("delEventRow:",delEventRow);
+            // const [newEvent] = await Event.createEvent(delEventRow);
+            // console.log("result:",newEvent);
             return res.status(200).json(delEvent);
+
 
             // await Event.deletePhase(req.params.id, userId, unixTime);
             // await Event.deleteEquipment(req.params.id, userId, unixTime);
@@ -353,18 +349,12 @@ exports.deleteEvent = async (req, res) => {
             }
         }
 
-  
         // res.status(200).json({ msg: `Мероприятие успешно удалено. idEvent = ${req.params.id}` });
-  
-
-
-        // res.status(200).json({ msg: `Мероприятие успешно удалено. idEvent = ${req.params.id}` });
-
 
     } else {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-  }
+}
 
 exports.getSummary = async (req, res) => {
 
@@ -530,11 +520,4 @@ exports.getOneHistory = async (req, res) => {
     }
 
 }
-
-
-
-
-
-
-
 
