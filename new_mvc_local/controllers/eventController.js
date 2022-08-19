@@ -251,13 +251,13 @@ exports.updateEvent = async (req, res) => {
 
         let date = new Date(dateStart);
         let newDataRowArr = [];
-        
+
         console.log("eventDays :", eventDays);
 
 
         console.log("authentication successfull!");
 
-        
+
 
         let destructArr = Event.destructObj(userId, req.body);
 
@@ -316,8 +316,6 @@ exports.updateEvent = async (req, res) => {
 
 exports.deleteEvent = async (req, res) => {
 
-    console.log("delete Event req.body:", req.body);
-
     let status = await auth.authenticateJWT(req, res);
     let userId = status.id;
     let unixTime = Date.now();
@@ -328,16 +326,24 @@ exports.deleteEvent = async (req, res) => {
 
         try {
             const [delEvent] = await Event.copyRow(req.params.id);
-            console.log("delEvent:",delEvent);
-            delEvent[0].idUpdatedBy = userId;
-            delEvent[0].unixTime = unixTime;
-            delEvent[0].is_deleted = 1;
-            let delEventRow = Object.values(delEvent[0]);
+            console.log("delEvent:", delEvent);
+            if (delEvent.length > 0) {
+                delEvent[0].idUpdatedBy = userId;
+                delEvent[0].unixTime = unixTime;
+                delEvent[0].is_deleted = 1;
 
+            } else {
+                return res.status(200).json({ msg: `Мероприятия с id=${req.params.id} не существует` });
+            }
+
+            let delEventRow = Object.values(delEvent[0]);
             await Event.markEventDel(req.params.id);
 
             delEventRow.shift();        //  delete id
-            console.log("delEventRow:",delEventRow);
+
+            const [paste] = await Event.pasteRow(delEventRow);
+            console.log("result:", paste);
+            console.log("delEventRow:", delEventRow);
             // const [newEvent] = await Event.createEvent(delEventRow);
             // console.log("result:",newEvent);
             return res.status(200).json(delEvent);

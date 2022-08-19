@@ -7,35 +7,35 @@ module.exports = class Event {
     constructor(eventId, event) {
         console.log("eventRow:", event);
         console.log("eventId:", eventId);
-        
+
         this.id = eventId;
         this.time = { start: event.start, end: event.end };
         this.warehouse = { id: event.idWarehouse, name: event.warehouse };
         this.title = event.title;
-        this.creator = { id: event.idCreatedBy, name: event.createdBy};
-        this.client = { id: event.idClient, name: event.client};
-        this.status = { id: event.idStatus, name: event.status}; 
-        this.location = {city:{id:event.idEventCity,name:event.eventCity},place:{id:event.idEventPlace,name:event.eventPlace}};
-        this.manager = {id:event.idManager_1,name:event.manager_1};           
+        this.creator = { id: event.idCreatedBy, name: event.createdBy };
+        this.client = { id: event.idClient, name: event.client };
+        this.status = { id: event.idStatus, name: event.status };
+        this.location = { city: { id: event.idEventCity, name: event.eventCity }, place: { id: event.idEventPlace, name: event.eventPlace } };
+        this.manager = { id: event.idManager_1, name: event.manager_1 };
         this.notes = event.notes;
     }
 
-    static  destructObj(userId, obj) {
+    static destructObj(userId, obj) {
 
         console.log("destructObj:", obj);
         console.log("=====================================");
-    
+
         console.log("id:", obj.id);
-    
+
         let { id, time: { start }, time: { end }, warehouse: { id: whId }, title, creator: { id: creatorId }, client: { id: clientId }, status: { id: statusId }, location: { city: { id: cityId }, place: { id: placeId } }, manager: { id: managerId }, notes } = obj;
-    
+
         let eventRow = [];
         let phaseArr = [];
         let bookArr = [];
         let errMsg = null;
-    
+
         let unixTime = Date.now();
-    
+
         eventRow.push(id);
         eventRow.push(whId);
         eventRow.push(title);
@@ -50,56 +50,56 @@ module.exports = class Event {
         eventRow.push(statusId);
         eventRow.push(userId);
         eventRow.push(unixTime);
-        
-    
+
+
         let i = 0;
         eventRow.map(item => {
-    
+
             console.log(i, "item:", item);
             i++;
         })
-    
-    
+
+
         if (obj.phase.length > 0) {
             obj.phase.map(item => {
                 let phaseRow = [];
                 let { id, start, end } = item;
-    
+
                 // console.log("obj.phase:", obj.phase);
-    
+
                 phaseRow.push(eventRow[0]);     // eventId
                 phaseRow.push(id);
                 phaseRow.push(start.slice(0, 16));
                 phaseRow.push(end.slice(0, 16));
                 phaseRow.push(clientId);
                 phaseRow.push(unixTime);
-    
+
                 phaseArr.push(phaseRow);
             })
-    
+
             console.log("phaseArr:", phaseArr);
         }
-    
+
         if (obj.booking.length > 0) {
             obj.booking.map(item => {
                 let bookRow = [];
                 let { id, qtt } = item;
-    
+
                 // console.log("req.body.booking:", req.body.booking);
-    
+
                 bookRow.push(eventRow[0]);      // eventId
                 bookRow.push(id + ".0000");
                 bookRow.push(qtt);
                 bookRow.push(eventRow[1]);      // whId
                 bookRow.push(clientId);
                 bookRow.push(unixTime);
-    
+
                 bookArr.push(bookRow);
             })
-    
+
             console.log("bookArr:", bookArr);
         }
-    
+
         return [errMsg, eventRow, phaseArr, bookArr];
     }
 
@@ -175,13 +175,22 @@ module.exports = class Event {
 
     static markEventDel(idEvent) {
         try {
-            return db.execute('UPDATE t_events SET is_deleted=1 WHERE idEvent=?' , [idEvent]);
+            return db.execute('UPDATE t_events SET is_deleted=1 WHERE idEvent=?', [idEvent]);
 
         } catch (error) {
             return error;
         }
     }
-    
+
+    static pasteRow(row) {
+        try {
+            return db.execute('INSERT INTO `t_events`(idEvent, idWarehouse, title, start, end, idManager_1,  idEventCity, idEventPlace, idClient, idCreatedBy, createdAt, notes, idStatus, idPhase, phaseTimeStart, phaseTimeEnd, idUpdatedBy, updatedAt, filledUp, is_deleted, unixTime) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' , row);
+
+        } catch (error) {
+            return error;
+        }
+    }
+
     // static deleteEvent(id, userId, unixTime) {
     //     try {
     //         return db.execute('UPDATE t_events SET t_events.is_deleted = 1, t_events.idUpdatedBy=?, t_events.unixTime=? WHERE t_events.idEvent=?', [userId, unixTime, id]);
