@@ -137,6 +137,136 @@ exports.createNewEvent = async (req, res) => {
     }
 }
 
+exports.deleteEvent = async (req, res) => {
+
+    let status = await auth.authenticateJWT(req, res);
+    let userId = status.id;
+    let unixTime = Date.now();
+
+    if (status.status === 200) {
+
+        console.log("authentication successfull!");
+
+        try {
+            const [delEvent] = await Event.copyRow(req.params.id);
+            console.log("delEvent:", delEvent);
+            if (delEvent.length > 0) {
+                delEvent[0].idUpdatedBy = userId;
+                delEvent[0].unixTime = unixTime;
+                delEvent[0].is_deleted = 1;
+
+            } else {
+                return res.status(200).json({ msg: `Мероприятия с id=${req.params.id} не существует` });
+            }
+
+            let delEventRow = Object.values(delEvent[0]);
+            await Event.markEventDel(req.params.id);
+
+            delEventRow.shift();        //  delete id
+
+            const [paste] = await Event.pasteRow(delEventRow);
+            // console.log("result:", paste);
+            // console.log("delEventRow:", delEventRow);
+            
+            await Event.deletePhase(req.params.id, userId, unixTime);
+            await Event.deleteEquipment(req.params.id, userId, unixTime);
+            await Event.deleteFromBookCalendar(req.params.id, userId, unixTime);
+
+            res.status(200).json({ msg: `Мероприятие успешно удалено. idEvent = ${req.params.id}` });
+
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with deleting event data from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }       
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}
+
+exports.updateEvent = async (req, res) => {
+
+    console.log("update Event req.body:", req.body);
+
+    let status = await auth.authenticateJWT(req, res);
+    let userId = status.id;
+
+    if (status.status === 200) {
+
+        const dateStart = req.body.time.start.slice(0, 10);
+        const dateEnd = req.body.time.end.slice(0, 10);
+        const diffInMs = new Date(dateEnd) - new Date(dateStart);
+        const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
+
+        let date = new Date(dateStart);
+        let newDataRowArr = [];
+
+        console.log("eventDays :", eventDays);
+
+
+        console.log("authentication successfull!");
+
+
+
+        let destructArr = Event.destructObj(userId, req.body);
+
+        let errMsg = destructArr[0];
+        let eventRow = destructArr[1];
+        let eventPhase = destructArr[2];
+        let bookedEquip = destructArr[3];
+
+        // console.log("obj:", obj);
+        // console.log("eventRow:", eventRow);
+        // console.log("msg:", msg);
+        // console.log("eventPhase:", eventPhase);
+        // console.log("bookedEquip:", bookedEquip);
+        // console.log("eventRow[13]:", eventRow[13]);
+
+        // let unixTime = Date.now();
+
+
+        if (errMsg === null) {
+
+            try {
+                await Event.deleteEvent(req.params.id, userId, unixTime);
+                const [newEvent] = await Event.createEvent(eventRow);
+
+                console.log("result newEvent:", newEvent);
+                await Event.deletePhase(req.params.id, userId, unixTime);
+
+                if (eventPhase.length > 0) {
+                    const [newPhase] = await Phase.writeEventPhase(eventPhase);
+                    console.log("result newPhase:", newPhase);
+                }
+                await Event.deleteEquipment(req.params.id, userId, unixTime);
+
+                if (bookedEquip.length > 0) {
+                    const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
+                    console.log("result booked equipment:", bkEquip);
+                }
+
+            } catch (error) {
+                console.log("error:", error);
+                res.status(500).json({ msg: "We have problems with writing event data to database" });
+                return {
+                    error: true,
+                    message: 'Error from database'
+                }
+            }
+
+            res.status(200).json({ msg: `Мероприятие успешно обновлено. idEvent = ${eventRow[0]}` });
+
+        } else res.status(400).json(msg);
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}
+
 exports.getAll = async (req, res) => {
 
     console.log("getAllEvents");
@@ -235,137 +365,7 @@ exports.getAll = async (req, res) => {
 
 }
 
-exports.updateEvent = async (req, res) => {
 
-    console.log("update Event req.body:", req.body);
-
-    let status = await auth.authenticateJWT(req, res);
-    let userId = status.id;
-
-    if (status.status === 200) {
-
-        const dateStart = req.body.time.start.slice(0, 10);
-        const dateEnd = req.body.time.end.slice(0, 10);
-        const diffInMs = new Date(dateEnd) - new Date(dateStart);
-        const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
-
-        let date = new Date(dateStart);
-        let newDataRowArr = [];
-
-        console.log("eventDays :", eventDays);
-
-
-        console.log("authentication successfull!");
-
-
-
-        let destructArr = Event.destructObj(userId, req.body);
-
-        let errMsg = destructArr[0];
-        let eventRow = destructArr[1];
-        let eventPhase = destructArr[2];
-        let bookedEquip = destructArr[3];
-
-        // console.log("obj:", obj);
-        // console.log("eventRow:", eventRow);
-        // console.log("msg:", msg);
-        // console.log("eventPhase:", eventPhase);
-        // console.log("bookedEquip:", bookedEquip);
-        // console.log("eventRow[13]:", eventRow[13]);
-
-        // let unixTime = Date.now();
-
-
-        if (errMsg === null) {
-
-            try {
-                await Event.deleteEvent(req.params.id, userId, unixTime);
-                const [newEvent] = await Event.createEvent(eventRow);
-
-                console.log("result newEvent:", newEvent);
-                await Event.deletePhase(req.params.id, userId, unixTime);
-
-                if (eventPhase.length > 0) {
-                    const [newPhase] = await Phase.writeEventPhase(eventPhase);
-                    console.log("result newPhase:", newPhase);
-                }
-                await Event.deleteEquipment(req.params.id, userId, unixTime);
-
-                if (bookedEquip.length > 0) {
-                    const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
-                    console.log("result booked equipment:", bkEquip);
-                }
-
-            } catch (error) {
-                console.log("error:", error);
-                res.status(500).json({ msg: "We have problems with writing event data to database" });
-                return {
-                    error: true,
-                    message: 'Error from database'
-                }
-            }
-
-            res.status(200).json({ msg: `Мероприятие успешно обновлено. idEvent = ${eventRow[0]}` });
-
-        } else res.status(400).json(msg);
-
-    } else {
-        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
-    }
-}
-
-exports.deleteEvent = async (req, res) => {
-
-    let status = await auth.authenticateJWT(req, res);
-    let userId = status.id;
-    let unixTime = Date.now();
-
-    if (status.status === 200) {
-
-        console.log("authentication successfull!");
-
-        try {
-            const [delEvent] = await Event.copyRow(req.params.id);
-            console.log("delEvent:", delEvent);
-            if (delEvent.length > 0) {
-                delEvent[0].idUpdatedBy = userId;
-                delEvent[0].unixTime = unixTime;
-                delEvent[0].is_deleted = 1;
-
-            } else {
-                return res.status(200).json({ msg: `Мероприятия с id=${req.params.id} не существует` });
-            }
-
-            let delEventRow = Object.values(delEvent[0]);
-            await Event.markEventDel(req.params.id);
-
-            delEventRow.shift();        //  delete id
-
-            const [paste] = await Event.pasteRow(delEventRow);
-            console.log("result:", paste);
-            console.log("delEventRow:", delEventRow);
-            // const [newEvent] = await Event.createEvent(delEventRow);
-            // console.log("result:",newEvent);
-            return res.status(200).json(delEvent);
-
-
-            // await Event.deletePhase(req.params.id, userId, unixTime);
-            // await Event.deleteEquipment(req.params.id, userId, unixTime);
-        } catch (error) {
-            console.log("error:", error);
-            res.status(500).json({ msg: "We have problems with deleting event data from database" });
-            return {
-                error: true,
-                message: 'Error from database'
-            }
-        }
-
-        // res.status(200).json({ msg: `Мероприятие успешно удалено. idEvent = ${req.params.id}` });
-
-    } else {
-        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
-    }
-}
 
 exports.getSummary = async (req, res) => {
 
