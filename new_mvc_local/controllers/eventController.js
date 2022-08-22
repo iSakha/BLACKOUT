@@ -93,6 +93,7 @@ exports.createNewEvent = async (req, res) => {
                         message: 'Error from database'
                     }
                 }
+
                 console.log("bookedEquip:", bookedEquip);
 
 
@@ -167,7 +168,7 @@ exports.deleteEvent = async (req, res) => {
             const [paste] = await Event.pasteRow(delEventRow);
             // console.log("result:", paste);
             // console.log("delEventRow:", delEventRow);
-            
+
             await Event.deletePhase(req.params.id, userId, unixTime);
             await Event.deleteEquipment(req.params.id, userId, unixTime);
             await Event.deleteFromBookCalendar(req.params.id, userId, unixTime);
@@ -181,7 +182,7 @@ exports.deleteEvent = async (req, res) => {
                 error: true,
                 message: 'Error from database'
             }
-        }       
+        }
 
     } else {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });
@@ -192,8 +193,11 @@ exports.updateEvent = async (req, res) => {
 
     console.log("update Event req.body:", req.body);
 
+    req.body.id = req.params.id;
+
     let status = await auth.authenticateJWT(req, res);
     let userId = status.id;
+    let unixTime = Date.now();
 
     if (status.status === 200) {
 
@@ -202,15 +206,13 @@ exports.updateEvent = async (req, res) => {
         const diffInMs = new Date(dateEnd) - new Date(dateStart);
         const eventDays = diffInMs / (1000 * 60 * 60 * 24) + 1;
 
+
         let date = new Date(dateStart);
         let newDataRowArr = [];
 
         console.log("eventDays :", eventDays);
 
-
         console.log("authentication successfull!");
-
-
 
         let destructArr = Event.destructObj(userId, req.body);
 
@@ -232,21 +234,64 @@ exports.updateEvent = async (req, res) => {
         if (errMsg === null) {
 
             try {
-                await Event.deleteEvent(req.params.id, userId, unixTime);
-                const [newEvent] = await Event.createEvent(eventRow);
-
-                console.log("result newEvent:", newEvent);
+                await Event.markEventDel(req.params.id, userId, unixTime);
                 await Event.deletePhase(req.params.id, userId, unixTime);
+                await Event.deleteEquipment(req.params.id, userId, unixTime);
+                await Event.deleteFromBookCalendar(req.params.id, userId, unixTime);
+
+                // write to `t_events` table
+                const [newEvent] = await Event.createEvent(eventRow);
+                console.log("result newEvent:", newEvent);
 
                 if (eventPhase.length > 0) {
                     const [newPhase] = await Phase.writeEventPhase(eventPhase);
                     console.log("result newPhase:", newPhase);
                 }
-                await Event.deleteEquipment(req.params.id, userId, unixTime);
 
                 if (bookedEquip.length > 0) {
-                    const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
-                    console.log("result booked equipment:", bkEquip);
+                    try {
+                        // write to `t_event_equipment` table
+                        const [bkEquip] = await BookedEquip.setBookedModels(bookedEquip);
+                        console.log("result booked equipment:", bkEquip);
+
+                    } catch (error) {
+                        console.log("error:", error);
+                        res.status(500).json({ msg: "We have problems with booked equipment to `t_event_equipment` table" });
+                        return {
+                            error: true,
+                            message: 'Error from database'
+                        }
+                    }
+
+                    console.log("bookedEquip:", bookedEquip);
+
+
+                    for (let i = 0; i < eventDays; i++) {
+
+                        bookedEquip.map(item => {
+                            item = item.slice(0, 6);
+                            item.push(date.toISOString().slice(0, 10));
+                            newDataRowArr.push(item);
+                        })
+
+                        date.setDate(date.getDate() + 1);
+                    }
+
+                    console.log("newDataRowArr:", newDataRowArr);
+
+                    try {
+                        // write to `t_booking_calendar` table
+                        const [bookedCalendar] = await BookedEquip.writeToBookCalendar(newDataRowArr);
+                        console.log("result bookedCalendar:", bookedCalendar);
+
+                    } catch (error) {
+                        console.log("error:", error);
+                        res.status(500).json({ msg: "We have problems with booked equipment to `t_booking_calendar` table" });
+                        return {
+                            error: true,
+                            message: 'Error from database'
+                        }
+                    }
                 }
 
             } catch (error) {
@@ -365,7 +410,72 @@ exports.getAll = async (req, res) => {
 
 }
 
+exports.getOne = async (req, res) => {
+    let phases = {};
+    let booked = {};
+    let eventObj = {};
 
+
+    console.log("getOne");
+    let status = await auth.authenticateJWT(req, res);
+
+    console.log("statusCode:", status);
+
+    if (status.status === 200) {
+
+        try {
+            const [event] = await Event.getOne(req.params.id);
+            // console.log("event:", event);
+            if (event.length < 1) {
+                res.status(200).json({ msg: `Мероприятия с id = ${req.params.id} не существует` });
+                return;
+            }
+            eventObj = new Event(req.params.id, event[0]);
+
+            [phases] = await Phase.getOnePhase(req.params.id);
+            console.log("phases:", phases);
+            [booked] = await BookedEquip.getBookedModelsByEventID(req.params.id);
+            console.log("booked:", booked);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting event from database" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+        if (phases.length > 0) {
+            eventObj.phase = phases;
+            console.log("event+phase:", eventObj);
+        } else {
+            eventObj.phase = [];
+        }
+
+        if (booked.length > 0) {
+            console.log("booked before map:", booked);
+            booked.map(item => {
+                delete item.idEvent;
+            })
+            console.log("booked after map:", booked);
+            eventObj.booking = booked;
+            console.log("event+booking:", eventObj);
+            console.log("event+booking:", eventObj);
+        } else {
+            eventObj.booking = [];
+        }
+
+        res.status(200).json(eventObj);
+
+
+
+
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+
+}
 
 exports.getSummary = async (req, res) => {
 
@@ -426,77 +536,6 @@ exports.getAllHistory = async (req, res) => {
     } else {
         res.status(status.status).json({ msg: "We have problems with JWT authentication" });
     }
-}
-
-exports.getOne = async (req, res) => {
-    // let event = {};
-    let phases = {};
-    let booked = {};
-    let eventObj = {};
-
-
-    console.log("getOne");
-    let status = await auth.authenticateJWT(req, res);
-
-    console.log("statusCode:", status);
-
-    if (status.status === 200) {
-
-        try {
-            const [event] = await Event.getOne(req.params.id);
-            // console.log("event:", event);
-            if (event.length < 1) {
-                res.status(200).json({ msg: `Мероприятия с id = ${req.params.id} не существует` });
-                return;
-            }
-            eventObj = new Event(req.params.id, event[0]);
-
-            [phases] = await Phase.getOnePhase(req.params.id);
-            console.log("phases:", phases);
-            [booked] = await BookedEquip.getBookedModelsByEventID(req.params.id);
-            console.log("booked:", booked);
-        } catch (error) {
-            console.log("error:", error);
-            res.status(500).json({ msg: "We have problems with getting event from database" });
-            return {
-                error: true,
-                message: 'Error from database'
-            }
-        }
-
-        // go to constructor
-        // eventObj = utils.convertRowToObj(event[0]);
-
-        if (phases.length > 0) {
-            eventObj.phase = phases;
-            console.log("event+phase:", eventObj);
-        } else {
-            eventObj.phase = [];
-        }
-
-        if (booked.length > 0) {
-            console.log("booked before map:", booked);
-            booked.map(item => {
-                delete item.idEvent;
-            })
-            console.log("booked after map:", booked);
-            eventObj.booking = booked;
-            console.log("event+booking:", eventObj);
-            console.log("event+booking:", eventObj);
-        } else {
-            eventObj.booking = [];
-        }
-
-        res.status(200).json(eventObj);
-
-
-
-
-
-    } else {
-        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
-    }
-
 }
 
 exports.getOneHistory = async (req, res) => {
