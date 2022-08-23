@@ -370,9 +370,6 @@ exports.getAll = async (req, res) => {
 
 
             let eventObj = new Event(allEvents[i].idEvent, allEvents[i]);
-            // let eventObj = utils.convertRowToObj(allEvents[i]);
-
-            // console.log("eventObj:", eventObj);
 
             let foundPhase = phases.filter(e => e.idEvent === allEvents[i].idEvent);
             console.log("foundPhase:", i, foundPhase);

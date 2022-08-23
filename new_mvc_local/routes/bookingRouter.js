@@ -12,6 +12,10 @@ router.post('/interval', bookingController.getBookedEquipOnInterval);
 router.post('/date', bookingController.getBookedEquipOnDate);
 
 
+// Get equipment by category and time interval
+
+
+
 
 
 module.exports = router;

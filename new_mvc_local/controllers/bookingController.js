@@ -261,16 +261,27 @@ exports.getBookedEquipOnInterval = async (req, res) => {
 
     console.log("getBookedEquipOnInterval", req.body.start);
 
+
     let status = await auth.authenticateJWT(req, res);
 
     if (status.status === 200) {
+
+        let allEquipArr = [];
+        
 
         console.log("authentication successfull!");
 
         try {
             const [equip] = await BookedEquip.getBookedEquipOnInterval(req.body.start,req.body.end);
             console.log("equip:",equip);
-            return res.status(200).json(equip);
+
+            for (let i = 0; i < equip.length; i++) {
+                let equipObj = new BookedEquip(equip[i]);
+                allEquipArr.push(equipObj);
+            }
+            
+
+            return res.status(200).json(allEquipArr);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting equipment on interval from `v_booked_equip` table" });

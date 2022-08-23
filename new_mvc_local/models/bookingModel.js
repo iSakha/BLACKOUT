@@ -4,10 +4,11 @@ const utils = require('../utils/utils');
 
 module.exports = class BookedEquip {
    constructor(equip) {
-      this.id = equip.id;
+      this.id = equip.idModel.slice(0,11);
       this.name = equip.name;
-      this.qtt = equip.qtt;
-   }
+      this.date = equip.date;
+      this.inWork = {qtt:equip.qttInUse};
+  }
 
    static setBookedModels(dataRow) {
       console.log("setBookedModels dataRow:", dataRow);
