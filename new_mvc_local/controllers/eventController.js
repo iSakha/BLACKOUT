@@ -386,6 +386,7 @@ exports.getAll = async (req, res) => {
             let foundEquip = equip.filter(e => e.idEvent === allEvents[i].idEvent);
             console.log("foundEquip:", i, foundEquip);
             foundEquip = foundEquip.map(item => {
+                console.log("item:",item)
                 return item = new BookedEquip(item);
             });
 

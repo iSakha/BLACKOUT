@@ -48,8 +48,13 @@ module.exports = class BookedEquip {
 
    static bookedGetAllModels() {
       console.log("bookedGetAll");
-      return db.query('SELECT `idEvent`, SUBSTRING(`id`,1,11) AS `id`, `name`, `qtt` FROM `v_event_equipment`');
+      return db.query('SELECT `idEvent`, `id` AS `idModel`, `name`, `qtt` FROM `v_event_equipment`');
    }
+
+   // static bookedGetAllModels() {
+   //    console.log("bookedGetAll");
+   //    return db.query('SELECT `idEvent`, SUBSTRING(`id`,1,11) AS `id`, `name`, `qtt` FROM `v_event_equipment`');
+   // }
 
    // static bookedEquipGetAll() {
    //    console.log("bookedEquipGetAll");
