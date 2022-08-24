@@ -11,6 +11,8 @@ router.get('/events', bookingController.getEvents);
 router.post('/interval', bookingController.getBookedEquipOnInterval);
 router.post('/date', bookingController.getBookedEquipOnDate);
 
+router.get('/interval', bookingController.getBookedEquipOnIntervalWh);
+
 
 // Get equipment by category and time interval
 

@@ -3,12 +3,44 @@ const db = dtb.promise();
 const utils = require('../utils/utils');
 
 module.exports = class BookedEquip {
-   constructor(equip) {
-      this.id = equip.idModel.slice(0,11);
-      this.name = equip.name;
-      this.date = equip.date;
-      this.inWork = {qtt:equip.qttInUse};
-  }
+   constructor(equip, mode) {
+
+      switch (mode) {
+         case 1:
+            console.log("case1");
+            this.id = equip.idModel.slice(0, 11);
+            this.qtt = equip.qtt;
+            this.name = equip.name;
+
+            break;
+
+         case 2:
+            console.log("case2", equip.idWh);
+
+            if (equip.idWh === undefined) {
+               console.log("all");
+               this.date = equip.date;
+               this.id = equip.idModel.slice(0, 11);
+               this.name = equip.name;
+               this.inWork = { qtt: equip.qttInUse };
+               this.onWarehouse = { qtt: equip.availableAll };
+            } else {
+               console.log("not all");
+               let whAvailableQtt = [equip.availableMinsk, equip.availableMoscow, equip.availableKazan, equip.availablePiter]
+
+               this.date = equip.date;
+               this.id = equip.idModel.slice(0, 11);
+               this.name = equip.name;
+               this.inWork = { qtt: equip.qttInUse };               
+               this.onWarehouse = { qtt: whAvailableQtt[equip.idWh - 2] };
+               break;
+            }
+      }
+
+
+      // this.date = equip.date;
+      // this.inWork = {qtt:equip.qttInUse};
+   }
 
    static setBookedModels(dataRow) {
       console.log("setBookedModels dataRow:", dataRow);
@@ -66,9 +98,18 @@ module.exports = class BookedEquip {
       return db.query('SELECT DISTINCT `b`.`idEvent`,`t_events`.`title`,`t_events`.`start`,`t_events`.`end` FROM `v_booked_equip` `b` JOIN `t_events` ON `b`.`idEvent` = `t_events`.`idEvent` ORDER BY `date`');
    }
 
-   static getBookedEquipOnInterval(start, end) {
-      console.log("getBookedEquipOnInterval", start, end);
-      return db.query('SELECT * FROM `v_booked_equip` WHERE `v_booked_equip`.`date` >=? AND `v_booked_equip`.`date` <=?', [start, end]);
+   static getBookedEquipOnInterval(idWh, start, end) {
+      console.log("getBookedEquipOnInterval", idWh, start, end);
+      switch (idWh) {
+         case "all":
+            console.log("case all");
+            return db.query('SELECT * FROM `v_booked_equip_all` WHERE `v_booked_equip_all`.`date` >=? AND `v_booked_equip_all`.`date` <=?', [start, end]);
+
+         default:
+            console.log("case idWh");
+            return db.query('SELECT * FROM `v_booked_equip` WHERE `v_booked_equip`.`date` >=? AND `v_booked_equip`.`date` <=? AND idWh=?', [start, end, idWh]);
+      }
+
    }
 
 }

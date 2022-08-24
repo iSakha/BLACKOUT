@@ -387,7 +387,7 @@ exports.getAll = async (req, res) => {
             console.log("foundEquip:", i, foundEquip);
             foundEquip = foundEquip.map(item => {
                 console.log("item:",item)
-                return item = new BookedEquip(item);
+                return item = new BookedEquip(item, 1);
             });
 
             if (foundEquip.length > 0) {

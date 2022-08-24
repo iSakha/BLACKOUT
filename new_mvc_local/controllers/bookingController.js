@@ -276,7 +276,7 @@ exports.getBookedEquipOnInterval = async (req, res) => {
             console.log("equip:",equip);
 
             for (let i = 0; i < equip.length; i++) {
-                let equipObj = new BookedEquip(equip[i]);
+                let equipObj = new BookedEquip(equip[i], 2);
                 allEquipArr.push(equipObj);
             }
             
@@ -310,6 +310,47 @@ exports.getBookedEquipOnDate = async (req, res) => {
             const [equip] = await BookedEquip.getBookedEquipOnInterval(req.body.start,req.body.start);
             console.log("equip:",equip);
             return res.status(200).json(equip);
+        } catch (error) {
+            console.log("error:", error);
+            res.status(500).json({ msg: "We have problems with getting equipment on interval from `v_booked_equip` table" });
+            return {
+                error: true,
+                message: 'Error from database'
+            }
+        }
+
+    } else {
+        res.status(status.status).json({ msg: "We have problems with JWT authentication" });
+    }
+}
+
+exports.getBookedEquipOnIntervalWh = async (req, res) => {
+
+    console.log("getBookedEquipOnInterval", req.body.start);
+
+
+    // return res.status(200).json({start:req.query.start, end:req.query.end});
+
+    let status = await auth.authenticateJWT(req, res);
+
+    if (status.status === 200) {
+
+        let allEquipArr = [];
+        
+
+        console.log("authentication successfull!");
+
+        try {
+            const [equip] = await BookedEquip.getBookedEquipOnInterval(req.query.idwh,req.query.start,req.query.end);
+            console.log("equip:",equip);
+
+            for (let i = 0; i < equip.length; i++) {
+                let equipObj = new BookedEquip(equip[i], 2);
+                allEquipArr.push(equipObj);
+            }
+            
+
+            return res.status(200).json(allEquipArr);
         } catch (error) {
             console.log("error:", error);
             res.status(500).json({ msg: "We have problems with getting equipment on interval from `v_booked_equip` table" });
